@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Navbar from '../../components/layout/Navbar';
 import api from '../../services/api';
 import { Link } from 'react-router-dom';
-import { Search, MapPin, Star, Briefcase, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, MapPin, Star, Briefcase, ChevronDown, ChevronUp, CheckCircle } from 'lucide-react';
 
 const CATEGORIES = ['', 'Plomberie', 'Électricité', 'Informatique', 'Jardinage', 'Peinture', 'Maçonnerie'];
 
@@ -187,7 +187,7 @@ const Prestataires = () => {
                  border:'1px solid rgba(37,99,235,0.2)',
                  fontSize:11, fontWeight:600, color:'var(--info)',
                     }}>
-                     ✅ Vérifié
+                     <CheckCircle size={12} /> Vérifié
                  </span>
                     )}
                    </div>

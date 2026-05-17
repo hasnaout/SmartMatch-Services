@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/layout/Navbar';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { Send, Upload, X, Image } from 'lucide-react';
+import {
+  Send, Upload, X, Image, FileText, Tags, Zap,
+  Wallet, MapPin, Images, CheckCircle, Clock, AlertTriangle, Flame
+} from 'lucide-react';
 
 const CATEGORIES = [
   'Plomberie', 'Électricité', 'Informatique', 'Jardinage',
@@ -54,7 +57,7 @@ const CreerDemande = () => {
       });
 
       setFichiers(prev => [...prev, ...data.fichiers]);
-      toast.success(`✅ ${data.fichiers.length} fichier(s) uploadé(s)`);
+      toast.success(`${data.fichiers.length} fichier(s) uploadé(s)`);
     } catch {
       toast.error('Erreur upload fichiers');
       setPreviews(prev => prev.slice(0, prev.length - filesArray.length));
@@ -80,7 +83,7 @@ const CreerDemande = () => {
     setLoading(true);
     try {
       await api.post('/demandes', { ...form, fichiers });
-      toast.success('✅ Demande publiée avec succès !');
+      toast.success('Demande publiée avec succès !');
       navigate('/client/demandes');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Erreur lors de la création');
@@ -105,7 +108,7 @@ const CreerDemande = () => {
             {/* Infos générales */}
             <div className="form-card">
               <div className="form-section">
-                <div className="form-section-title">📝 Informations générales</div>
+                <div className="form-section-title"><FileText size={16} /> Informations générales</div>
                 <div className="form-field" style={{ marginBottom:16 }}>
                   <label className="form-label">Titre de la demande *</label>
                   <input className="form-input" name="titre"
@@ -122,7 +125,7 @@ const CreerDemande = () => {
 
               {/* Catégorie */}
               <div className="form-section">
-                <div className="form-section-title">🏷️ Catégorie de service *</div>
+                <div className="form-section-title"><Tags size={16} /> Catégorie de service *</div>
                 <div className="cat-grid">
                   {CATEGORIES.map(cat => (
                     <button key={cat} type="button"
@@ -136,13 +139,17 @@ const CreerDemande = () => {
 
               {/* Urgence */}
               <div className="form-section">
-                <div className="form-section-title">⚡ Niveau d&apos;urgence</div>
+                <div className="form-section-title"><Zap size={16} /> Niveau d&apos;urgence</div>
                 <div className="urgence-selector">
-                  {['faible', 'normale', 'urgente'].map(u => (
-                    <button key={u} type="button"
-                      className={`urgence-btn ${u} ${form.urgence === u ? 'active' : ''}`}
-                      onClick={() => setForm({ ...form, urgence: u })}>
-                      {u === 'faible' ? '🟢 Faible' : u === 'normale' ? '🟡 Normale' : '🔴 Urgente'}
+                  {[
+                    { key: 'faible', label: 'Faible', icon: <Clock size={14} /> },
+                    { key: 'normale', label: 'Normale', icon: <AlertTriangle size={14} /> },
+                    { key: 'urgente', label: 'Urgente', icon: <Flame size={14} /> },
+                  ].map(u => (
+                    <button key={u.key} type="button"
+                      className={`urgence-btn ${u.key} ${form.urgence === u.key ? 'active' : ''}`}
+                      onClick={() => setForm({ ...form, urgence: u.key })}>
+                      {u.icon} {u.label}
                     </button>
                   ))}
                 </div>
@@ -152,7 +159,7 @@ const CreerDemande = () => {
             {/* Budget & Localisation */}
             <div className="form-card">
               <div className="form-section">
-                <div className="form-section-title">💰 Budget estimé (MAD)</div>
+                <div className="form-section-title"><Wallet size={16} /> Budget estimé (MAD)</div>
                 <div className="form-grid-2">
                   <div className="form-field">
                     <label className="form-label">Budget minimum</label>
@@ -168,7 +175,7 @@ const CreerDemande = () => {
               </div>
 
               <div className="form-section">
-                <div className="form-section-title">📍 Localisation</div>
+                <div className="form-section-title"><MapPin size={16} /> Localisation</div>
                 <div className="form-grid-2">
                   <div className="form-field">
                     <label className="form-label">Ville</label>
@@ -192,7 +199,7 @@ const CreerDemande = () => {
             {/* Upload photos */}
             <div className="form-card">
               <div className="form-section">
-                <div className="form-section-title">📸 Photos / Fichiers</div>
+                <div className="form-section-title"><Images size={16} /> Photos / Fichiers</div>
 
                 {/* Zone drag & drop */}
                 <div
@@ -255,7 +262,7 @@ const CreerDemande = () => {
 
                 {fichiers.length > 0 && (
                   <p style={{ fontSize:12, color:'var(--success)', marginTop:8 }}>
-                    ✅ {fichiers.length} fichier(s) prêt(s) à envoyer
+                    <CheckCircle size={13} /> {fichiers.length} fichier(s) prêt(s) à envoyer
                   </p>
                 )}
               </div>

@@ -5,7 +5,7 @@ import api from '../../services/api';
 import toast from 'react-hot-toast';
 import {
   ArrowLeft, CreditCard, Banknote, CheckCircle,
-  Clock, Shield, AlertCircle,
+  Clock, Shield, AlertCircle, ClipboardList, Wallet, Receipt
 } from 'lucide-react';
 import { CATEGORIES_EN_LIGNE } from '../../utils/paiementHelper';
 
@@ -59,7 +59,7 @@ const Paiement = () => {
       setPaying(true);
       try {
         const { data } = await api.put(`/paiements/${paiementExistant._id}/confirmer`);
-        toast.success('✅ Paiement en espèces enregistré !');
+        toast.success('Paiement en espèces enregistré !');
         setStep(3);
         setPaiementExistant(data.paiement);
       } catch (err) {
@@ -88,7 +88,7 @@ const Paiement = () => {
         });
         // Confirmer immédiatement pour les espèces
         await api.put(`/paiements/${data.paiement._id}/confirmer`);
-        toast.success('✅ Paiement en espèces enregistré !');
+        toast.success('Paiement en espèces enregistré !');
         setStep(3);
         setPaiementExistant({ ...data.paiement, statut: 'payé' });
       } catch (err) {
@@ -146,14 +146,14 @@ const Paiement = () => {
     await new Promise(resolve => setTimeout(resolve, 2500));
     try {
       const { data } = await api.put(`/paiements/${paiementExistant._id}/confirmer`);
-      toast.success('✅ Paiement effectué avec succès !');
+      toast.success('Paiement effectué avec succès !');
       setStep(3);
       setPaiementExistant(data.paiement);
     } catch (err) {
       if (err.response?.data?.message?.includes('déjà confirmé')) {
         setStep(3);
         setPaiementExistant(prev => prev ? ({ ...prev, statut: 'payé' }) : prev);
-        toast.success('✅ Paiement déjà confirmé');
+        toast.success('Paiement déjà confirmé');
         return;
       }
       toast.error(err.response?.data?.message || 'Erreur');
@@ -225,7 +225,7 @@ const Paiement = () => {
                 <div style={{ display:'flex', justifyContent:'space-between' }}>
                   <span style={{ color:'var(--muted)', fontSize:13 }}>Méthode</span>
                   <span style={{ fontWeight:600, fontSize:13 }}>
-                    {paiementExistant.methode === 'en_ligne' ? '💳 En ligne' : '💵 Espèces'}
+                    {paiementExistant.methode === 'en_ligne' ? 'En ligne' : 'Espèces'}
                   </span>
                 </div>
               </div>
@@ -240,7 +240,7 @@ const Paiement = () => {
               {/* Résumé mission */}
               <div className="card" style={{ marginBottom:20 }}>
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16, color:'var(--accent2)' }}>
-                  📋 Résumé de la mission
+                  <ClipboardList size={16} /> Résumé de la mission
                 </h3>
                 <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                   <div style={{ display:'flex', justifyContent:'space-between' }}>
@@ -271,7 +271,7 @@ const Paiement = () => {
               {/* Montant */}
               <div className="card" style={{ marginBottom:20 }}>
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16, color:'var(--accent2)' }}>
-                  💰 Montant à payer
+                  <Wallet size={16} /> Montant à payer
                 </h3>
                 <div className="form-field">
                   <label className="form-label">Montant (MAD) *</label>
@@ -305,7 +305,7 @@ const Paiement = () => {
               {/* Méthode de paiement */}
               <div className="card" style={{ marginBottom:20 }}>
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16, color:'var(--accent2)' }}>
-                  💳 Méthode de paiement
+                  <CreditCard size={16} /> Méthode de paiement
                 </h3>
 
                 {/* Paiement en ligne */}
@@ -536,7 +536,7 @@ const Paiement = () => {
               </div>
 
               <h2 style={{ fontSize:24, fontWeight:800, marginBottom:8, color:'var(--text)' }}>
-                Paiement Effectué ! 🎉
+                Paiement effectué
               </h2>
               <p style={{ color:'var(--muted)', marginBottom:28, fontSize:14 }}>
                 Votre paiement a été enregistré avec succès
@@ -553,14 +553,14 @@ const Paiement = () => {
                   fontFamily:"'Syne',sans-serif", fontSize:16, fontWeight:700,
                   color:'var(--accent2)',
                 }}>
-                  🧾 REÇU DE PAIEMENT
+                  <Receipt size={16} /> REÇU DE PAIEMENT
                 </div>
                 <div className="divider" />
                 {[
                   { label:'Référence',   value: paiementExistant?.reference },
                   { label:'Mission',     value: demande?.titre },
                   { label:'Prestataire', value: `${demande?.prestataireChoisi?.user?.prenom} ${demande?.prestataireChoisi?.user?.nom}` },
-                  { label:'Méthode',     value: paiementExistant?.methode === 'en_ligne' ? '💳 Paiement en ligne' : '💵 Espèces' },
+                  { label:'Méthode',     value: paiementExistant?.methode === 'en_ligne' ? 'Paiement en ligne' : 'Espèces' },
                   { label:'Date',        value: formatDate(new Date()) },
                 ].map((item, i) => (
                   <div key={i} style={{

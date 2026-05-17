@@ -106,7 +106,7 @@ const HistoriquePaiements = () => {
                     </td>
                     <td>
                       <span className={p.statut === 'payé' ? 'badge badge-success' : 'badge badge-warning'}>
-                        {p.statut === 'payé' ? '✅ Payé' : '⏳ En attente'}
+                        {p.statut === 'payé' ? <><CheckCircle size={12} /> Payé</> : <><Clock size={12} /> En attente</>}
                       </span>
                     </td>
                     <td style={{ color:'var(--muted)', fontSize:13 }}>

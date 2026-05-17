@@ -33,7 +33,7 @@ const AdminUsers = () => {
   const handleAction = async (action, id) => {
     try {
       await api.put(`/admin/users/${id}/${action}`);
-      toast.success('✅ Action effectuée');
+      toast.success('Action effectuée');
       fetchUsers();
     } catch {
       toast.error('Erreur lors de l\'action');
@@ -44,7 +44,7 @@ const AdminUsers = () => {
     if (!window.confirm('Supprimer cet utilisateur ?')) return;
     try {
       await api.delete(`/admin/users/${id}`);
-      toast.success('✅ Utilisateur supprimé');
+      toast.success('Utilisateur supprimé');
       fetchUsers();
     } catch {
       toast.error('Erreur suppression');

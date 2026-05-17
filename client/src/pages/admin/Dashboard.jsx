@@ -44,7 +44,7 @@ const AdminDashboard = () => {
         {/* Header */}
         <div className="dashboard-header">
           <h1 className="dashboard-greeting">
-            Dashboard <span>Admin</span> 🛡️
+            Dashboard <span>Admin</span>
           </h1>
           <p className="dashboard-subtitle">
             Vue d'ensemble de la plateforme SmartMatch

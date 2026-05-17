@@ -4,7 +4,10 @@ import Navbar from '../../components/layout/Navbar';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 import { io } from 'socket.io-client';
-import { ArrowLeft, MapPin, Calendar, Send, MessageCircle, CheckCircle } from 'lucide-react';
+import {
+  ArrowLeft, MapPin, Calendar, Send, MessageCircle, CheckCircle,
+  ClipboardList, Wallet, User, Images
+} from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const socket = io('http://localhost:5000');
@@ -34,7 +37,7 @@ const DetailMission = () => {
   setTerminant(true);
   try {
     await api.put(`/demandes/${id}/terminer`);
-    toast.success('✅ Mission terminée !');
+    toast.success('Mission terminée !');
     setDemande(prev => ({ ...prev, statut: 'terminée' }));
   } catch (err) {
     toast.error(err.response?.data?.message || 'Erreur');
@@ -145,7 +148,7 @@ const DetailMission = () => {
 )}
 {demande.statut === 'terminée' && (
   <span className="badge badge-success" style={{ padding:'10px 16px', fontSize:14 }}>
-    ✅ Mission terminée
+    <CheckCircle size={15} /> Mission terminée
   </span>
 )}
         </div>
@@ -156,7 +159,7 @@ const DetailMission = () => {
           <div>
             <div className="card" style={{ marginBottom:16 }}>
               <h3 style={{ fontSize:15, fontWeight:700, marginBottom:14, color:'var(--prest-accent)' }}>
-                📋 Détails de la mission
+                <ClipboardList size={16} /> Détails de la mission
               </h3>
               <p style={{ fontSize:14, color:'var(--muted)', lineHeight:1.7, marginBottom:16 }}>
                 {demande.description}
@@ -171,8 +174,8 @@ const DetailMission = () => {
                   {formatDate(demande.createdAt)}
                 </div>
                 {(demande.budget?.min > 0 || demande.budget?.max > 0) && (
-                  <div style={{ fontSize:13, color:'var(--success)', fontWeight:500 }}>
-                    💰 Budget : {demande.budget.min} – {demande.budget.max} {demande.budget.devise}
+                  <div style={{ display:'flex', alignItems:'center', gap:8, fontSize:13, color:'var(--success)', fontWeight:500 }}>
+                    <Wallet size={14} /> Budget : {demande.budget.min} – {demande.budget.max} {demande.budget.devise}
                   </div>
                 )}
               </div>
@@ -181,7 +184,7 @@ const DetailMission = () => {
             {/* Client info */}
             <div className="card">
               <h3 style={{ fontSize:15, fontWeight:700, marginBottom:14, color:'var(--prest-accent)' }}>
-                👤 Client
+                <User size={16} /> Client
               </h3>
               <div style={{ display:'flex', alignItems:'center', gap:12 }}>
                 <div style={{
@@ -207,7 +210,7 @@ const DetailMission = () => {
             {demande.fichiers?.length > 0 && (
               <div className="card" style={{ marginTop:16 }}>
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:14, color:'var(--prest-accent)' }}>
-                  📸 Photos
+                  <Images size={16} /> Photos
                 </h3>
                 <div style={{ display:'flex', flexWrap:'wrap', gap:10 }}>
                   {demande.fichiers.map((f, i) => (

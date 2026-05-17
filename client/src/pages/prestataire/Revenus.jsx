@@ -102,7 +102,7 @@ const Revenus = () => {
             {Object.keys(parMois).length > 0 && (
               <div className="card" style={{ marginBottom:24 }}>
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16, color:'var(--prest-accent)' }}>
-                  📅 Revenus par mois
+                  <Calendar size={16} /> Revenus par mois
                 </h3>
                 <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                   {Object.entries(parMois).map(([mois, stats]) => (
@@ -158,8 +158,8 @@ const Revenus = () => {
             <div style={{ display:'flex', gap:8, marginBottom:20, flexWrap:'wrap' }}>
               {[
                 { val:'tout',     label:'Tous' },
-                { val:'en_ligne', label:'💳 En ligne' },
-                { val:'especes',  label:'💵 Espèces' },
+                { val:'en_ligne', label:'En ligne', icon:<CreditCard size={13} /> },
+                { val:'especes',  label:'Espèces', icon:<Banknote size={13} /> },
               ].map(f => (
                 <button
                   key={f.val}
@@ -167,7 +167,7 @@ const Revenus = () => {
                   onClick={() => setFilter(f.val)}
                   style={{ padding:'8px 16px', fontSize:13 }}
                 >
-                  {f.label}
+                  {f.icon} {f.label}
                 </button>
               ))}
             </div>

@@ -286,12 +286,14 @@
 
   /* Card demande */
   .demande-card {
-    padding: 14px;
+    min-height: auto;
+    padding: 16px;
   }
   .demande-card-header {
     flex-direction: column;
     gap: 10px;
   }
+  .demande-card-badges,
   .demande-card-header > div:last-child {
     flex-direction: row;
     align-items: center;
@@ -305,7 +307,7 @@
 
   /* Client info dans card */
   .client-info-card {
-    padding: 8px 10px;
+    padding: 10px;
   }
 
   /* Badges */

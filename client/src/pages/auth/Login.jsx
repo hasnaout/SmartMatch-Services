@@ -59,7 +59,7 @@ const Login = () => {
       toast.success('Code envoyé !');
       setCodeEnvoye(true);
       if (data.code) {
-        toast(`🔑 Code de test : ${data.code}`, { duration: 10000 });
+        toast(` Code de test : ${data.code}`, { duration: 10000 });
       }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Erreur');
@@ -80,7 +80,7 @@ const Login = () => {
           nouveauMotDePasse: newPass,
         })
       );
-      toast.success('✅ Mot de passe réinitialisé !');
+      toast.success(' Mot de passe réinitialisé !');
       setShowForgot(false);
       setCodeEnvoye(false);
       setForgotEmail('');
@@ -138,7 +138,7 @@ const Login = () => {
             /* ── Formulaire Login ── */
             <div className="auth-card">
               <div className="auth-card-header">
-                <h1 className="auth-title">Bon retour 👋</h1>
+                <h1 className="auth-title">Bon retour </h1>
                 <p className="auth-subtitle">Connectez-vous à votre espace</p>
               </div>
 
@@ -204,7 +204,7 @@ const Login = () => {
             <div className="auth-card">
               <div className="auth-card-header">
                 <h1 className="auth-title">
-                  {codeEnvoye ? '🔑 Nouveau mot de passe' : '🔒 Mot de passe oublié'}
+                  {codeEnvoye ? ' Nouveau mot de passe' : ' Mot de passe oublié'}
                 </h1>
                 <p className="auth-subtitle">
                   {codeEnvoye
@@ -281,11 +281,6 @@ const Login = () => {
             </div>
           )}
 
-          <div className="auth-badges">
-            {['Client', 'Prestataire', 'Admin'].map(r => (
-              <span key={r} className="auth-badge">{r}</span>
-            ))}
-          </div>
         </div>
       </div>
     </div>

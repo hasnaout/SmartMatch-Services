@@ -7,16 +7,22 @@ import socket from '../../services/socket';
 import {
   Zap, LayoutDashboard, FileText, PlusCircle,
   Users, Settings, LogOut, ShieldCheck,
-  MessageCircle, Bell, CheckCheck, MapPin,CreditCard,TrendingUp,Tag, Star
+  MessageCircle, Bell, CheckCheck, MapPin, CreditCard, TrendingUp, Tag, Star,
+  CheckCircle, PartyPopper, BadgeCheck
 } from 'lucide-react';
 
 const typeIcon = {
-  nouvelle_demande: '🔔',
-  demande_acceptee: '🎉',
-  demande_terminee: '✅',
-  nouveau_message:  '💬',
-  nouvel_avis:      '⭐',
-  compte_verifie:   '✔️',
+  nouvelle_demande: Bell,
+  demande_acceptee: PartyPopper,
+  demande_terminee: CheckCircle,
+  nouveau_message:  MessageCircle,
+  nouvel_avis:      Star,
+  compte_verifie:   BadgeCheck,
+};
+
+const NotificationIcon = ({ type, size = 18 }) => {
+  const Icon = typeIcon[type] || Bell;
+  return <Icon size={size} strokeWidth={2.2} />;
 };
 
 const Navbar = () => {
@@ -42,14 +48,14 @@ useEffect(() => {
   if (!user) return;
   fetchNotifs();
 
-  console.log('🔌 Socket join_user:', user.id);
+  console.log('Socket join_user:', user.id);
   socket.emit('join_user', user.id);
 
   socket.on('nouvelle_notification', (notif) => {
-    console.log('🔔 Notification reçue:', notif);
+    console.log('Notification reçue:', notif);
     setNotifs(prev => [notif, ...prev]);
     setNonLus(prev => prev + 1);
-    toast(notif.message, { icon: typeIcon[notif.type] || '🔔' });
+    toast(notif.message, { icon: <NotificationIcon type={notif.type} size={18} /> });
   });
 
   return () => socket.off('nouvelle_notification');
@@ -204,7 +210,7 @@ useEffect(() => {
                   onClick={() => handleClickNotif(n)}
                 >
                   <div className="notif-icon" style={{ background: 'var(--accent-light)' }}>
-                    <span style={{ fontSize: 18 }}>{typeIcon[n.type] || '🔔'}</span>
+                    <NotificationIcon type={n.type} size={18} />
                   </div>
                   <div style={{ flex: 1 }}>
                     <div className="notif-text" style={{ fontWeight: n.lu ? 400 : 600 }}>

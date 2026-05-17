@@ -14,9 +14,9 @@ const statusConfig = {
 };
 
 const urgenceConfig = {
-  faible:  { label: '🟢 Faible',  className: 'badge badge-muted'   },
-  normale: { label: '🟡 Normale', className: 'badge badge-warning' },
-  urgente: { label: '🔴 Urgente', className: 'badge badge-danger'  },
+  faible:  { label: 'Faible',  className: 'badge badge-muted'   },
+  normale: { label: 'Normale', className: 'badge badge-warning' },
+  urgente: { label: 'Urgente', className: 'badge badge-danger'  },
 };
 
 // ── Modal Avis ──
@@ -36,7 +36,7 @@ const ModalAvis = ({ demande, onClose, onSuccess }) => {
         note,
         commentaire,
       });
-      toast.success('✅ Avis publié !');
+      toast.success('Avis publié !');
       onSuccess();
       onClose();
     } catch (err) {
@@ -77,7 +77,7 @@ const ModalAvis = ({ demande, onClose, onSuccess }) => {
           </div>
           {note > 0 && (
             <p style={{ fontSize:13, color:'var(--warning)', marginTop:8, fontWeight:500 }}>
-              {['','Mauvais 😞','Passable 😐','Bien 🙂','Très bien 😊','Excellent ! 🌟'][note]}
+              {['','Mauvais','Passable','Bien','Très bien','Excellent'][note]}
             </p>
           )}
         </div>
@@ -228,7 +228,7 @@ const MesDemandes = () => {
                       <div className="demande-card-title">{d.titre}</div>
                       <div className="demande-card-cat">{d.categorie}</div>
                     </div>
-                    <div style={{ display:'flex', flexDirection:'column', gap:5, alignItems:'flex-end' }}>
+                    <div className="demande-card-badges">
                       <span className={s.className}>{s.label}</span>
                       <span className={u.className}>{u.label}</span>
                     </div>
@@ -237,13 +237,13 @@ const MesDemandes = () => {
                   <p className="demande-card-body">{d.description}</p>
 
                   {(d.budget?.min > 0 || d.budget?.max > 0) && (
-                    <div style={{ marginBottom:12, fontSize:13, color:'var(--success)', fontWeight:500 }}>
-                      💰 {d.budget.min} – {d.budget.max} {d.budget.devise}
+                    <div className="demande-budget">
+                      Budget : {d.budget.min} - {d.budget.max} {d.budget.devise}
                     </div>
                   )}
 
                   <div className="demande-card-footer">
-                    <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
+                    <div className="demande-card-meta-row">
                       <div className="demande-card-meta">
                         <MapPin size={12} /> {d.localisation?.ville || 'Non précisé'}
                       </div>
@@ -251,7 +251,7 @@ const MesDemandes = () => {
                         <Calendar size={12} /> {formatDate(d.createdAt)}
                       </div>
                     </div>
-                    <div style={{ display:'flex', gap:6 }}>
+                    <div className="demande-card-actions">
                       {d.statut === 'terminée' && d.prestataireChoisi && !dejaNote && (
                         <button
                           className="btn-success"

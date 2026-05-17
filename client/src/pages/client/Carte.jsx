@@ -4,7 +4,7 @@ import Navbar from '../../components/layout/Navbar';
 import api from '../../services/api';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { MapPin, Search, Star, Filter } from 'lucide-react';
+import { MapPin, Search, Star, Filter, Wallet, CheckCircle, XCircle } from 'lucide-react';
 
 // Fix icônes Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -204,8 +204,8 @@ const Carte = () => {
                         {p.zoneGeographique?.ville || 'Non précisé'}
                       </div>
                       {p.tarifMin > 0 && (
-                        <div style={{ fontSize:12, color:'var(--success)', fontWeight:500 }}>
-                          💰 {p.tarifMin}–{p.tarifMax}
+                        <div style={{ display:'flex', alignItems:'center', gap:4, fontSize:12, color:'var(--success)', fontWeight:500 }}>
+                          <Wallet size={11} /> {p.tarifMin}–{p.tarifMax}
                         </div>
                       )}
                     </div>
@@ -274,14 +274,14 @@ const Carte = () => {
                         </div>
 
                         {p.notemoyenne > 0 && (
-                          <div style={{ fontSize:12, color:'#d97706', marginBottom:6 }}>
-                            ⭐ {p.notemoyenne}/5 ({p.nombreAvis} avis)
+                          <div style={{ display:'flex', alignItems:'center', gap:4, fontSize:12, color:'#d97706', marginBottom:6 }}>
+                            <Star size={12} fill="currentColor" /> {p.notemoyenne}/5 ({p.nombreAvis} avis)
                           </div>
                         )}
 
                         {p.tarifMin > 0 && (
-                          <div style={{ fontSize:12, color:'#059669', marginBottom:10, fontWeight:500 }}>
-                            💰 {p.tarifMin} – {p.tarifMax} MAD
+                          <div style={{ display:'flex', alignItems:'center', gap:4, fontSize:12, color:'#059669', marginBottom:10, fontWeight:500 }}>
+                            <Wallet size={12} /> {p.tarifMin} – {p.tarifMax} MAD
                           </div>
                         )}
 
@@ -290,12 +290,12 @@ const Carte = () => {
                           color: p.disponible ? '#059669' : '#dc2626',
                           fontWeight:600, marginBottom:10,
                         }}>
-                          {p.disponible ? '✅ Disponible' : '❌ Indisponible'}
+                          {p.disponible ? <><CheckCircle size={12} /> Disponible</> : <><XCircle size={12} /> Indisponible</>}
                         </div>
 
                         {p.zoneGeographique?.rayon && (
-                          <div style={{ fontSize:11, color:'#6b7280', marginBottom:10 }}>
-                            📍 Rayon d&apos;intervention : {p.zoneGeographique.rayon} km
+                          <div style={{ display:'flex', alignItems:'center', gap:4, fontSize:11, color:'#6b7280', marginBottom:10 }}>
+                            <MapPin size={11} /> Rayon d&apos;intervention : {p.zoneGeographique.rayon} km
                           </div>
                         )}
                       </div>

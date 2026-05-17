@@ -2,9 +2,40 @@ import { useEffect, useState } from 'react';
 import Navbar from '../../components/layout/Navbar';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { Plus, Edit, Trash2, Check, X, Eye, EyeOff } from 'lucide-react';
+import {
+  Plus, Edit, Trash2, Check, X, Eye, EyeOff,
+  Wrench, Zap, Laptop, Leaf, Palette, Building2, Hammer, Snowflake,
+  Package, Sparkles, ChefHat, Pencil, Megaphone, Globe, Home, Car,
+  Smartphone, Music, Camera
+} from 'lucide-react';
 
-const ICONES = ['🔧','⚡','💻','🌿','🎨','🏗️','🪚','❄️','📦','🧹','👨‍🍳','✏️','📢','🌐','🔨','🏠','🚗','📱','🎵','📷'];
+const ICONES = [
+  { value:'Wrench', label:'Outils', Icon:Wrench },
+  { value:'Zap', label:'Énergie', Icon:Zap },
+  { value:'Laptop', label:'Informatique', Icon:Laptop },
+  { value:'Leaf', label:'Jardinage', Icon:Leaf },
+  { value:'Palette', label:'Design', Icon:Palette },
+  { value:'Building2', label:'Construction', Icon:Building2 },
+  { value:'Hammer', label:'Travaux', Icon:Hammer },
+  { value:'Snowflake', label:'Climatisation', Icon:Snowflake },
+  { value:'Package', label:'Livraison', Icon:Package },
+  { value:'Sparkles', label:'Nettoyage', Icon:Sparkles },
+  { value:'ChefHat', label:'Cuisine', Icon:ChefHat },
+  { value:'Pencil', label:'Rédaction', Icon:Pencil },
+  { value:'Megaphone', label:'Marketing', Icon:Megaphone },
+  { value:'Globe', label:'Web', Icon:Globe },
+  { value:'Home', label:'Maison', Icon:Home },
+  { value:'Car', label:'Auto', Icon:Car },
+  { value:'Smartphone', label:'Mobile', Icon:Smartphone },
+  { value:'Music', label:'Audio', Icon:Music },
+  { value:'Camera', label:'Photo', Icon:Camera },
+];
+
+const ICON_COMPONENTS = Object.fromEntries(ICONES.map(({ value, Icon }) => [value, Icon]));
+const CategoryIcon = ({ name, size = 20 }) => {
+  const Icon = ICON_COMPONENTS[name] || Wrench;
+  return <Icon size={size} strokeWidth={2.1} />;
+};
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -12,7 +43,7 @@ const Categories = () => {
   const [showForm,   setShowForm]   = useState(false);
   const [editId,     setEditId]     = useState(null);
   const [saving,     setSaving]     = useState(false);
-  const [form, setForm] = useState({ nom:'', description:'', icone:'🔧', ordre:0 });
+  const [form, setForm] = useState({ nom:'', description:'', icone:'Wrench', ordre:0 });
 
   const fetchCategories = () => {
     setLoading(true);
@@ -30,14 +61,14 @@ const Categories = () => {
     try {
       if (editId) {
         await api.put(`/categories/${editId}`, form);
-        toast.success('✅ Catégorie mise à jour');
+        toast.success('Catégorie mise à jour');
       } else {
         await api.post('/categories', form);
-        toast.success('✅ Catégorie créée');
+        toast.success('Catégorie créée');
       }
       setShowForm(false);
       setEditId(null);
-      setForm({ nom:'', description:'', icone:'🔧', ordre:0 });
+      setForm({ nom:'', description:'', icone:'Wrench', ordre:0 });
       fetchCategories();
     } catch (err) {
       toast.error(err.response?.data?.message || 'Erreur');
@@ -56,7 +87,7 @@ const Categories = () => {
     if (!window.confirm('Supprimer cette catégorie ?')) return;
     try {
       await api.delete(`/categories/${id}`);
-      toast.success('✅ Catégorie supprimée');
+      toast.success('Catégorie supprimée');
       fetchCategories();
     } catch { toast.error('Erreur suppression'); }
   };
@@ -72,7 +103,7 @@ const Categories = () => {
   const handleCancel = () => {
     setShowForm(false);
     setEditId(null);
-    setForm({ nom:'', description:'', icone:'🔧', ordre:0 });
+    setForm({ nom:'', description:'', icone:'Wrench', ordre:0 });
   };
 
   return (
@@ -93,7 +124,7 @@ const Categories = () => {
         {showForm && (
           <div className="card" style={{ marginBottom:24, border:'2px solid var(--accent)', animation:'fadeUp 0.3s ease-out' }}>
             <h3 style={{ fontSize:16, fontWeight:700, marginBottom:20, color:'var(--accent2)' }}>
-              {editId ? '✏️ Modifier la catégorie' : '➕ Nouvelle catégorie'}
+              {editId ? <><Edit size={16} /> Modifier la catégorie</> : <><Plus size={16} /> Nouvelle catégorie</>}
             </h3>
 
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16, marginBottom:16 }}>
@@ -118,19 +149,22 @@ const Categories = () => {
             <div className="form-field" style={{ marginBottom:20 }}>
               <label className="form-label">Icône</label>
               <div style={{ display:'flex', flexWrap:'wrap', gap:8, marginTop:4 }}>
-                {ICONES.map(icone => (
+                {ICONES.map(({ value, label, Icon }) => (
                   <button
-                    key={icone}
+                    key={value}
                     type="button"
-                    onClick={() => setForm({ ...form, icone })}
+                    title={label}
+                    onClick={() => setForm({ ...form, icone: value })}
                     style={{
-                      width:40, height:40, borderRadius:10, fontSize:20,
-                      border: form.icone === icone ? '2px solid var(--accent)' : '2px solid var(--border)',
-                      background: form.icone === icone ? 'var(--accent-light)' : 'var(--bg3)',
+                      width:40, height:40, borderRadius:10,
+                      border: form.icone === value ? '2px solid var(--accent)' : '2px solid var(--border)',
+                      background: form.icone === value ? 'var(--accent-light)' : 'var(--bg3)',
+                      color: form.icone === value ? 'var(--accent2)' : 'var(--muted)',
                       cursor:'pointer', transition:'all 0.15s',
+                      display:'inline-flex', alignItems:'center', justifyContent:'center',
                     }}
                   >
-                    {icone}
+                    <Icon size={19} />
                   </button>
                 ))}
               </div>
@@ -175,12 +209,13 @@ const Categories = () => {
               }}>
                 <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:12 }}>
                   <div style={{
-                    width:48, height:48, borderRadius:14, fontSize:24,
+                    width:48, height:48, borderRadius:14,
                     display:'flex', alignItems:'center', justifyContent:'center',
                     background: cat.isActive ? 'var(--accent-light)' : 'var(--bg3)',
+                    color: cat.isActive ? 'var(--accent2)' : 'var(--muted)',
                     flexShrink:0,
                   }}>
-                    {cat.icone}
+                    <CategoryIcon name={cat.icone} size={22} />
                   </div>
                   <div style={{ flex:1 }}>
                     <div style={{ fontSize:15, fontWeight:700, color:'var(--text)', marginBottom:2 }}>

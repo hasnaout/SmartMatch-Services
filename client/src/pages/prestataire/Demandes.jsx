@@ -3,12 +3,12 @@ import Navbar from '../../components/layout/Navbar';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
-import { MapPin, Calendar, Filter, MessageCircle } from 'lucide-react';
+import { MapPin, Calendar, Filter, MessageCircle, Clock, AlertTriangle, Flame } from 'lucide-react';
 
 const urgenceConfig = {
-  faible:  { label: '🟢 Faible',  className: 'badge badge-muted'   },
-  normale: { label: '🟡 Normale', className: 'badge badge-warning' },
-  urgente: { label: '🔴 Urgente', className: 'badge badge-danger'  },
+  faible:  { label: 'Faible',  className: 'badge badge-muted'   },
+  normale: { label: 'Normale', className: 'badge badge-warning' },
+  urgente: { label: 'Urgente', className: 'badge badge-danger'  },
 };
 
 const DemandesPrestataire = () => {
@@ -58,9 +58,9 @@ const DemandesPrestataire = () => {
   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', flex: 1 }}>
     {[
       { val: '',        label: 'Toutes'      },
-      { val: 'faible',  label: '🟢 Faible'  },
-      { val: 'normale', label: '🟡 Normale' },
-      { val: 'urgente', label: '🔴 Urgente' },
+      { val: 'faible',  label: 'Faible',  icon: <Clock size={13} /> },
+      { val: 'normale', label: 'Normale', icon: <AlertTriangle size={13} /> },
+      { val: 'urgente', label: 'Urgente', icon: <Flame size={13} /> },
     ].map(f => (
       <button
         key={f.val}
@@ -68,7 +68,7 @@ const DemandesPrestataire = () => {
         onClick={() => setFilter(f.val)}
         style={{ padding: '8px 14px', fontSize: 13 }}
       >
-        {f.label}
+        {f.icon} {f.label}
       </button>
     ))}
   </div>
@@ -97,7 +97,7 @@ const DemandesPrestataire = () => {
               return (
                 <div
                   key={d._id}
-                  className="demande-card"
+                  className="demande-card prest-style"
                   style={{ animationDelay: `${i * 0.06}s` }}
                 >
                   <div className="demande-card-header">
@@ -105,43 +105,36 @@ const DemandesPrestataire = () => {
                       <div className="demande-card-title">{d.titre}</div>
                       <div className="demande-card-cat">{d.categorie}</div>
                     </div>
-                    <span className={u.className}>{u.label}</span>
+                    <div className="demande-card-badges">
+                      <span className={u.className}>{u.label}</span>
+                    </div>
                   </div>
 
                   <p className="demande-card-body">{d.description}</p>
 
                   {(d.budget?.min > 0 || d.budget?.max > 0) && (
-                    <div style={{ marginBottom: 12, fontSize: 13, color: 'var(--success)', fontWeight: 500 }}>
-                      💰 {d.budget.min} – {d.budget.max} {d.budget.devise}
+                    <div className="demande-budget">
+                      Budget : {d.budget.min} - {d.budget.max} {d.budget.devise}
                     </div>
                   )}
 
                   {/* Client info */}
-                  <div style={{
-                    display: 'flex', alignItems: 'center', gap: 8,
-                    padding: '10px 14px', background: 'var(--bg3)',
-                    borderRadius: 10, marginBottom: 14,
-                  }}>
-                    <div style={{
-                      width: 28, height: 28, borderRadius: '50%',
-                      background: 'linear-gradient(135deg, var(--accent), var(--accent2))',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: 11, fontWeight: 700, color: '#fff', flexShrink: 0,
-                    }}>
+                  <div className="client-info-card">
+                    <div className="client-avatar">
                       {d.client?.prenom?.[0]}{d.client?.nom?.[0]}
                     </div>
-                    <div>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text2)' }}>
+                    <div className="client-info-details">
+                      <div className="client-info-name">
                         {d.client?.prenom} {d.client?.nom}
                       </div>
-                      <div style={{ fontSize: 11, color: 'var(--muted)' }}>
+                      <div className="client-info-email">
                         {d.client?.email}
                       </div>
                     </div>
                   </div>
 
                   <div className="demande-card-footer">
-                    <div style={{ display: 'flex', gap: 12 }}>
+                    <div className="demande-card-meta-row">
                       <div className="demande-card-meta">
                         <MapPin size={12} />
                         {d.localisation?.ville || 'Non précisé'}
@@ -150,6 +143,8 @@ const DemandesPrestataire = () => {
                         <Calendar size={12} />
                         {formatDate(d.createdAt)}
                       </div>
+                    </div>
+                    <div className="demande-card-actions">
                       <Link
   to={`/prestataire/missions/${d._id}`}
   className="btn-secondary"

@@ -3,7 +3,7 @@ import Navbar from '../../components/layout/Navbar';
 import api from '../../services/api';
 import {
   Users, FileText, CreditCard, Star,
-  TrendingUp, CheckCircle, Clock, XCircle,
+  TrendingUp, CheckCircle, Clock, XCircle, Wallet
 } from 'lucide-react';
 
 // Composant graphique barre simple
@@ -194,7 +194,7 @@ const Analytics = () => {
           {/* Graphique inscriptions */}
           <div className="card">
             <h3 style={{ fontSize:15, fontWeight:700, marginBottom:20, color:'var(--accent2)' }}>
-              👥 Inscriptions (6 derniers mois)
+              <Users size={16} /> Inscriptions (6 derniers mois)
             </h3>
             <BarChart data={inscriptionsData} color="var(--gradient)" />
           </div>
@@ -202,7 +202,7 @@ const Analytics = () => {
           {/* Graphique revenus */}
           <div className="card">
             <h3 style={{ fontSize:15, fontWeight:700, marginBottom:20, color:'var(--accent2)' }}>
-              💰 Revenus MAD (6 derniers mois)
+              <Wallet size={16} /> Revenus MAD (6 derniers mois)
             </h3>
             <BarChart
               data={revenusData.map(d => ({ ...d, value: Math.round(d.value) }))}
@@ -216,7 +216,7 @@ const Analytics = () => {
           {/* Répartition utilisateurs */}
           <div className="card" style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:16 }}>
             <h3 style={{ fontSize:15, fontWeight:700, color:'var(--accent2)', alignSelf:'flex-start' }}>
-              👥 Répartition utilisateurs
+              <Users size={16} /> Répartition utilisateurs
             </h3>
             <DonutChart segments={[
               { value: stats?.users?.clients || 0,      color:'var(--accent)',  label:'Clients'      },
@@ -237,7 +237,7 @@ const Analytics = () => {
           {/* Statuts demandes */}
           <div className="card" style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:16 }}>
             <h3 style={{ fontSize:15, fontWeight:700, color:'var(--accent2)', alignSelf:'flex-start' }}>
-              📋 Statuts demandes
+              <FileText size={16} /> Statuts demandes
             </h3>
             <DonutChart segments={[
               { value: demandes.filter(d=>d.statut==='publiée').length,  color:'var(--accent)',  },
@@ -266,7 +266,7 @@ const Analytics = () => {
           {/* Méthodes paiement */}
           <div className="card" style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:16 }}>
             <h3 style={{ fontSize:15, fontWeight:700, color:'var(--accent2)', alignSelf:'flex-start' }}>
-              💳 Méthodes paiement
+              <CreditCard size={16} /> Méthodes paiement
             </h3>
             <DonutChart segments={[
               { value: paiements.filter(p=>p.methode==='en_ligne').length, color:'var(--accent)'  },
@@ -288,7 +288,7 @@ const Analytics = () => {
         {/* Graphique missions */}
         <div className="card">
           <h3 style={{ fontSize:15, fontWeight:700, marginBottom:20, color:'var(--accent2)' }}>
-            📋 Nouvelles missions (6 derniers mois)
+            <FileText size={16} /> Nouvelles missions (6 derniers mois)
           </h3>
           <BarChart
             data={missionsData}

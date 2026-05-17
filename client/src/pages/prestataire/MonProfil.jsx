@@ -3,7 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/layout/Navbar';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { Save, Plus, X } from 'lucide-react';
+import { Save, Plus, X, CheckCircle, Clock } from 'lucide-react';
 
 const CATEGORIES = [
   'Plomberie', 'Électricité', 'Informatique', 'Jardinage',
@@ -72,7 +72,7 @@ const MonProfil = () => {
     try {
       await api.put('/prestataires/profil', form);
       await api.put('/prestataires/disponibilite', { disponible });
-      toast.success('✅ Profil mis à jour !');
+      toast.success('Profil mis à jour !');
     } catch {
       toast.error('Erreur lors de la sauvegarde');
     } finally {
@@ -114,7 +114,7 @@ const MonProfil = () => {
         border:'1px solid rgba(37,99,235,0.2)',
         fontSize:13, fontWeight:600, color:'var(--info)',
       }}>
-        ✅ Compte vérifié
+        <CheckCircle size={13} /> Compte vérifié
       </span>
     )}
     {!profil?.user?.isVerified && (
@@ -125,7 +125,7 @@ const MonProfil = () => {
         border:'1px solid rgba(217,119,6,0.2)',
         fontSize:13, fontWeight:600, color:'var(--warning)',
       }}>
-        ⏳ En attente de vérification
+        <Clock size={13} /> En attente de vérification
       </span>
     )}
   </h2>
@@ -154,7 +154,7 @@ const MonProfil = () => {
                   <span className="toggle-slider" />
                 </label>
                 <span className="toggle-label">
-                  {disponible ? '🟢 Disponible' : '🔴 Indisponible'}
+                  {disponible ? 'Disponible' : 'Indisponible'}
                 </span>
               </div>
             </div>

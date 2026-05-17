@@ -8,7 +8,8 @@ import { useAuth } from '../../context/AuthContext';
 import { formatMontant } from '../../utils/paiementHelper';
 import {
   ArrowLeft, MapPin, Calendar, Send,
-  MessageCircle, CheckCircle, XCircle, User, Star, CreditCard, Banknote
+  MessageCircle, CheckCircle, XCircle, User, Star, CreditCard, Banknote,
+  ClipboardList, Wallet, UserCheck, Bot, Search, Images, ThumbsUp, Circle
 } from 'lucide-react';
 
 const statusConfig = {
@@ -123,7 +124,7 @@ const DetailDemande = () => {
     if (!window.confirm('Confirmer le choix de ce prestataire ?')) return;
     try {
       await api.put(`/demandes/${id}/choisir-prestataire`, { prestataireId });
-      toast.success('✅ Prestataire choisi ! La mission démarre.');
+      toast.success('Prestataire choisi ! La mission démarre.');
       const { data } = await api.get(`/demandes/${id}`);
       setDemande(data.demande);
     } catch (err) {
@@ -136,7 +137,7 @@ const DetailDemande = () => {
     if (!window.confirm('Marquer cette demande comme terminée ?')) return;
     try {
       await api.put(`/demandes/${id}/statut`, { statut: 'terminée' });
-      toast.success('✅ Demande terminée !');
+      toast.success('Demande terminée !');
       const [{ data }, paiementResponse] = await Promise.all([
         api.get(`/demandes/${id}`),
         api.get(`/paiements/demande/${id}`).catch(() => ({ data: { paiement: null } })),
@@ -229,7 +230,7 @@ const DetailDemande = () => {
               <span className={s.className}>{s.label}</span>
               <span className="badge badge-muted">{demande.categorie}</span>
               {demande.urgence === 'urgente' && (
-                <span className="badge badge-danger">🔴 Urgente</span>
+                <span className="badge badge-danger"><Circle size={8} fill="currentColor" /> Urgente</span>
               )}
             </div>
           </div>
@@ -253,7 +254,7 @@ const DetailDemande = () => {
             {/* Détails */}
             <div className="card">
               <h3 style={{ fontSize:15, fontWeight:700, marginBottom:14, color:'var(--accent2)' }}>
-                📋 Détails
+                <ClipboardList size={16} /> Détails
               </h3>
               <p style={{ fontSize:14, color:'var(--muted)', lineHeight:1.7, marginBottom:16 }}>
                 {demande.description}
@@ -271,8 +272,8 @@ const DetailDemande = () => {
                   {formatDate(demande.createdAt)}
                 </div>
                 {(demande.budget?.min > 0 || demande.budget?.max > 0) && (
-                  <div style={{ fontSize:13, color:'var(--success)', fontWeight:500 }}>
-                    💰 Budget : {demande.budget.min} – {demande.budget.max} {demande.budget.devise}
+                  <div style={{ display:'flex', alignItems:'center', gap:8, fontSize:13, color:'var(--success)', fontWeight:500 }}>
+                    <Wallet size={14} /> Budget : {demande.budget.min} – {demande.budget.max} {demande.budget.devise}
                   </div>
                 )}
               </div>
@@ -282,7 +283,7 @@ const DetailDemande = () => {
             {canPayer && (
               <div className="card">
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:14, color:'var(--accent2)' }}>
-                  💳 Paiement
+                  <CreditCard size={16} /> Paiement
                 </h3>
 
                 {paiement ? (
@@ -368,7 +369,7 @@ const DetailDemande = () => {
             {prestataireUser ? (
               <div className="card">
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:14, color:'var(--accent2)' }}>
-                  👤 Prestataire assigné
+                  <UserCheck size={16} /> Prestataire assigné
                 </h3>
                 <div style={{ display:'flex', alignItems:'center', gap:12 }}>
                   <div style={{
@@ -393,7 +394,7 @@ const DetailDemande = () => {
                   background:'var(--success-light)', borderRadius:10,
                   fontSize:13, color:'var(--success)', fontWeight:500,
                 }}>
-                  ✅ Mission en cours — utilisez la messagerie pour communiquer
+                  <CheckCircle size={14} /> Mission en cours — utilisez la messagerie pour communiquer
                 </div>
               </div>
             ) : (
@@ -412,7 +413,7 @@ const DetailDemande = () => {
             {!demande.prestataireChoisi && demande.prestatairesRecommandes?.length > 0 && (
               <div className="card">
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16, color:'var(--accent2)' }}>
-                  🤖 Prestataires recommandés ({demande.prestatairesRecommandes.length})
+                  <Bot size={16} /> Prestataires recommandés ({demande.prestatairesRecommandes.length})
                 </h3>
                 <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                   {[...demande.prestatairesRecommandes]
@@ -450,7 +451,7 @@ const DetailDemande = () => {
                             background: r.score >= 70 ? 'var(--success-light)' : r.score >= 40 ? 'var(--warning-light)' : 'var(--bg3)',
                             color:      r.score >= 70 ? 'var(--success)'       : r.score >= 40 ? 'var(--warning)'       : 'var(--muted)',
                           }}>
-                            {r.score >= 70 ? '⭐ Excellent' : r.score >= 40 ? '👍 Bien' : '🔵 Correct'}
+                            {r.score >= 70 ? <><Star size={11} fill="currentColor" /> Excellent</> : r.score >= 40 ? <><ThumbsUp size={11} /> Bien</> : <><Circle size={8} fill="currentColor" /> Correct</>}
                           </span>
                           <button
                             className="btn-primary"
@@ -470,7 +471,7 @@ const DetailDemande = () => {
             {!demande.prestataireChoisi && demande.prestatairesRecommandes?.length === 0 && (
               <div className="card">
                 <div style={{ textAlign:'center', padding:'20px 0', color:'var(--muted)' }}>
-                  <p style={{ fontSize:14 }}>🔍 Aucun prestataire disponible pour cette catégorie</p>
+                  <p style={{ fontSize:14 }}><Search size={16} /> Aucun prestataire disponible pour cette catégorie</p>
                   <p style={{ fontSize:12, marginTop:4 }}>
                     Consultez la liste des prestataires pour en contacter un directement
                   </p>
@@ -482,7 +483,7 @@ const DetailDemande = () => {
             {demande.fichiers?.length > 0 && (
               <div className="card">
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:14, color:'var(--accent2)' }}>
-                  📸 Photos ({demande.fichiers.length})
+                  <Images size={16} /> Photos ({demande.fichiers.length})
                 </h3>
                 <div style={{ display:'flex', flexWrap:'wrap', gap:10 }}>
                   {demande.fichiers.map((f, i) => (
@@ -524,7 +525,7 @@ const DetailDemande = () => {
               {!autreUserId ? (
                 <div style={{ textAlign:'center', color:'var(--muted)', fontSize:13, marginTop:60 }}>
                   <MessageCircle size={40} style={{ marginBottom:12, opacity:0.3 }} />
-                  <p>💬 La messagerie sera disponible</p>
+                  <p>La messagerie sera disponible</p>
                   <p>après avoir choisi un prestataire</p>
                 </div>
               ) : messages.length === 0 ? (

@@ -45,7 +45,7 @@ const ClientDashboard = () => {
         {/* Header */}
         <div className="dashboard-header">
           <h1 className="dashboard-greeting">
-            Bonjour, <span>{user?.prenom}</span> 👋
+            Bonjour, <span>{user?.prenom}</span>
           </h1>
           <p className="dashboard-subtitle">
             Voici un aperçu de vos demandes de service
@@ -102,23 +102,27 @@ const ClientDashboard = () => {
               {demandes.slice(0, 6).map((d, i) => {
                 const s = statusConfig[d.statut] || statusConfig['publiée'];
                 return (
-                  <div key={d._id} className="demande-card" style={{ animationDelay: `${i * 0.06}s` }}>
+                  <div key={d._id} className="demande-card client-style" style={{ animationDelay: `${i * 0.06}s` }}>
                     <div className="demande-card-header">
                       <div>
                         <div className="demande-card-title">{d.titre}</div>
                         <div className="demande-card-cat">{d.categorie}</div>
                       </div>
-                      <span className={s.className}>{s.label}</span>
+                      <div className="demande-card-badges">
+                        <span className={s.className}>{s.label}</span>
+                      </div>
                     </div>
                     <p className="demande-card-body">{d.description}</p>
                     <div className="demande-card-footer">
-                      <div className="demande-card-meta">
-                        <MapPin size={12} />
-                        {d.localisation?.ville || 'Non précisé'}
-                      </div>
-                      <div className="demande-card-meta">
-                        <Calendar size={12} />
-                        {formatDate(d.createdAt)}
+                      <div className="demande-card-meta-row">
+                        <div className="demande-card-meta">
+                          <MapPin size={12} />
+                          {d.localisation?.ville || 'Non précisé'}
+                        </div>
+                        <div className="demande-card-meta">
+                          <Calendar size={12} />
+                          {formatDate(d.createdAt)}
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Navbar from '../../components/layout/Navbar';
 import api from '../../services/api';
-import { MapPin, Star, Briefcase, ArrowLeft, ChevronDown, ChevronUp, PlusCircle } from 'lucide-react';
+import {
+  MapPin, Star, Briefcase, ArrowLeft, ChevronDown, ChevronUp, PlusCircle,
+  CheckCircle, XCircle, Trophy, Wallet, Gem, ClipboardList
+} from 'lucide-react';
 import PropTypes from 'prop-types';
 
 const Stars = ({ note, size = 16 }) => (
@@ -105,7 +108,7 @@ const ProfilPrestataire = () => {
                   border:'1px solid rgba(255,255,255,0.4)',
                    fontSize:12, fontWeight:600, color:'#fff',
                 }}>
-                 ✅ Vérifié
+                 <CheckCircle size={13} /> Vérifié
                 </span>
                     )}
                 </h1>
@@ -132,7 +135,7 @@ const ProfilPrestataire = () => {
                     color:'#fff', fontSize:12, fontWeight:600,
                     border:`1px solid ${prestataire.disponible ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}`,
                   }}>
-                    {prestataire.disponible ? '✅ Disponible' : '❌ Indisponible'}
+                    {prestataire.disponible ? <><CheckCircle size={13} /> Disponible</> : <><XCircle size={13} /> Indisponible</>}
                   </span>
                 </div>
 
@@ -191,17 +194,17 @@ const ProfilPrestataire = () => {
               </h3>
               <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
                 {[
-                  { label:'Missions réussies', value: prestataire.nombreMissionsReussies, icon:'🏆' },
-                  { label:'Années d\'exp.',    value: `${prestataire.experience || 0} ans`, icon:'💼' },
-                  { label:'Tarif min',         value: prestataire.tarifMin > 0 ? `${prestataire.tarifMin} MAD` : 'N/A', icon:'💰' },
-                  { label:'Tarif max',         value: prestataire.tarifMax > 0 ? `${prestataire.tarifMax} MAD` : 'N/A', icon:'💎' },
+                  { label:'Missions réussies', value: prestataire.nombreMissionsReussies, icon:<Trophy size={22} /> },
+                  { label:'Années d\'exp.',    value: `${prestataire.experience || 0} ans`, icon:<Briefcase size={22} /> },
+                  { label:'Tarif min',         value: prestataire.tarifMin > 0 ? `${prestataire.tarifMin} MAD` : 'N/A', icon:<Wallet size={22} /> },
+                  { label:'Tarif max',         value: prestataire.tarifMax > 0 ? `${prestataire.tarifMax} MAD` : 'N/A', icon:<Gem size={22} /> },
                 ].map((s, i) => (
                   <div key={i} style={{
                     background:'var(--bg3)', borderRadius:12,
                     padding:'14px', textAlign:'center',
                     border:'1px solid var(--border)',
                   }}>
-                    <div style={{ fontSize:22, marginBottom:4 }}>{s.icon}</div>
+                    <div style={{ marginBottom:4, color:'var(--prest-accent)' }}>{s.icon}</div>
                     <div style={{ fontSize:16, fontWeight:700, color:'var(--text)', marginBottom:2 }}>
                       {s.value}
                     </div>
@@ -263,7 +266,7 @@ const ProfilPrestataire = () => {
                 }}
               >
                 <h3 style={{ fontSize:15, fontWeight:700, color:'var(--prest-accent)' }}>
-                  ⭐ Avis clients ({avis.length})
+                  <Star size={16} fill="var(--warning)" color="var(--warning)" /> Avis clients ({avis.length})
                 </h3>
                 {avisOpen ? <ChevronUp size={18} color="var(--muted)" /> : <ChevronDown size={18} color="var(--muted)" />}
               </button>
@@ -329,7 +332,7 @@ const ProfilPrestataire = () => {
                           </div>
                           {a.demande?.titre && (
                             <div style={{ fontSize:12, color:'var(--accent)', marginBottom:8, fontWeight:500 }}>
-                              📋 {a.demande.titre}
+                              <ClipboardList size={13} /> {a.demande.titre}
                             </div>
                           )}
                           {a.commentaire && (

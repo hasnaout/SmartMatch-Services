@@ -55,7 +55,7 @@ useEffect(() => {
         {/* Header */}
         <div className="dashboard-header">
           <h1 className="dashboard-greeting">
-            Bonjour, <span>{user?.prenom}</span> 👋
+            Bonjour, <span>{user?.prenom}</span>
           </h1>
           <p className="dashboard-subtitle">
             Voici les missions disponibles correspondant à votre profil
@@ -134,7 +134,7 @@ useEffect(() => {
                      fontSize:12, fontWeight:600, color:'var(--info)',
                       border:'1px solid rgba(37,99,235,0.2)',
                  }}>
-                   ✅ Vérifié
+                   <CheckCircle size={14} /> Vérifié
                   </span>
                         )}
                    </h3>
@@ -207,7 +207,7 @@ useEffect(() => {
                 return (
                   <div
                     key={d._id}
-                    className="demande-card"
+                    className="demande-card prest-style"
                     style={{ animationDelay: `${i * 0.06}s` }}
                   >
                     <div className="demande-card-header">
@@ -215,7 +215,7 @@ useEffect(() => {
                         <div className="demande-card-title">{d.titre}</div>
                         <div className="demande-card-cat">{d.categorie}</div>
                       </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-end' }}>
+                      <div className="demande-card-badges">
                         <span className={s.className}>{s.label}</span>
                         <span className={u.className}>{u.label}</span>
                       </div>
@@ -224,19 +224,21 @@ useEffect(() => {
                     <p className="demande-card-body">{d.description}</p>
 
                     {(d.budget?.min > 0 || d.budget?.max > 0) && (
-                      <div style={{ marginBottom: 12, fontSize: 13, color: 'var(--success)', fontWeight: 500 }}>
-                        💰 {d.budget.min} – {d.budget.max} {d.budget.devise}
+                      <div className="demande-budget">
+                         Budget : {d.budget.min} - {d.budget.max} {d.budget.devise}
                       </div>
                     )}
 
                     <div className="demande-card-footer">
-                      <div className="demande-card-meta">
-                        <MapPin size={12} />
-                        {d.localisation?.ville || 'Non précisé'}
-                      </div>
-                      <div className="demande-card-meta">
-                        <Calendar size={12} />
-                        {formatDate(d.createdAt)}
+                      <div className="demande-card-meta-row">
+                        <div className="demande-card-meta">
+                          <MapPin size={12} />
+                          {d.localisation?.ville || 'Non précisé'}
+                        </div>
+                        <div className="demande-card-meta">
+                          <Calendar size={12} />
+                          {formatDate(d.createdAt)}
+                        </div>
                       </div>
                     </div>
                   </div>

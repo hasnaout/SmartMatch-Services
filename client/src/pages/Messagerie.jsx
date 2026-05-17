@@ -103,7 +103,7 @@ const Messagerie = () => {
 
         <div className="dashboard-header" style={{ marginBottom: 20 }}>
           <h1 className="dashboard-greeting">
-            <span>Messagerie</span> 💬
+            <span>Messagerie</span>
           </h1>
           <p className="dashboard-subtitle">
             Communiquez avec vos clients et prestataires

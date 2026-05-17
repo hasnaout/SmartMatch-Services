@@ -77,7 +77,7 @@ const Register = () => {
 
           <div className="auth-card">
             <div className="auth-card-header">
-              <h1 className="auth-title">Créer un compte ✨</h1>
+              <h1 className="auth-title">Créer un compte </h1>
               <p className="auth-subtitle">Rejoignez la plateforme intelligente</p>
             </div>
 

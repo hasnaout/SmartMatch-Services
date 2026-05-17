@@ -142,7 +142,7 @@ tbody td {
 .demandes-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
+  gap: 28px;
 }
 @media (min-width: 640px) {
   .demandes-grid { grid-template-columns: repeat(2, 1fr); }
@@ -153,52 +153,224 @@ tbody td {
 
 /* Client demande card */
 .demande-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 254px;
+  background: #fff;
+  border: 1px solid rgba(226, 232, 240, 0.78);
+  border-radius: 8px;
+  padding: 22px;
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
   animation: fadeUp 0.5s ease-out both;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.12);
+}
+.demande-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 92% 4%, rgba(14, 165, 233, 0.12), transparent 24%);
 }
 .demande-card:hover {
-  border-color: var(--border2);
-  box-shadow: var(--shadow);
-  transform: translateY(-2px);
+  border-color: rgba(203, 213, 225, 0.95);
+  box-shadow: 0 22px 44px rgba(15, 23, 42, 0.16);
+  transform: translateY(-3px);
 }
 .demande-card.client-style {
-  border-top: 3px solid;
-  border-image: var(--client-gradient) 1;
+  border-top: 1px solid rgba(226, 232, 240, 0.78);
 }
 .demande-card.prest-style {
-  border-top: 3px solid;
-  border-image: var(--prest-gradient) 1;
+  border-top: 1px solid rgba(226, 232, 240, 0.78);
+}
+.demande-card.client-style::before {
+  background: radial-gradient(circle at 92% 4%, rgba(236, 72, 153, 0.1), transparent 24%);
+}
+.demande-card.prest-style::before {
+  background: radial-gradient(circle at 92% 4%, rgba(99, 102, 241, 0.12), transparent 24%);
 }
 
 .demande-card-header {
-  display: flex; align-items: flex-start;
-  justify-content: space-between; margin-bottom: 12px; gap: 8px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 16px;
+}
+.demande-card-header > div:first-child {
+  position: relative;
+  min-width: 0;
 }
 .demande-card-title {
-  font-size: 15px; font-weight: 600;
-  color: var(--text); margin-bottom: 3px;
+  font-size: 16px; font-weight: 700;
+  color: #111827; margin-bottom: 5px;
+  line-height: 1.35;
 }
-.demande-card-cat  { font-size: 12px; color: var(--muted); }
+.demande-card-cat  {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: #eef2ff;
+  border: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: #4f46e5;
+}
+.demande-card.prest-style .demande-card-cat {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+.demande-card-badges {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  max-width: 48%;
+}
+.demande-card-badges .badge {
+  min-height: 28px;
+  padding: 6px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.demande-card-badges .badge-accent {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+.demande-card-badges .badge-warning {
+  background: #fff7ed;
+  color: #c2410c;
+}
+.demande-card-badges .badge-success {
+  background: #dcfce7;
+  color: #15803d;
+}
+.demande-card-badges .badge-danger {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+.demande-card-badges .badge-muted {
+  background: #ecfeff;
+  color: #0e7490;
+}
 .demande-card-body {
-  font-size: 13px; color: var(--muted); line-height: 1.6;
-  margin-bottom: 14px;
+  position: relative;
+  z-index: 1;
+  font-size: 13px; color: #71717a; line-height: 1.65;
+  margin-bottom: 22px;
   display: -webkit-box;
   -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
+.demande-budget {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 16px;
+  padding: 7px 11px;
+  background: linear-gradient(135deg, #dcfce7, #f0fdf4);
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  color: #047857;
+  font-size: 15px;
+  font-weight: 700;
+}
+.client-info-card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  margin: -4px 0 18px;
+}
+.client-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.client-info-details {
+  min-width: 0;
+}
+.client-info-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1f2937;
+}
+.client-info-email {
+  font-size: 11px;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .demande-card-footer {
+  position: relative;
+  z-index: 1;
   display: flex; align-items: center;
   justify-content: space-between;
-  padding-top: 12px; border-top: 1px solid var(--border);
-  flex-wrap: wrap; gap: 8px;
+  margin-top: auto;
+  padding-top: 18px; border-top: 1px solid #eceff3;
+  flex-wrap: wrap; gap: 12px;
 }
 .demande-card-meta {
   display: flex; align-items: center; gap: 5px;
-  font-size: 12px; color: var(--muted);
+  font-size: 12px; color: #8a8f98;
+  min-width: 0;
+}
+.demande-card-meta-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.demande-card-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.demande-card .btn-secondary {
+  background: linear-gradient(135deg, #111827, #312e81);
+  border-color: transparent;
+  color: #fff;
+  border-radius: 6px;
+  font-weight: 700;
+  box-shadow: 0 10px 18px rgba(49, 46, 129, 0.22);
+}
+.demande-card .btn-secondary:hover {
+  background: linear-gradient(135deg, #000, #4338ca);
+  border-color: #000;
+  color: #fff;
+}
+.demande-card.prest-style .btn-secondary {
+  background: linear-gradient(135deg, #075985, #2563eb);
+  box-shadow: 0 10px 18px rgba(37, 99, 235, 0.22);
+}
+.demande-card.prest-style .btn-secondary:hover {
+  background: linear-gradient(135deg, #0c4a6e, #1d4ed8);
 }
 
 /* ── Welcome banner ── */

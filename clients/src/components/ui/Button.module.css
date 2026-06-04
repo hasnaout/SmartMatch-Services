@@ -1,0 +1,69 @@
+/* src/components/ui/Button.module.css */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  font-weight: var(--font-semibold);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  outline: none;
+}
+.btn:focus-visible {
+  box-shadow: 0 0 0 3px var(--color-primary-border);
+}
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* Variants */
+.primary {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+.primary:hover:not(:disabled)  { background: var(--color-primary-dark); }
+.primary:active:not(:disabled) { transform: scale(0.98); }
+
+.secondary {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+.secondary:hover:not(:disabled) { background: var(--color-border); }
+
+.ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-color: transparent;
+}
+.ghost:hover:not(:disabled) { background: var(--color-surface-2); color: var(--color-text); }
+
+.danger {
+  background: var(--color-error-bg);
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+.danger:hover:not(:disabled) { background: var(--color-error); color: var(--color-white); }
+
+/* Sizes */
+.sm  { font-size: var(--text-xs);  padding: var(--space-1) var(--space-3); height: 32px; }
+.md  { font-size: var(--text-sm);  padding: var(--space-2) var(--space-4); height: 40px; }
+.lg  { font-size: var(--text-base);padding: var(--space-3) var(--space-6); height: 48px; }
+
+.fullWidth { width: 100%; }
+
+/* Spinner */
+.spinner {
+  position: absolute;
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+.content        { display: contents; }
+.contentHidden  { visibility: hidden; }

@@ -1,0 +1,134 @@
+/* src/layouts/AuthLayout.module.css */
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── Panneau gauche ── */
+.brand {
+  position: relative;
+  flex: 0 0 44%;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-dark) 0%,
+    var(--color-primary)      60%,
+    var(--color-primary-light) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12);
+  overflow: hidden;
+}
+
+.brandInner {
+  position: relative;
+  z-index: 1;
+  color: var(--color-white);
+  animation: fadeInUp var(--transition-slow) both;
+}
+
+.logo {
+  width: 56px;
+  height: 56px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  margin-bottom: var(--space-6);
+}
+
+.brandTitle {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-bold);
+  color: var(--color-white);
+  margin-bottom: var(--space-3);
+}
+
+.brandSubtitle {
+  font-size: var(--text-base);
+  color: rgba(255,255,255,0.75);
+  line-height: 1.7;
+  margin-bottom: var(--space-8);
+  max-width: 320px;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.featureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: rgba(255,255,255,0.85);
+  line-height: 1.5;
+}
+
+.featureIcon {
+  flex-shrink: 0;
+  color: rgba(255,255,255,0.6);
+  font-size: var(--text-xs);
+  margin-top: 3px;
+}
+
+/* Décoration cercles */
+.brandDecor {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 80% 10%,  rgba(255,255,255,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 20% 90%,  rgba(255,255,255,0.06) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+/* ── Panneau droit ── */
+.form {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  padding: var(--space-8);
+}
+
+.formInner {
+  width: 100%;
+  max-width: 440px;
+  animation: fadeInUp var(--transition-slow) 80ms both;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-6);
+  transition: color var(--transition-fast);
+}
+.backLink:hover { color: var(--color-primary); }
+
+.formCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-md);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .wrapper  { flex-direction: column; }
+  .brand    { flex: 0 0 auto; padding: var(--space-8) var(--space-6); min-height: 220px; }
+  .brandSubtitle, .features { display: none; }
+  .form     { padding: var(--space-6) var(--space-4); }
+  .formCard { padding: var(--space-6); }
+}

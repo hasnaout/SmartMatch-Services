@@ -1,5 +1,6 @@
 const express = require('express');
-const router = express.Router();
+const router  = express.Router();
+
 const {
   creerDemande,
   getMesDemandes,
@@ -7,30 +8,61 @@ const {
   getDemande,
   updateStatut,
   choisirPrestataire,
-  terminerMission
+  terminerMission,
 } = require('../controllers/demandeController');
-const { protect } = require('../middleware/authMiddleware');
-const { authorizeRoles } = require('../middleware/roleMiddleware');
 
-// POST /api/demandes — créer une demande (client)
-router.post('/', protect, authorizeRoles('client'), creerDemande);
+const { protect, authorize }  = require('../middleware/authMiddleware');
 
-// GET /api/demandes/mes-demandes — demandes du client connecté
-router.get('/mes-demandes', protect, authorizeRoles('client'), getMesDemandes);
+const {
+  validateMongoId,
+  validateCreerDemande,
+  validateUpdateStatut,
+  validateChoisirPrestataire,
+} = require('../middleware/demandeValidator');
 
-// GET /api/demandes/disponibles — demandes visibles par le prestataire
-router.get('/disponibles', protect, authorizeRoles('prestataire'), getDemandesDisponibles);
+// ── Client ──
+router.post('/',
+  protect, authorize('client'),
+  validateCreerDemande,
+  creerDemande
+);
 
-// GET /api/demandes/:id — détail d'une demande
-router.get('/:id', protect, getDemande);
+router.get('/mes-demandes',
+  protect, authorize('client'),
+  getMesDemandes
+);
 
-// PUT /api/demandes/:id/statut — changer le statut
-router.put('/:id/statut', protect, updateStatut);
+router.put('/:id/choisir-prestataire',
+  protect, authorize('client'),
+  validateMongoId, validateChoisirPrestataire,
+  choisirPrestataire
+);
 
-// PUT /api/demandes/:id/choisir-prestataire — choisir un prestataire
-router.put('/:id/choisir-prestataire', protect, authorizeRoles('client'), choisirPrestataire);
+// ── Prestataire ──
+router.get('/disponibles',
+  protect, authorize('prestataire'),
+  getDemandesDisponibles
+);
 
-// PUT /api/demandes/:id/terminer — prestataire termine la mission
-router.put('/:id/terminer', protect, authorizeRoles('prestataire'), terminerMission);
+router.put('/:id/terminer',
+  protect, authorize('prestataire'),
+  validateMongoId,
+  terminerMission
+);
+
+// ── Client + Admin ──
+// CORRECTION : authorize explicite — prestataire ne peut pas changer le statut
+router.put('/:id/statut',
+  protect, authorize('client', 'admin'),
+  validateMongoId, validateUpdateStatut,
+  updateStatut
+);
+
+// ── Tous rôles authentifiés ──
+router.get('/:id',
+  protect,
+  validateMongoId,
+  getDemande
+);
 
 module.exports = router;

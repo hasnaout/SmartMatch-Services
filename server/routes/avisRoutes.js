@@ -1,16 +1,25 @@
-const express = require('express');
-const router  = express.Router();
-const { creerAvis, getAvisPrestataire, getMesAvis } = require('../controllers/avisController');
-const { protect }        = require('../middleware/authMiddleware');
-const { authorizeRoles } = require('../middleware/roleMiddleware');
+const express  = require('express');
+const router   = express.Router();
 
-// POST /api/avis — créer un avis (client)
-router.post('/', protect, authorizeRoles('client'), creerAvis);
+const {
+  creerAvis,
+  getAvisPrestataire,
+  getMesAvis,
+} = require('../controllers/avisController');
 
-// GET /api/avis/mes-avis — mes avis
-router.get('/mes-avis', protect, authorizeRoles('client'), getMesAvis);
+const { protect, authorize }        = require('../middleware/authMiddleware');
+const { validateCreerAvis,
+        validateMongoId   }         = require('../middleware/demandeValidator');
 
-// GET /api/avis/prestataire/:id — avis d'un prestataire
-router.get('/prestataire/:id', getAvisPrestataire);
+// ── Public ──
+// GET /api/avis/prestataire/:id — avis visibles d'un prestataire
+router.get('/prestataire/:id',   validateMongoId, getAvisPrestataire);
+
+// ── Privé (client) ──
+// POST /api/avis — créer un avis après mission terminée
+router.post('/',                 protect, authorize('client'), validateCreerAvis, creerAvis);
+
+// GET /api/avis/mes-avis — historique des avis du client connecté
+router.get('/mes-avis',          protect, authorize('client'), getMesAvis);
 
 module.exports = router;

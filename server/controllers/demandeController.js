@@ -112,7 +112,7 @@ const getMesDemandes = async (req, res) => {
       })
       .populate({
         path: 'prestataireChoisi',
-        populate: { path: 'user', select: 'nom prenom email telephone avatar isVerified ' },
+        populate: { path: 'user', select: 'nom prenom email telephone avatar isVerified' },
       })
       .sort({ createdAt: -1 });
 
@@ -172,22 +172,31 @@ const getDemande = async (req, res) => {
     const isClient = demande.client._id.toString() === req.user.id;
     const isAdmin  = req.user.role === 'admin';
 
-    let isPrestataireChoisi    = false;
-    let isPrestataireRecommande = false;
+    let isPrestataireAutorise = false;
 
     if (req.user.role === 'prestataire') {
       const prestataire = await Prestataire.findOne({ user: req.user.id });
       if (prestataire) {
-        isPrestataireChoisi = demande.prestataireChoisi?._id?.toString() === prestataire._id.toString()
-          || demande.prestataireChoisi?.toString() === prestataire._id.toString();
-        isPrestataireRecommande = demande.prestatairesRecommandes?.some(
-          r => r.prestataire?._id?.toString() === prestataire._id.toString()
-            || r.prestataire?.toString()       === prestataire._id.toString()
+        const pid = prestataire._id.toString();
+
+        // Prestataire choisi
+        const choisi = demande.prestataireChoisi?._id?.toString()
+          || demande.prestataireChoisi?.toString();
+
+        // Prestataire recommandé
+        const recommande = demande.prestatairesRecommandes?.some(
+          r => r.prestataire?._id?.toString() === pid
+            || r.prestataire?.toString() === pid
         );
+
+        // ✅ Prestataire dont la catégorie correspond (accès depuis /disponibles)
+        const categorieMatch = prestataire.categories?.includes(demande.categorie);
+
+        isPrestataireAutorise = choisi === pid || recommande || categorieMatch;
       }
     }
 
-    if (!isClient && !isPrestataireChoisi && !isPrestataireRecommande && !isAdmin) {
+    if (!isClient && !isPrestataireAutorise && !isAdmin) {
       return res.status(403).json({ message: '❌ Non autorisé' });
     }
 

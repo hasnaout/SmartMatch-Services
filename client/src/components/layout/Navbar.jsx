@@ -113,7 +113,6 @@ useEffect(() => {
   const linksClient = [
     { to: '/client/dashboard',    icon: <LayoutDashboard size={15} />, label: 'Tableau de bord' },
     { to: '/client/demandes',     icon: <FileText size={15} />,        label: 'Mes demandes'    },
-    { to: '/client/creer',        icon: <PlusCircle size={15} />,      label: 'Nouvelle demande'},
     { to: '/messages',            icon: <MessageCircle size={15} />,   label: 'Messages'        },
     { to: '/client/carte', icon: <MapPin size={15} />, label: 'Carte' },
         { to: '/client/prestataires', icon: <Users size={15} />,           label: 'Prestataires'    },

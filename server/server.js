@@ -1,12 +1,14 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 const express    = require('express');
 const cors       = require('cors');
-const dotenv     = require('dotenv');
 const http       = require('http');
 const { Server } = require('socket.io');
 const connectDB  = require('./config/db');
 
-dotenv.config();
 connectDB();
+
 const initCategories = async () => {
   const Categorie = require('./models/Categorie');
   const count = await Categorie.countDocuments();
@@ -32,6 +34,7 @@ const initCategories = async () => {
   }
 };
 initCategories();
+
 const app    = express();
 const server = http.createServer(app);
 
@@ -40,13 +43,11 @@ const io = new Server(server, {
   cors: { origin: 'http://localhost:5173', methods: ['GET', 'POST'] },
 });
 
-// Rendre io accessible dans les controllers
 app.set('io', io);
 
 io.on('connection', (socket) => {
   console.log(`🔌 Connecté : ${socket.id}`);
 
-  // Rejoindre sa room personnelle pour les notifications
   socket.on('join_user', (userId) => {
     socket.join(`user_${userId}`);
     console.log(`👤 User ${userId} a rejoint sa room`);
@@ -79,17 +80,18 @@ app.use('/api/admin',         require('./routes/adminRoutes'));
 app.use('/api/messages',      require('./routes/messageRoutes'));
 app.use('/api/avis',          require('./routes/avisRoutes'));
 app.use('/api/notifications', require('./routes/notificationRoutes'));
-app.use('/api/upload', require('./routes/uploadRoutes'));
-app.use('/api/paiements', require('./routes/paiementRoutes'));
-app.use('/api/categories', require('./routes/categorieRoutes'));
-app.get('/', (req, res) => res.json({ message: ' SmartMatch API fonctionne !' }));
+app.use('/api/upload',        require('./routes/uploadRoutes'));
+app.use('/api/paiements',     require('./routes/paiementRoutes'));
+app.use('/api/categories',    require('./routes/categorieRoutes'));
 
-app.use((req, res) => res.status(404).json({ message: ' Route non trouvée' }));
+app.get('/', (req, res) => res.json({ message: '✅ SmartMatch API fonctionne !' }));
+
+app.use((req, res) => res.status(404).json({ message: '❌ Route non trouvée' }));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: ' Erreur serveur', error: err.message });
+  res.status(500).json({ message: '❌ Erreur serveur', error: err.message });
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(` Serveur démarré sur le port ${PORT}`));
+server.listen(PORT, () => console.log(`🚀 Serveur démarré sur le port ${PORT}`));

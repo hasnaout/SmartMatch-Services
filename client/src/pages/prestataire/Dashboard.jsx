@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/layout/Navbar';
 import api from '../../services/api';
 import {
-  FileText, CheckCircle, Clock,
+  FileText, CheckCircle,
   Star, MapPin, Calendar, Settings,TrendingUp
 } from 'lucide-react';
 
@@ -63,7 +63,7 @@ useEffect(() => {
         </div>
 
         {/* Stats */}
-        <div className="stats-grid">
+        <div className="stats-grid prestataire-stats-grid">
           {[
             {
               icon: <FileText size={22} />,
@@ -86,14 +86,6 @@ useEffect(() => {
               cls: 'stat-icon-warning',
             },
             {
-              icon: <Clock size={22} />,
-              value: profil?.disponible ? 'Oui' : 'Non',
-              label: 'Disponible',
-              cls: profil?.disponible
-                ? 'stat-icon-success'
-                : 'stat-icon-danger',
-            },
-            {
             icon:  <TrendingUp size={22} />,
              value: `${revenus} MAD`,
             label: 'Total revenus',
@@ -113,56 +105,6 @@ useEffect(() => {
             </div>
           ))}
         </div>
-
-        {/* Profil rapide */}
-        {profil && (
-          <div className="card" style={{ marginBottom: '32px', animation: 'fadeUp 0.5s ease-out' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <div className="profil-avatar" style={{ width: 52, height: 52, fontSize: 18, borderRadius: 14 }}>
-                  {user?.prenom?.[0]}{user?.nom?.[0]}
-                </div>
-                <div>
-                  <div>
-                    <h3 style={{ fontSize:16, marginBottom:4, display:'flex', alignItems:'center', gap:8 }}>
-                    {user?.prenom} {user?.nom}
-                     {profil?.user?.isVerified && (
-                   <span style={{
-                   display:'inline-flex', alignItems:'center', gap:3,
-                     padding:'3px 10px', borderRadius:99,
-                     background:'var(--info-light)',
-                     fontSize:12, fontWeight:600, color:'var(--info)',
-                      border:'1px solid rgba(37,99,235,0.2)',
-                 }}>
-                   <CheckCircle size={14} /> Vérifié
-                  </span>
-                        )}
-                   </h3>
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                    {profil.categories?.length > 0
-                      ? profil.categories.map((c) => (
-                          <span key={c} className="badge badge-accent">{c}</span>
-                        ))
-                      : <span className="badge badge-muted">Aucune catégorie</span>
-                    }
-                  </div>
-                </div>
-              </div>
-              </div>
-              <Link to="/prestataire/profil" className="btn-secondary">
-                <Settings size={15} /> Modifier le profil
-              </Link>
-            </div>
-
-            {profil.zoneGeographique?.ville && (
-              <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 6, color: 'var(--muted)', fontSize: 13 }}>
-                <MapPin size={13} />
-                {profil.zoneGeographique.ville}
-                {profil.zoneGeographique.region && `, ${profil.zoneGeographique.region}`}
-              </div>
-            )}
-          </div>
-        )}
 
         {/* Missions disponibles */}
         <div>

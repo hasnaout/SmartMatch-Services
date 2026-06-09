@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import Messagerie from './pages/Messagerie';
+ 
 
 // Landing
 import LandingPage from './pages/auth/LandingPage';
@@ -95,6 +96,7 @@ const App = () => {
 
       {/* 404 */}
       <Route path="*" element={<Navigate to="/" />} />
+      
     </Routes>
   );
 };

@@ -75,7 +75,7 @@ const ProfilPrestataire = () => {
 
         {/* Hero profil */}
         <div style={{
-          background: 'var(--prest-gradient)',
+          background: 'radial-gradient(circle at 12% 0%, rgba(139,92,246,0.58), transparent 34%), radial-gradient(circle at 90% 8%, rgba(255,255,255,0.13), transparent 28%), linear-gradient(135deg, #10051f 0%, #261052 52%, #0d0418 100%)',
           borderRadius: 'var(--radius-xl)',
           padding: '32px',
           marginBottom: 24,
@@ -98,20 +98,7 @@ const ProfilPrestataire = () => {
           <div style={{ position:'relative', zIndex:1 }}>
             <div style={{ display:'flex', alignItems:'flex-start', gap:20, flexWrap:'wrap' }}>
               {/* Avatar */}
-              <h1 style={{ fontSize:26, fontWeight:800, color:'#fff', marginBottom:6, display:'flex', alignItems:'center', gap:10 }}>
-              {u?.prenom} {u?.nom}
-                 {prestataire.user?.isVerified && (
-                 <span style={{
-                  display:'inline-flex', alignItems:'center', gap:4,
-                  padding:'4px 10px', borderRadius:99,
-                   background:'rgba(255,255,255,0.2)',
-                  border:'1px solid rgba(255,255,255,0.4)',
-                   fontSize:12, fontWeight:600, color:'#fff',
-                }}>
-                 <CheckCircle size={13} /> Vérifié
-                </span>
-                    )}
-                </h1>
+         
 
               {/* Infos */}
               <div style={{ flex:1 }}>

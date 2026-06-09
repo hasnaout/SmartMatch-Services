@@ -38,13 +38,13 @@ const HistoriquePaiements = () => {
         </div>
 
         {/* Stats */}
-        <div className="stats-grid" style={{ marginBottom:28 }}>
+        <div className="stats-grid prestataire-stats-grid" style={{ marginBottom:28 }}>
           {[
             { icon:<CreditCard size={22}/>, value:stats.total, label:'Total paiements', cls:'stat-icon-accent' },
             { icon:<CheckCircle size={22}/>, value:`${stats.totalMontant} MAD`, label:'Total payé', cls:'stat-icon-success' },
             { icon:<Clock size={22}/>, value:stats.enAttente, label:'En attente', cls:'stat-icon-warning' },
           ].map((s, i) => (
-            <div key={i} className="stat-card">
+            <div key={i} className="stat-card prest-card" style={{ animationDelay:`${i*0.08}s` }}>
               <div className={`stat-icon ${s.cls}`}>{s.icon}</div>
               <div className="stat-info">
                 <div className="stat-value">{s.value}</div>

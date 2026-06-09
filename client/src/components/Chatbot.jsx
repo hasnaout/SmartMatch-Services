@@ -1,0 +1,198 @@
+// src/components/Chatbot.jsx
+import { useState, useRef, useEffect } from "react";
+import "./Chatbot.css";
+
+// ─────────────────────────────────────────────
+//  Configuration
+// ─────────────────────────────────────────────
+const API_URL = "http://localhost:5000/api/chatbot";
+
+const QUICK_SUGGESTIONS = [
+  { label: "🚀 Comment ça marche",       text: "Comment fonctionne SmartMatch ?" },
+  { label: "💰 Tarifs",                  text: "Quels sont vos tarifs ?" },
+  { label: "🛠️ Devenir prestataire",     text: "Je suis prestataire, comment m'inscrire ?" },
+  { label: "📧 Nous contacter",          text: "Comment vous contacter ?" },
+];
+
+// ─────────────────────────────────────────────
+//  Composant principal
+// ─────────────────────────────────────────────
+export default function Chatbot() {
+  const [isOpen, setIsOpen]     = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [input, setInput]       = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(true);
+
+  const messagesEndRef = useRef(null);
+  const inputRef       = useRef(null);
+
+  // Scroll automatique vers le bas
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isTyping]);
+
+  // Focus sur l'input à l'ouverture
+  useEffect(() => {
+    if (isOpen) {
+      // Message de bienvenue (une seule fois)
+      if (messages.length === 0) {
+        setMessages([
+          {
+            id: Date.now(),
+            from: "bot",
+            text: "👋 Bonjour ! Je suis l'assistant SmartMatch. Je peux vous aider à comprendre comment fonctionne la plateforme, nos tarifs, ou comment rejoindre notre réseau de prestataires.",
+          },
+        ]);
+      }
+      setTimeout(() => inputRef.current?.focus(), 100);
+    }
+  }, [isOpen]);
+
+  // ── Envoi du message ──────────────────────
+  const sendMessage = async (text) => {
+    const trimmed = (text || input).trim();
+    if (!trimmed) return;
+
+    // Ajouter le message utilisateur
+    const userMsg = { id: Date.now(), from: "user", text: trimmed };
+    setMessages((prev) => [...prev, userMsg]);
+    setInput("");
+    setShowSuggestions(false);
+    setIsTyping(true);
+
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: trimmed }),
+      });
+
+      if (!res.ok) throw new Error("Erreur serveur");
+
+      const data = await res.json();
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now() + 1, from: "bot", text: data.response },
+      ]);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          from: "bot",
+          text: "⚠️ Une erreur est survenue. Vérifiez votre connexion et réessayez.",
+        },
+      ]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  // ── Rendu ─────────────────────────────────
+  return (
+    <>
+      {/* Bulle flottante */}
+      <button
+        className={`chat-bubble ${isOpen ? "chat-bubble--open" : ""}`}
+        onClick={() => setIsOpen((v) => !v)}
+        aria-label="Ouvrir le chat"
+      >
+        {isOpen ? "✕" : "💬"}
+      </button>
+
+      {/* Fenêtre de chat */}
+      {isOpen && (
+        <div className="chat-window" role="dialog" aria-label="Chatbot CertiCall">
+          {/* Header */}
+          <div className="chat-header">
+            <div className="chat-header__info">
+              <span className="chat-header__avatar">🤖</span>
+              <div>
+                <p className="chat-header__name">Assistant SmartMatch</p>
+                <p className="chat-header__status">
+                  <span className="chat-header__dot" />
+                  En ligne
+                </p>
+              </div>
+            </div>
+            <button
+              className="chat-header__close"
+              onClick={() => setIsOpen(false)}
+              aria-label="Fermer"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Zone de messages */}
+          <div className="chat-messages">
+            {messages.map((msg) => (
+              <div
+                key={msg.id}
+                className={`chat-msg chat-msg--${msg.from}`}
+              >
+                {msg.text}
+              </div>
+            ))}
+
+            {/* Indicateur de frappe */}
+            {isTyping && (
+              <div className="chat-msg chat-msg--bot">
+                <span className="typing-indicator">
+                  <span /><span /><span />
+                </span>
+              </div>
+            )}
+
+            {/* Suggestions rapides */}
+            {showSuggestions && messages.length > 0 && (
+              <div className="chat-suggestions">
+                {QUICK_SUGGESTIONS.map((s) => (
+                  <button
+                    key={s.text}
+                    className="chat-suggestion-btn"
+                    onClick={() => sendMessage(s.text)}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Zone de saisie */}
+          <div className="chat-input-area">
+            <input
+              ref={inputRef}
+              type="text"
+              className="chat-input"
+              placeholder="Écrivez votre message..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              disabled={isTyping}
+            />
+            <button
+              className="chat-send-btn"
+              onClick={() => sendMessage()}
+              disabled={!input.trim() || isTyping}
+              aria-label="Envoyer"
+            >
+              ➤
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}

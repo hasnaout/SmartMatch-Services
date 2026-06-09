@@ -58,7 +58,7 @@ const AdminDashboard = () => {
         ) : (
           <>
             {/* Stats */}
-            <div className="stats-grid">
+            <div className="stats-grid prestataire-stats-grid">
               {[
                 { icon: <Users size={22} />,       value: stats?.users?.total        || 0, label: 'Utilisateurs',         cls: 'stat-icon-accent'  },
                 { icon: <ShieldCheck size={22} />, value: stats?.users?.clients      || 0, label: 'Clients',              cls: 'stat-icon-success' },
@@ -67,7 +67,7 @@ const AdminDashboard = () => {
                 { icon: <CheckCircle size={22} />, value: stats?.demandes?.terminees || 0, label: 'Demandes terminées',   cls: 'stat-icon-success' },
                 { icon: <Star size={22} />,        value: stats?.avis?.total         || 0, label: 'Avis publiés',         cls: 'stat-icon-warning' },
               ].map((s, i) => (
-                <div key={i} className="stat-card" style={{ animationDelay: `${i * 0.07}s` }}>
+                <div key={i} className="stat-card prest-card" style={{ animationDelay: `${i * 0.07}s` }}>
                   <div className={`stat-icon ${s.cls}`}>{s.icon}</div>
                   <div className="stat-info">
                     <div className="stat-value">{s.value}</div>

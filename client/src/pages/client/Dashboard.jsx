@@ -53,14 +53,14 @@ const ClientDashboard = () => {
         </div>
 
         {/* Stats */}
-        <div className="stats-grid">
+        <div className="stats-grid prestataire-stats-grid">
           {[
             { icon: <FileText size={22} />, value: stats.total,     label: 'Total demandes',  cls: 'stat-icon-accent'  },
             { icon: <Clock size={22} />,    value: stats.publiees,  label: 'En attente',      cls: 'stat-icon-warning' },
             { icon: <CheckCircle size={22}/>,value: stats.terminees,label: 'Terminées',        cls: 'stat-icon-success' },
             { icon: <XCircle size={22} />,  value: stats.enCours,   label: 'En cours',        cls: 'stat-icon-danger'  },
           ].map((s, i) => (
-            <div key={i} className="stat-card" style={{ animationDelay: `${i * 0.08}s` }}>
+            <div key={i} className="stat-card prest-card" style={{ animationDelay: `${i * 0.08}s` }}>
               <div className={`stat-icon ${s.cls}`}>{s.icon}</div>
               <div className="stat-info">
                 <div className="stat-value">{s.value}</div>

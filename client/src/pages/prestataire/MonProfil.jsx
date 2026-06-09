@@ -96,7 +96,7 @@ const MonProfil = () => {
   return (
     <div className="layout">
       <Navbar />
-      <div className="page-content">
+      <div className="page-content mon-profil-page">
 
         {/* Header */}
         <div className="profil-header">
@@ -104,27 +104,15 @@ const MonProfil = () => {
             {user?.prenom?.[0]}{user?.nom?.[0]}
           </div>
           <div className="profil-info">
-  <h2 style={{ display:'flex', alignItems:'center', gap:10, flexWrap:'wrap' }}>
+  <h2>
     {user?.prenom} {user?.nom}
     {disponible !== undefined && profil?.user?.isVerified && (
-      <span style={{
-        display:'inline-flex', alignItems:'center', gap:4,
-        padding:'4px 12px', borderRadius:99,
-        background:'var(--info-light)',
-        border:'1px solid rgba(37,99,235,0.2)',
-        fontSize:13, fontWeight:600, color:'var(--info)',
-      }}>
+      <span className="profil-status-badge verified">
         <CheckCircle size={13} /> Compte vérifié
       </span>
     )}
     {!profil?.user?.isVerified && (
-      <span style={{
-        display:'inline-flex', alignItems:'center', gap:4,
-        padding:'4px 12px', borderRadius:99,
-        background:'var(--warning-light)',
-        border:'1px solid rgba(217,119,6,0.2)',
-        fontSize:13, fontWeight:600, color:'var(--warning)',
-      }}>
+      <span className="profil-status-badge pending">
         <Clock size={13} /> En attente de vérification
       </span>
     )}
@@ -133,14 +121,14 @@ const MonProfil = () => {
 </div>
         </div>
 
-        <form onSubmit={handleSave} className="form-page" style={{ maxWidth: '100%' }}>
+        <form onSubmit={handleSave} className="form-page mon-profil-form">
 
           {/* Disponibilité */}
-          <div className="card" style={{ marginBottom: 24 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div className="card profil-availability-card">
+            <div className="profil-availability-content">
               <div>
-                <h3 style={{ fontSize: 15, marginBottom: 4 }}>Disponibilité</h3>
-                <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+                <h3>Disponibilité</h3>
+                <p>
                   Activez pour recevoir des demandes de clients
                 </p>
               </div>
@@ -161,7 +149,7 @@ const MonProfil = () => {
           </div>
 
           {/* Description */}
-          <div className="form-card" style={{ marginBottom: 20 }}>
+          <div className="form-card profil-form-card">
             <div className="form-section">
               <div className="form-section-title">À propos</div>
               <div className="form-field">
@@ -178,14 +166,13 @@ const MonProfil = () => {
             {/* Catégories */}
             <div className="form-section">
               <div className="form-section-title">Catégories de service</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+              <div className="profil-category-list">
                 {CATEGORIES.map((cat) => (
                   <button
                     key={cat}
                     type="button"
                     onClick={() => toggleCategorie(cat)}
-                    className={form.categories.includes(cat) ? 'btn-primary' : 'btn-secondary'}
-                    style={{ padding: '8px 16px', fontSize: 13 }}
+                    className={form.categories.includes(cat) ? 'btn-primary profil-category-btn active' : 'btn-secondary profil-category-btn'}
                   >
                     {cat}
                   </button>
@@ -196,7 +183,7 @@ const MonProfil = () => {
             {/* Compétences */}
             <div className="form-section">
               <div className="form-section-title">Compétences</div>
-              <div style={{ display: 'flex', gap: 10, marginBottom: 12 }}>
+              <div className="profil-add-row">
                 <input
                   className="form-input"
                   placeholder="Ex: Soudure TIG, Réseau informatique..."
@@ -204,18 +191,18 @@ const MonProfil = () => {
                   onChange={(e) => setNewComp(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addCompetence())}
                 />
-                <button type="button" className="btn-primary" onClick={addCompetence} style={{ whiteSpace: 'nowrap' }}>
+                <button type="button" className="btn-primary profil-add-btn" onClick={addCompetence}>
                   <Plus size={15} /> Ajouter
                 </button>
               </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              <div className="profil-skill-list">
                 {form.competences.map((c, i) => (
-                  <span key={i} className="badge badge-accent" style={{ gap: 6, padding: '6px 12px' }}>
+                  <span key={i} className="badge badge-accent profil-skill-badge">
                     {c}
                     <button
                       type="button"
                       onClick={() => removeCompetence(i)}
-                      style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0, display: 'flex' }}
+                      className="profil-skill-remove"
                     >
                       <X size={12} />
                     </button>
@@ -226,7 +213,7 @@ const MonProfil = () => {
           </div>
 
           {/* Tarifs & Zone */}
-          <div className="form-card" style={{ marginBottom: 20 }}>
+          <div className="form-card profil-form-card">
             <div className="form-section">
               <div className="form-section-title">Tarifs & Expérience</div>
               <div className="form-grid-2">
@@ -270,7 +257,7 @@ const MonProfil = () => {
             </div>
           </div>
 
-          <button type="submit" className="btn-primary" disabled={saving} style={{ width: '100%', padding: '15px' }}>
+          <button type="submit" className="btn-primary profil-save-btn" disabled={saving}>
             {saving ? <><span className="spinner" /> Sauvegarde...</> : <><Save size={16} /> Sauvegarder le profil</>}
           </button>
         </form>

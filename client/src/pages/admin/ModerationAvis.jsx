@@ -75,7 +75,7 @@ const ModerationAvis = () => {
             { value:avis.filter(a => !a.isVisible).length,         label:'Masqués',      cls:'stat-icon-danger'  },
             { value:avis.length > 0 ? (avis.reduce((s,a) => s+a.note,0)/avis.length).toFixed(1) : 0, label:'Note moyenne', cls:'stat-icon-warning' },
           ].map((s, i) => (
-            <div key={i} className="stat-card">
+            <div key={i} className="stat-card prest-card" style={{ animationDelay: `${i * 0.07}s` }}>
               <div className={`stat-icon ${s.cls}`}><Star size={20} /></div>
               <div className="stat-info">
                 <div className="stat-value">{s.value}</div>

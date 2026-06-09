@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./LandingPage.css";
 import { useNavigate } from "react-router-dom";
+import Chatbot from "../../components/Chatbot";
 
 // Images
 import ph from "../../Assets/ph.jpg";
@@ -22,6 +23,165 @@ const StarIcon = () => (
 const TargetIcon = () => (
   <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>
 );
+
+const FAQ_SUGGESTIONS = [
+  {
+    question: "Comment ça marche ?",
+    answer:
+      "SmartMatch vous permet de publier une demande, de recevoir des recommandations de prestataires et de communiquer directement via la plateforme.",
+  },
+  {
+    question: "Quels sont vos tarifs ?",
+    answer:
+      "L'inscription est simple. Les tarifs dépendent du type de service et du prestataire choisi. Vous pouvez comparer les profils avant de décider.",
+  },
+  {
+    question: "Comment contacter SmartMatch ?",
+    answer:
+      "Vous pouvez nous contacter par email à contact@smartmatch.com ou par téléphone au +212 6XX-XXXXXX.",
+  },
+  {
+    question: "Je suis prestataire",
+    answer:
+      "Vous pouvez créer un profil professionnel, renseigner vos compétences, gérer votre disponibilité et recevoir des missions adaptées.",
+  },
+];
+
+const getBotReply = (message) => {
+  const text = message.toLowerCase();
+
+  if (text.includes("tarif") || text.includes("prix") || text.includes("coût") || text.includes("cout")) {
+    return FAQ_SUGGESTIONS[1].answer;
+  }
+
+  if (text.includes("comment") || text.includes("fonctionne") || text.includes("marche")) {
+    return FAQ_SUGGESTIONS[0].answer;
+  }
+
+  if (text.includes("contact") || text.includes("email") || text.includes("téléphone") || text.includes("telephone")) {
+    return FAQ_SUGGESTIONS[2].answer;
+  }
+
+  if (text.includes("prestataire") || text.includes("mission") || text.includes("profil")) {
+    return FAQ_SUGGESTIONS[3].answer;
+  }
+
+  return "Merci pour votre message. Pour l'instant, je peux répondre aux questions simples sur le fonctionnement, les tarifs, les prestataires et le contact.";
+};
+
+const LandingChatbot = () => {
+  const [open, setOpen] = useState(false);
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [typing, setTyping] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    if (open && messages.length === 0) {
+      setMessages([
+        {
+          role: "bot",
+          text: "Bonjour ! Comment puis-je vous aider aujourd'hui ?",
+        },
+      ]);
+    }
+  }, [open, messages.length]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, typing]);
+
+  const replyLater = (text) => {
+    setTyping(true);
+    window.setTimeout(() => {
+      setMessages((prev) => [...prev, { role: "bot", text }]);
+      setTyping(false);
+    }, 450);
+  };
+
+  const sendMessage = (text = input) => {
+    const clean = text.trim();
+    if (!clean) return;
+
+    setMessages((prev) => [...prev, { role: "user", text: clean }]);
+    setInput("");
+    replyLater(getBotReply(clean));
+  };
+
+  const handleSuggestion = (item) => {
+    setMessages((prev) => [...prev, { role: "user", text: item.question }]);
+    replyLater(item.answer);
+  };
+
+  return (
+    <div className="landing-chatbot">
+      {open && (
+        <div className="chatbot-panel" role="dialog" aria-label="Assistant SmartMatch">
+          <div className="chatbot-header">
+            <div>
+              <p className="chatbot-eyebrow">Assistant</p>
+              <h3>SmartMatch</h3>
+            </div>
+            <button type="button" className="chatbot-close" onClick={() => setOpen(false)} aria-label="Fermer le chat">
+              ×
+            </button>
+          </div>
+
+          <div className="chatbot-messages">
+            {messages.map((message, index) => (
+              <div key={`${message.role}-${index}`} className={`chatbot-message ${message.role}`}>
+                {message.text}
+              </div>
+            ))}
+
+            {typing && (
+              <div className="chatbot-message bot typing">
+                <span />
+                <span />
+                <span />
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          <div className="chatbot-suggestions">
+            {FAQ_SUGGESTIONS.map((item) => (
+              <button key={item.question} type="button" onClick={() => handleSuggestion(item)}>
+                {item.question}
+              </button>
+            ))}
+          </div>
+
+          <form
+            className="chatbot-input-row"
+            onSubmit={(e) => {
+              e.preventDefault();
+              sendMessage();
+            }}
+          >
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Écrivez votre question..."
+            />
+            <button type="submit" aria-label="Envoyer le message">
+              Envoyer
+            </button>
+          </form>
+        </div>
+      )}
+
+      <button
+        type="button"
+        className={`chatbot-fab ${open ? "active" : ""}`}
+        onClick={() => setOpen((value) => !value)}
+        aria-label={open ? "Fermer l'assistant" : "Ouvrir l'assistant"}
+      >
+        {open ? "×" : "?"}
+      </button>
+    </div>
+  );
+};
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -199,6 +359,8 @@ const LandingPage = () => {
           <p>© 2025 SmartMatch. Tous droits réservés.</p>
         </div>
       </footer>
+       <Chatbot /> 
+      <LandingChatbot />
     </div>
   );
 };

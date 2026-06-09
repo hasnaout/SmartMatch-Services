@@ -179,7 +179,7 @@ const Analytics = () => {
             { icon:<Star size={22}/>,         value:stats?.avis?.total || 0,         label:'Avis publiés',      cls:'stat-icon-warning' },
             { icon:<TrendingUp size={22}/>,   value:paiements.filter(p=>p.statut==='payé').length, label:'Paiements reçus', cls:'stat-icon-success' },
           ].map((s, i) => (
-            <div key={i} className="stat-card" style={{ animationDelay:`${i*0.07}s` }}>
+            <div key={i} className="stat-card prest-card" style={{ animationDelay: `${i * 0.07}s` }}>
               <div className={`stat-icon ${s.cls}`}>{s.icon}</div>
               <div className="stat-info">
                 <div className="stat-value">{s.value}</div>

@@ -1,6 +1,8 @@
 // src/components/Chatbot.jsx
 import { useState, useRef, useEffect } from "react";
 import "./Chatbot.css";
+import robotImg from '../assets/robot1.png';
+import { FaRocket, FaTag, FaTools, FaEnvelope } from "react-icons/fa";
 
 // ─────────────────────────────────────────────
 //  Configuration
@@ -8,10 +10,10 @@ import "./Chatbot.css";
 const API_URL = "http://localhost:5000/api/chatbot";
 
 const QUICK_SUGGESTIONS = [
-  { label: "🚀 Comment ça marche",       text: "Comment fonctionne SmartMatch ?" },
-  { label: "💰 Tarifs",                  text: "Quels sont vos tarifs ?" },
-  { label: "🛠️ Devenir prestataire",     text: "Je suis prestataire, comment m'inscrire ?" },
-  { label: "📧 Nous contacter",          text: "Comment vous contacter ?" },
+  { label: <><FaRocket /> Comment ça marche</>,    text: "Comment fonctionne SmartMatch ?" },
+  { label: <><FaTag />    Tarifs</>,               text: "Quels sont vos tarifs ?" },
+  { label: <><FaTools />  Devenir prestataire</>,  text: "Je suis prestataire, comment m'inscrire ?" },
+  { label: <><FaEnvelope /> Nous contacter</>,     text: "Comment vous contacter ?" },
 ];
 
 // ─────────────────────────────────────────────
@@ -41,7 +43,7 @@ export default function Chatbot() {
           {
             id: Date.now(),
             from: "bot",
-            text: "👋 Bonjour ! Je suis l'assistant SmartMatch. Je peux vous aider à comprendre comment fonctionne la plateforme, nos tarifs, ou comment rejoindre notre réseau de prestataires.",
+            text: " Bonjour ! Je suis l'assistant SmartMatch. Je peux vous aider à comprendre comment fonctionne la plateforme, nos tarifs, ou comment rejoindre notre réseau de prestataires.",
           },
         ]);
       }
@@ -81,7 +83,7 @@ export default function Chatbot() {
         {
           id: Date.now() + 1,
           from: "bot",
-          text: "⚠️ Une erreur est survenue. Vérifiez votre connexion et réessayez.",
+          text: " Une erreur est survenue. Vérifiez votre connexion et réessayez.",
         },
       ]);
     } finally {
@@ -105,7 +107,7 @@ export default function Chatbot() {
         onClick={() => setIsOpen((v) => !v)}
         aria-label="Ouvrir le chat"
       >
-        {isOpen ? "✕" : "💬"}
+        {isOpen ? "✕" : <img src={robotImg} alt="bot" style={{width:"34px",height:"34px",objectFit:"contain"}} />}
       </button>
 
       {/* Fenêtre de chat */}
@@ -114,7 +116,7 @@ export default function Chatbot() {
           {/* Header */}
           <div className="chat-header">
             <div className="chat-header__info">
-              <span className="chat-header__avatar">🤖</span>
+              <img src={robotImg} alt="SmartMatch" className="chat-header__avatar" />
               <div>
                 <p className="chat-header__name">Assistant SmartMatch</p>
                 <p className="chat-header__status">

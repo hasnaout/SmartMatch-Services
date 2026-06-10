@@ -83,6 +83,7 @@ app.use('/api/notifications', require('./routes/notificationRoutes'));
 app.use('/api/upload',        require('./routes/uploadRoutes'));
 app.use('/api/paiements',     require('./routes/paiementRoutes'));
 app.use('/api/categories',    require('./routes/categorieRoutes'));
+app.use('/api/chatbot',       require('./chatbot'));
 
 app.get('/', (req, res) => res.json({ message: '✅ SmartMatch API fonctionne !' }));
 

@@ -7,23 +7,26 @@ import { FaRocket, FaTag, FaTools, FaEnvelope } from "react-icons/fa";
 // ─────────────────────────────────────────────
 //  Configuration
 // ─────────────────────────────────────────────
-const API_URL = "http://localhost:5000/api/chatbot";
+const API_URL = "http://localhost:5001/api/chatbot";
+
+// Identifiant de session unique par onglet — permet la mémoire de conversation
+const SESSION_ID = `session_${Date.now()}_${Math.random().toString(36).slice(2)}`;
 
 const QUICK_SUGGESTIONS = [
-  { label: <><FaRocket /> Comment ça marche</>,    text: "Comment fonctionne SmartMatch ?" },
-  { label: <><FaTag />    Tarifs</>,               text: "Quels sont vos tarifs ?" },
-  { label: <><FaTools />  Devenir prestataire</>,  text: "Je suis prestataire, comment m'inscrire ?" },
-  { label: <><FaEnvelope /> Nous contacter</>,     text: "Comment vous contacter ?" },
+  { label: <><FaRocket /> Comment ça marche</>,   text: "Comment fonctionne SmartMatch ?" },
+  { label: <><FaTag />    Tarifs</>,              text: "Quels sont vos tarifs ?" },
+  { label: <><FaTools />  Devenir prestataire</>, text: "Je suis prestataire, comment m'inscrire ?" },
+  { label: <><FaEnvelope /> Nous contacter</>,    text: "Comment vous contacter ?" },
 ];
 
 // ─────────────────────────────────────────────
 //  Composant principal
 // ─────────────────────────────────────────────
 export default function Chatbot() {
-  const [isOpen, setIsOpen]     = useState(false);
-  const [messages, setMessages] = useState([]);
-  const [input, setInput]       = useState("");
-  const [isTyping, setIsTyping] = useState(false);
+  const [isOpen, setIsOpen]               = useState(false);
+  const [messages, setMessages]           = useState([]);
+  const [input, setInput]                 = useState("");
+  const [isTyping, setIsTyping]           = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
 
   const messagesEndRef = useRef(null);
@@ -34,18 +37,15 @@ export default function Chatbot() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
-  // Focus sur l'input à l'ouverture
+  // Message de bienvenue à l'ouverture
   useEffect(() => {
     if (isOpen) {
-      // Message de bienvenue (une seule fois)
       if (messages.length === 0) {
-        setMessages([
-          {
-            id: Date.now(),
-            from: "bot",
-            text: " Bonjour ! Je suis l'assistant SmartMatch. Je peux vous aider à comprendre comment fonctionne la plateforme, nos tarifs, ou comment rejoindre notre réseau de prestataires.",
-          },
-        ]);
+        setMessages([{
+          id:   Date.now(),
+          from: "bot",
+          text: "Bonjour ! Je suis l'assistant SmartMatch. Je peux vous aider à comprendre comment fonctionne la plateforme, nos tarifs, ou comment rejoindre notre réseau de prestataires.",
+        }]);
       }
       setTimeout(() => inputRef.current?.focus(), 100);
     }
@@ -56,7 +56,6 @@ export default function Chatbot() {
     const trimmed = (text || input).trim();
     if (!trimmed) return;
 
-    // Ajouter le message utilisateur
     const userMsg = { id: Date.now(), from: "user", text: trimmed };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
@@ -65,9 +64,10 @@ export default function Chatbot() {
 
     try {
       const res = await fetch(API_URL, {
-        method: "POST",
+        method:  "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: trimmed }),
+        // sessionId transmis pour activer la mémoire de conversation côté serveur
+        body: JSON.stringify({ message: trimmed, sessionId: SESSION_ID }),
       });
 
       if (!res.ok) throw new Error("Erreur serveur");
@@ -81,9 +81,9 @@ export default function Chatbot() {
       setMessages((prev) => [
         ...prev,
         {
-          id: Date.now() + 1,
+          id:   Date.now() + 1,
           from: "bot",
-          text: " Une erreur est survenue. Vérifiez votre connexion et réessayez.",
+          text: "Une erreur est survenue. Vérifiez votre connexion et réessayez.",
         },
       ]);
     } finally {
@@ -107,12 +107,12 @@ export default function Chatbot() {
         onClick={() => setIsOpen((v) => !v)}
         aria-label="Ouvrir le chat"
       >
-        {isOpen ? "✕" : <img src={robotImg} alt="bot" style={{width:"34px",height:"34px",objectFit:"contain"}} />}
+        {isOpen ? "✕" : <img src={robotImg} alt="bot" style={{ width: "34px", height: "34px", objectFit: "contain" }} />}
       </button>
 
       {/* Fenêtre de chat */}
       {isOpen && (
-        <div className="chat-window" role="dialog" aria-label="Chatbot CertiCall">
+        <div className="chat-window" role="dialog" aria-label="Assistant SmartMatch">
           {/* Header */}
           <div className="chat-header">
             <div className="chat-header__info">
@@ -137,10 +137,7 @@ export default function Chatbot() {
           {/* Zone de messages */}
           <div className="chat-messages">
             {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`chat-msg chat-msg--${msg.from}`}
-              >
+              <div key={msg.id} className={`chat-msg chat-msg--${msg.from}`}>
                 {msg.text}
               </div>
             ))}

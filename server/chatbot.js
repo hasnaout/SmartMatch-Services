@@ -1,159 +1,173 @@
 // server/chatbot.js
+// ─────────────────────────────────────────────────────────────────
+//  Chatbot intelligent — propulsé par un LLM (claude-haiku)
+//  Interface identique à l'ancienne version :
+//    POST /api/chatbot  { message: string } → { response: string }
+// ─────────────────────────────────────────────────────────────────
+
 const express = require("express");
-const router = express.Router();
+const router  = express.Router();
+const axios   = require("axios");
 
 // ─────────────────────────────────────────────
-//  Base de connaissances : mots-clés → réponses
+//  Prompt système — contexte de la plateforme
+//  Le LLM connaît SmartMatch et répond en son nom
 // ─────────────────────────────────────────────
-const knowledgeBase = [
-  // ── Fonctionnement général ──────────────────
-  {
-    keywords: ["fonctionne", "marche", "comment", "utiliser", "démarrer", "principe", "etape"],
-    response:
-      " Créez un compte, publiez votre demande en précisant vos besoins, recevez des propositions de prestataires et communiquez via la messagerie intégrée pour choisir le bon profil.",
-  },
-  // ── Tarifs ─────────────────────────────────
-  {
-    keywords: ["prix", "tarif", "cout", "combien", "abonnement", "forfait", "gratuit", "payer"],
-    response:
-      "L'inscription est entièrement gratuite. Les tarifs des prestations sont fixés par chaque prestataire et varient selon le service demandé.",
-  },
-  // ── Contact ────────────────────────────────
-  {
-    keywords: ["contact", "joindre", "appeler", "email", "mail", "ecrire", "support"],
-    response:
-      " Écrivez-nous à contact@smartmatch.com — nous répondons généralement sous 48h.",
-  },
-  // ── Inscription prestataire ────────────────
-  {
-    keywords: ["prestataire", "inscrire", "inscription", "rejoindre", "activer", "competence", "disponibilite"],
-    response:
-      " Créez un compte, complétez votre profil (compétences, tarifs, photos, disponibilités) et activez-le pour commencer à recevoir des missions.",
-  },
-  // ── Publier une demande (client) ───────────
-  {
-    keywords: ["publier", "creer", "demande", "projet", "budget", "localisation", "poster"],
-    response:
-      " Connectez-vous, cliquez sur « Créer une demande », décrivez le projet (budget, délai, localisation) et publiez — les prestataires pourront postuler.",
-  },
-  // ── Choisir un prestataire ─────────────────
-  {
-    keywords: ["choisir", "comparer", "selectionner", "engager", "devis", "profils"],
-    response:
-      " Comparez les profils, avis, tarifs et échanges ; demandez un devis ou discutez via la messagerie avant d'engager un prestataire.",
-  },
-  // ── Messagerie ─────────────────────────────
-  {
-    keywords: ["messagerie", "message", "chat", "echanger", "communication", "fichier", "interne"],
-    response:
-      " La messagerie interne vous permet d'échanger en privé avec les prestataires, clarifier vos besoins et partager des fichiers directement sur la plateforme.",
-  },
-  // ── Paiement ───────────────────────────────
-  {
-    keywords: ["paiement", "payer", "virement", "carte", "moyen", "transaction", "reglement"],
-    response:
-      " Les modalités de paiement sont définies par chaque prestataire. La plateforme peut proposer des options sécurisées selon les intégrations disponibles.",
-  },
-  // ── Avis / notation ────────────────────────
-  {
-    keywords: ["avis", "note", "notation", "commentaire", "evaluer", "mission", "retour"],
-    response:
-      " Après une mission, vous pouvez noter et laisser un commentaire sur le profil du prestataire pour aider les futurs clients.",
-  },
-  // ── Profils vérifiés ───────────────────────
-  {
-    keywords: ["verifie", "badge", "certifie", "verifier", "confiance", "fiable"],
-    response:
-      "Certains prestataires peuvent être marqués « vérifié » si leurs informations ont été contrôlées. Vérifiez le badge directement sur leur profil.",
-  },
-  // ── Documents profil pro ───────────────────
-  {
-    keywords: ["document", "cv", "portfolio", "reference", "certification", "realisation"],
-    response:
-      " Pour un profil pro convaincant : ajoutez votre CV/portfolio, références, certifications et exemples de réalisations. Cela augmente vos chances d'être choisi.",
-  },
-  // ── Litige ─────────────────────────────────
-  {
-    keywords: ["litige", "probleme", "plainte", "conflit", "desaccord", "preuve", "resolution"],
-    response:
-      "⚖️ En cas de litige avec un prestataire, contactez le support à contact@smartmatch.com avec les détails et preuves — nous faciliterons la résolution.",
-  },
-  // ── Suppression de compte ──────────────────
-  {
-    keywords: ["supprimer", "suppression", "fermer", "cloturer", "compte", "desactiver"],
-    response:
-      " Vous pouvez supprimer votre compte depuis les paramètres → « Supprimer le compte ». Contactez le support si vous avez besoin d'aide.",
-  },
-  // ── Sécurité / Confidentialité ─────────────
-  {
-    keywords: ["securite", "confidentialite", "donnees", "rgpd", "protection", "prive", "securise"],
-    response:
-      " Votre compte et vos données sont protégés par de bonnes pratiques de sécurité. Consultez notre politique de confidentialité pour plus de détails.",
-  },
-  // ── API / Intégrations ─────────────────────
-  {
-    keywords: ["api", "integration", "entreprise", "connecter", "webhook", "developpeur"],
-    response:
-      " Nous proposons ou prévoyons des intégrations selon le plan produit. Contactez-nous à contact@smartmatch.com pour vos besoins d'entreprise.",
-  },
-  // ── Horaires ───────────────────────────────
-  {
-    keywords: ["horaire", "heure", "ouverture", "disponible", "equipe", "semaine"],
-    response:
-      " Nos équipes sont disponibles du lundi au vendredi de 9h à 18h (GMT+1).",
-  },
-  // ── Salutations ────────────────────────────
-  {
-    keywords: ["bonjour", "salut", "hello", "bonsoir", "coucou", "hi"],
-    response:
-      " Bonjour ! Je suis l'assistant SmartMatch. Posez-moi vos questions ou choisissez une suggestion ci-dessous.",
-  },
-  // ── Remerciements ──────────────────────────
-  {
-    keywords: ["merci", "parfait", "super", "genial", "excellent", "nickel", "top"],
-    response:
-      " Avec plaisir ! N'hésitez pas si vous avez d'autres questions sur SmartMatch.",
-  },
-];
+const SYSTEM_PROMPT = `Tu es l'assistant virtuel de SmartMatch, une plateforme marocaine de mise en relation entre clients et prestataires de services (plomberie, électricité, informatique, design, jardinage, etc.).
+
+Voici tout ce que tu sais sur SmartMatch :
+
+FONCTIONNEMENT :
+- Un client crée un compte, publie une demande (titre, description, budget min/max, localisation, catégorie, urgence).
+- Un algorithme de matching automatique sélectionne les 5 meilleurs prestataires selon : catégorie (40pts), localisation (20pts), disponibilité (15pts), note (15pts), missions réussies (10pts).
+- Les prestataires recommandés reçoivent une notification.
+- Le client choisit son prestataire parmi les recommandés.
+- Une fois assigné, client et prestataire peuvent échanger via la messagerie interne.
+- À la fin, le prestataire marque la mission comme terminée. Le client peut noter et payer.
+
+RÔLES :
+- Client : crée des demandes, choisit un prestataire, note, paye.
+- Prestataire : complète son profil, reçoit des recommandations, accepte les missions, communique, termine les missions.
+- Admin : gère les utilisateurs, valide les litiges, supervise les paiements.
+
+PAIEMENT :
+- Le paiement s'effectue après la fin de la mission.
+- Méthodes acceptées : espèces (présentiel) ou en ligne selon la catégorie.
+- Catégories en ligne : Informatique, Design, Développement web, Rédaction, Marketing, Traduction.
+- Un historique de paiement horodaté est conservé en base de données.
+
+INSCRIPTION :
+- Gratuite pour clients et prestataires.
+- Le prestataire doit compléter son profil : compétences, tarifs, zone géographique, disponibilité, portfolio.
+
+CONTACT :
+- Email support : contact@smartmatch.com
+- Disponible du lundi au vendredi, 9h–18h (GMT+1).
+
+RÈGLES DE RÉPONSE :
+- Réponds toujours en français, de manière claire, concise et professionnelle.
+- Ne réponds qu'aux questions liées à SmartMatch ou à ses services.
+- Si la question est hors sujet, redirige poliment vers le support.
+- N'invente jamais de fonctionnalités inexistantes.
+- Maximum 3 phrases par réponse — sois précis, pas verbeux.`;
 
 // ─────────────────────────────────────────────
-//  Fonction : détection d'intention par mots-clés
+//  Historique de conversation par session
+//  Clé = sessionId (généré côté client), Valeur = tableau de messages
 // ─────────────────────────────────────────────
-function detectIntent(message) {
-  const normalised = message
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, ""); // supprime les accents
+const conversationHistory = new Map();
 
-  for (const entry of knowledgeBase) {
-    const matched = entry.keywords.some((kw) =>
-      normalised.includes(
-        kw.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-      )
-    );
-    if (matched) return entry.response;
+// Nettoyage automatique des sessions inactives (30 min)
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, session] of conversationHistory.entries()) {
+    if (now - session.lastActivity > 30 * 60 * 1000) {
+      conversationHistory.delete(key);
+    }
   }
-
-  // Réponse par défaut
-  return " Je ne suis pas sûr de comprendre votre demande. Pouvez-vous reformuler ? Ou choisissez une option ci-dessous pour que je puisse mieux vous aider.";
-}
+}, 5 * 60 * 1000);
 
 // ─────────────────────────────────────────────
 //  POST /api/chatbot
 // ─────────────────────────────────────────────
-router.post("/", (req, res) => {
-  const { message } = req.body;
+router.post("/", async (req, res) => {
+  const { message, sessionId } = req.body;
 
+  // Validation
   if (!message || typeof message !== "string" || message.trim() === "") {
     return res.status(400).json({ error: "Message manquant ou invalide." });
   }
 
-  const response = detectIntent(message.trim());
+  const apiKey = process.env.GROQ_API_KEY;
 
-  // Légère pause simulée (optionnel — peut être supprimée)
-  setTimeout(() => {
-    res.json({ response });
-  }, 300);
+  // ── Fallback rule-based si pas de clé API ──────────────
+  if (!apiKey) {
+    console.warn("⚠️  Aucune clé GROQ_API_KEY trouvée — fallback rule-based actif.");
+    return res.json({ response: getFallbackResponse(message.trim()) });
+  }
+
+  // ── Gestion de l'historique de conversation ────────────
+  const sid = sessionId || "default";
+  if (!conversationHistory.has(sid)) {
+    conversationHistory.set(sid, { messages: [], lastActivity: Date.now() });
+  }
+  const session = conversationHistory.get(sid);
+  session.lastActivity = Date.now();
+
+  // Ajouter le message utilisateur
+  session.messages.push({ role: "user", content: message.trim() });
+
+  // Limiter l'historique à 10 échanges (20 messages) pour économiser les tokens
+  if (session.messages.length > 20) {
+    session.messages = session.messages.slice(-20);
+  }
+
+  try {
+    let botResponse;
+
+    // ── Groq (LLaMA 3 — 100% gratuit) ─────────────────
+    const result = await axios.post(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        model:     "llama-3.1-8b-instant",   // modèle gratuit et rapide
+        max_tokens: 300,
+        messages:   [
+          { role: "system", content: SYSTEM_PROMPT },
+          ...session.messages,
+        ],
+      },
+      {
+        headers: {
+          Authorization:  `Bearer ${process.env.GROQ_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    botResponse = result.data.choices[0].message.content;
+
+    // Ajouter la réponse du bot à l'historique
+    session.messages.push({ role: "assistant", content: botResponse });
+
+    return res.json({ response: botResponse });
+
+  } catch (error) {
+    console.error("❌ Erreur LLM :", error.response?.data || error.message);
+
+    // Fallback gracieux si l'API est indisponible
+    const fallback = getFallbackResponse(message.trim());
+    return res.json({ response: fallback });
+  }
 });
+
+// ─────────────────────────────────────────────
+//  Fallback rule-based (si pas de clé API ou erreur réseau)
+//  Conservé comme filet de sécurité
+// ─────────────────────────────────────────────
+const knowledgeBase = [
+  { keywords: ["fonctionne", "marche", "comment", "utiliser", "principe"],
+    response:  "Créez un compte, publiez votre demande, notre algorithme vous recommande les meilleurs prestataires. Vous choisissez, échangez via la messagerie, puis notez à la fin." },
+  { keywords: ["prix", "tarif", "cout", "combien", "gratuit"],
+    response:  "L'inscription est entièrement gratuite. Les tarifs sont fixés par chaque prestataire selon le service demandé." },
+  { keywords: ["contact", "joindre", "email", "support"],
+    response:  "Écrivez-nous à contact@smartmatch.com — nous répondons du lundi au vendredi, 9h–18h." },
+  { keywords: ["prestataire", "inscrire", "rejoindre", "competence"],
+    response:  "Créez un compte prestataire, complétez votre profil (compétences, tarifs, zone, disponibilité) et commencez à recevoir des missions." },
+  { keywords: ["paiement", "payer", "virement", "transaction"],
+    response:  "Le paiement s'effectue après la fin de la mission. Les modalités varient selon la catégorie (en ligne ou en espèces)." },
+  { keywords: ["avis", "note", "notation", "evaluer"],
+    response:  "Après chaque mission terminée, le client peut noter et commenter le prestataire pour aider les futurs utilisateurs." },
+  { keywords: ["bonjour", "salut", "hello", "bonsoir"],
+    response:  "Bonjour ! Je suis l'assistant SmartMatch. Comment puis-je vous aider ?" },
+];
+
+function getFallbackResponse(message) {
+  const normalised = message.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  for (const entry of knowledgeBase) {
+    if (entry.keywords.some(kw => normalised.includes(kw.normalize("NFD").replace(/[\u0300-\u036f]/g, "")))) {
+      return entry.response;
+    }
+  }
+  return "Je ne suis pas sûr de comprendre. Pouvez-vous reformuler ? Ou contactez-nous à contact@smartmatch.com.";
+}
 
 module.exports = router;

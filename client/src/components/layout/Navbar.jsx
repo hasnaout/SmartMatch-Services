@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import api from '../../services/api';
 import socket from '../../services/socket';
+
 import {
   Zap, LayoutDashboard, FileText, PlusCircle,
   Users, Settings, LogOut, ShieldCheck,
@@ -117,6 +118,7 @@ useEffect(() => {
     { to: '/client/carte', icon: <MapPin size={15} />, label: 'Carte' },
         { to: '/client/prestataires', icon: <Users size={15} />,           label: 'Prestataires'    },
         { to: '/client/paiements', icon: <CreditCard size={15} />, label: 'Paiements' },
+        { to: '/settings', icon: <Settings size={15} />, label: 'Paramètres' },
   ];
 
   const linksPrestataire = [
@@ -125,6 +127,7 @@ useEffect(() => {
     { to: '/messages',              icon: <MessageCircle size={15} />,   label: 'Messages'        },
      { to: '/prestataire/profil',    icon: <Settings size={15} />,        label: 'Mon profil'      },
      { to: '/prestataire/revenus', icon: <TrendingUp size={15} />, label: 'Revenus' },
+     { to: '/settings', icon: <Settings size={15} />, label: 'Paramètres' },
   ];
 
   const linksAdmin = [

@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import Messagerie from './pages/Messagerie';
- 
+ import Settings from './pages/Settings';
 
 // Landing
 import LandingPage from './pages/auth/LandingPage';
@@ -93,7 +93,11 @@ const App = () => {
       <Route path="/admin/categories" element={<ProtectedRoute roles={['admin']}><Categories /></ProtectedRoute>} />
       <Route path="/admin/avis"       element={<ProtectedRoute roles={['admin']}><ModerationAvis /></ProtectedRoute>} />
       <Route path="/admin/analytics"  element={<ProtectedRoute roles={['admin']}><Analytics /></ProtectedRoute>} />
-
+      <Route path="/settings" element={
+  <ProtectedRoute roles={['client', 'prestataire', 'admin']}>
+    <Settings />
+  </ProtectedRoute>
+} />
       {/* 404 */}
       <Route path="*" element={<Navigate to="/" />} />
       

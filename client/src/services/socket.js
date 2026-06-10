@@ -1,8 +1,8 @@
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:5001', {
-  autoConnect: true,
-  reconnection: true,
+const socket = io('', {
+  autoConnect: false,
+  transports: ['websocket', 'polling'],
 });
 
 export default socket;

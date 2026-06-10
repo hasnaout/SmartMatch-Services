@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import Chatbot from "../../components/Chatbot";
 
 // Images
-import ph from "../../Assets/ph.jpg";
-import vid from "../../Assets/vid.mp4";
+import ph from "../../assets/ph.jpg";
+import vid from "../../assets/vid.mp4";
 
 // Icônes SVG
 const UserIcon = () => (

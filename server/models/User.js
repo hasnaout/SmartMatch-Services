@@ -55,6 +55,25 @@ const userSchema = new mongoose.Schema(
       type: Date,
       select: false,
     },
+
+    // ── Demande de suppression de compte ─────────────────────────
+    // Renseignée par l'utilisateur via POST /api/users/demande-suppression.
+    // L'admin la consulte dans Users.jsx et peut valider (suppression réelle)
+    // ou rejeter (remise à null).
+    demandeSuppressionStatut: {
+      type: String,
+      enum: ['en_attente', 'refusee', null],
+      default: null,
+    },
+    demandeSuppressionRaison: {
+      type: String,
+      default: null,
+      trim: true,
+    },
+    demandeSuppressionDate: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );

@@ -91,7 +91,6 @@ const verifierUser = async (req, res) => {
       return res.status(404).json({ message: '❌ Utilisateur introuvable' });
     }
 
-    // Notifier l'utilisateur
     const io = req.app.get('io');
     await creerNotification(io, {
       destinataire: user._id,
@@ -119,7 +118,6 @@ const supprimerUser = async (req, res) => {
       return res.status(404).json({ message: '❌ Utilisateur introuvable' });
     }
 
-    // Supprimer le profil prestataire si existe
     await Prestataire.findOneAndDelete({ user: req.params.id });
 
     res.status(200).json({ message: '✅ Utilisateur supprimé' });
@@ -129,8 +127,67 @@ const supprimerUser = async (req, res) => {
 };
 
 // ─────────────────────────────────────────
-// @route   GET /api/admin/avis
+// @route   GET /api/admin/demandes-suppression
 // @access  Privé (admin)
+// Retourne tous les users ayant une demande en attente
+// ─────────────────────────────────────────
+const getDemandesSuppression = async (req, res) => {
+  try {
+    const users = await User.find({ demandeSuppressionStatut: 'en_attente' })
+      .select('nom prenom email role demandeSuppressionRaison demandeSuppressionDate createdAt')
+      .sort({ demandeSuppressionDate: -1 });
+
+    res.status(200).json({ total: users.length, users });
+  } catch (error) {
+    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+  }
+};
+
+// ─────────────────────────────────────────
+// @route   PUT /api/admin/users/:id/valider-suppression
+// @access  Privé (admin)
+// Valide la demande → supprime le compte
+// ─────────────────────────────────────────
+const validerSuppression = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: '❌ Utilisateur introuvable' });
+
+    await Prestataire.findOneAndDelete({ user: req.params.id });
+    await User.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({ message: '✅ Compte supprimé suite à la demande utilisateur' });
+  } catch (error) {
+    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+  }
+};
+
+// ─────────────────────────────────────────
+// @route   PUT /api/admin/users/:id/refuser-suppression
+// @access  Privé (admin)
+// Refuse la demande → remet les champs à null
+// ─────────────────────────────────────────
+const refuserSuppression = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        demandeSuppressionStatut: 'refusee',
+        demandeSuppressionRaison: null,
+        demandeSuppressionDate:   null,
+      },
+      { new: true }
+    );
+    if (!user) return res.status(404).json({ message: '❌ Utilisateur introuvable' });
+
+    res.status(200).json({ message: '✅ Demande de suppression refusée', user });
+  } catch (error) {
+    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+  }
+};
+
+// ─────────────────────────────────────────
+// @route   GET /api/admin/avis
 // ─────────────────────────────────────────
 const getTousAvis = async (req, res) => {
   try {
@@ -145,10 +202,6 @@ const getTousAvis = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   PUT /api/admin/avis/:id/masquer
-// @access  Privé (admin)
-// ─────────────────────────────────────────
 const masquerAvis = async (req, res) => {
   try {
     const avis = await Avis.findByIdAndUpdate(
@@ -156,40 +209,13 @@ const masquerAvis = async (req, res) => {
       { isVisible: false },
       { new: true }
     );
-
-    if (!avis) {
-      return res.status(404).json({ message: '❌ Avis introuvable' });
-    }
-
+    if (!avis) return res.status(404).json({ message: '❌ Avis introuvable' });
     res.status(200).json({ message: '✅ Avis masqué', avis });
   } catch (error) {
     res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
   }
 };
 
-// ─────────────────────────────────────────
-// @route   GET /api/admin/stats
-// @access  Privé (admin)
-// ─────────────────────────────────────────
-const getStats = async (req, res) => {
-  try {
-    const totalUsers      = await User.countDocuments();
-    const totalClients    = await User.countDocuments({ role: 'client' });
-    const totalPrestataires = await User.countDocuments({ role: 'prestataire' });
-    const totalDemandes   = await Demande.countDocuments();
-    const demandesEnCours = await Demande.countDocuments({ statut: 'en_cours' });
-    const demandesTerminees = await Demande.countDocuments({ statut: 'terminée' });
-    const totalAvis       = await Avis.countDocuments();
-
-    res.status(200).json({
-      users: { total: totalUsers, clients: totalClients, prestataires: totalPrestataires },
-      demandes: { total: totalDemandes, enCours: demandesEnCours, terminees: demandesTerminees },
-      avis: { total: totalAvis },
-    });
-  } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
-  }
-};
 const afficherAvis = async (req, res) => {
   try {
     const avis = await Avis.findByIdAndUpdate(
@@ -204,14 +230,39 @@ const afficherAvis = async (req, res) => {
   }
 };
 
+const getStats = async (req, res) => {
+  try {
+    const totalUsers        = await User.countDocuments();
+    const totalClients      = await User.countDocuments({ role: 'client' });
+    const totalPrestataires = await User.countDocuments({ role: 'prestataire' });
+    const totalDemandes     = await Demande.countDocuments();
+    const demandesEnCours   = await Demande.countDocuments({ statut: 'en_cours' });
+    const demandesTerminees = await Demande.countDocuments({ statut: 'terminée' });
+    const totalAvis         = await Avis.countDocuments();
+    const demandesSuppr     = await User.countDocuments({ demandeSuppressionStatut: 'en_attente' });
+
+    res.status(200).json({
+      users:    { total: totalUsers, clients: totalClients, prestataires: totalPrestataires },
+      demandes: { total: totalDemandes, enCours: demandesEnCours, terminees: demandesTerminees },
+      avis:     { total: totalAvis },
+      suppressions: { enAttente: demandesSuppr },
+    });
+  } catch (error) {
+    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+  }
+};
+
 module.exports = {
   getTousUsers,
   activerUser,
   suspendrUser,
   verifierUser,
   supprimerUser,
+  getDemandesSuppression,
+  validerSuppression,
+  refuserSuppression,
   getTousAvis,
   masquerAvis,
-  getStats,
   afficherAvis,
+  getStats,
 };

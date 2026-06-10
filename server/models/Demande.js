@@ -22,11 +22,6 @@ const demandeSchema = new mongoose.Schema(
       required: [true, 'La catégorie est obligatoire'],
       trim: true,
     },
-    urgence: {
-      type: String,
-      enum: ['faible', 'normale', 'urgente'],
-      default: 'normale',
-    },
     budget: {
       min:    { type: Number, default: 0 },
       max:    { type: Number, default: 0 },

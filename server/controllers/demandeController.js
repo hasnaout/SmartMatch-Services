@@ -12,7 +12,7 @@ const creerDemande = async (req, res) => {
     console.log('📋 Body reçu:', JSON.stringify(req.body, null, 2));
 
     const {
-      titre, description, categorie, urgence,
+      titre, description, categorie,
       budgetMin, budgetMax, ville, region, adresse, fichiers, coordonneesLat, coordonneesLng,
     } = req.body;
 
@@ -29,7 +29,6 @@ const creerDemande = async (req, res) => {
       titre,
       description,
       categorie,
-      urgence:     urgence || 'normale',
       budget: {
         min: Number(budgetMin) || 0,
         max: Number(budgetMax) || 0,

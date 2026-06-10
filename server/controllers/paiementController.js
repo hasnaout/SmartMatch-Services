@@ -142,18 +142,25 @@ const confirmerPaiement = async (req, res) => {
       return res.status(200).json({ message: '✅ Paiement déjà confirmé', paiement });
     }
 
-    // ── Vérifier le statut Stripe si applicable ───────────
-    if (paiement.stripePaymentIntentId && stripe) {
-      try {
-        const intent = await stripe.paymentIntents.retrieve(paiement.stripePaymentIntentId);
-        if (intent.status !== 'succeeded') {
-          return res.status(400).json({
-            message: `❌ Paiement Stripe non finalisé (statut : ${intent.status})`,
-          });
-        }
-      } catch (stripeError) {
-        console.error('⚠️  Vérification Stripe échouée — confirmation manuelle :', stripeError.message);
-        // On laisse passer — la simulation frontend a déjà validé
+    // ── Vérification Stripe bloquante ────────────────────
+    // Paiement en ligne : stripePaymentIntentId obligatoire et statut succeeded.
+    // Paiement en espèces : pas de Stripe, on confirme directement.
+    if (paiement.methode === 'en_ligne') {
+      if (!paiement.stripePaymentIntentId) {
+        return res.status(400).json({
+          message: '❌ Paiement en ligne non initié côté Stripe — confirmation impossible',
+        });
+      }
+      if (!stripe) {
+        return res.status(500).json({
+          message: '❌ Stripe non configuré sur le serveur',
+        });
+      }
+      const intent = await stripe.paymentIntents.retrieve(paiement.stripePaymentIntentId);
+      if (intent.status !== 'succeeded') {
+        return res.status(400).json({
+          message: `❌ Paiement Stripe non finalisé (statut : ${intent.status})`,
+        });
       }
     }
 

@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import api from '../../services/api';
 import socket from '../../services/socket';
+import logo from '../../assets/logo.png';
 
 import {
   Zap, LayoutDashboard, FileText, PlusCircle,
@@ -148,9 +149,7 @@ useEffect(() => {
       <nav className={`navbar ${role}`}>
         {/* Logo */}
         <NavLink to="/" className="navbar-logo">
-          <div className={`navbar-logo-icon ${role}`}>
-            <Zap size={18} color="#fff" strokeWidth={2.5} />
-          </div>
+          <img src={logo} alt="SmartMatch logo" className="navbar-logo-image" />
           <span className="navbar-logo-text">SmartMatch</span>
         </NavLink>
 

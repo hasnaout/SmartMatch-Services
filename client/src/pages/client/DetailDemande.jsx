@@ -229,9 +229,6 @@ const DetailDemande = () => {
             <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap' }}>
               <span className={s.className}>{s.label}</span>
               <span className="badge badge-muted">{demande.categorie}</span>
-              {demande.urgence === 'urgente' && (
-                <span className="badge badge-danger"><Circle size={8} fill="currentColor" /> Urgente</span>
-              )}
             </div>
           </div>
           {user.role === 'client' && demande.statut === 'en_cours' && (

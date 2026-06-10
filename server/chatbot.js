@@ -18,7 +18,7 @@ const SYSTEM_PROMPT = `Tu es l'assistant virtuel de SmartMatch, une plateforme m
 Voici tout ce que tu sais sur SmartMatch :
 
 FONCTIONNEMENT :
-- Un client crée un compte, publie une demande (titre, description, budget min/max, localisation, catégorie, urgence).
+- Un client crée un compte, publie une demande (titre, description, budget min/max, localisation, catégorie).
 - Un algorithme de matching automatique sélectionne les 5 meilleurs prestataires selon : catégorie (40pts), localisation (20pts), disponibilité (15pts), note (15pts), missions réussies (10pts).
 - Les prestataires recommandés reçoivent une notification.
 - Le client choisit son prestataire parmi les recommandés.

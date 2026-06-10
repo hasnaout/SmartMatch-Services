@@ -15,11 +15,6 @@ const statusConfig = {
   annulée:  { label: 'Annulée',  className: 'badge badge-danger'  },
 };
 
-const urgenceConfig = {
-  faible:  { label: 'Faible',   className: 'badge badge-muted'   },
-  normale: { label: 'Normale',  className: 'badge badge-warning' },
-  urgente: { label: 'Urgente',  className: 'badge badge-danger'  },
-};
 
 const PrestataireDashboard = () => {
   const { user } = useAuth();
@@ -145,7 +140,6 @@ useEffect(() => {
             <div className="demandes-grid">
               {demandes.map((d, i) => {
                 const s = statusConfig[d.statut]   || statusConfig['publiée'];
-                const u = urgenceConfig[d.urgence] || urgenceConfig['normale'];
                 return (
                   <div
                     key={d._id}

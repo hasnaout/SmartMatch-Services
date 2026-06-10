@@ -3,18 +3,12 @@ import Navbar from '../../components/layout/Navbar';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
-import { MapPin, Calendar, Filter, MessageCircle, Clock, AlertTriangle, Flame } from 'lucide-react';
+import { MapPin, Calendar, MessageCircle } from 'lucide-react';
 
-const urgenceConfig = {
-  faible:  { label: 'Faible',  className: 'badge badge-muted'   },
-  normale: { label: 'Normale', className: 'badge badge-warning' },
-  urgente: { label: 'Urgente', className: 'badge badge-danger'  },
-};
 
 const DemandesPrestataire = () => {
   const [demandes, setDemandes] = useState([]);
   const [loading,  setLoading]  = useState(true);
-  const [filter,   setFilter]   = useState('');
 
   useEffect(() => {
     api.get('/demandes/disponibles')
@@ -23,9 +17,7 @@ const DemandesPrestataire = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const filtered = filter
-    ? demandes.filter((d) => d.urgence === filter)
-    : demandes;
+  const filtered = demandes;
 
   const formatDate = (d) =>
     new Date(d).toLocaleDateString('fr-FR', {
@@ -46,34 +38,6 @@ const DemandesPrestataire = () => {
           </p>
         </div>
 
-        {/* Filtres urgence */}
-<div style={{
-  display: 'flex',
-  gap: 8,
-  marginBottom: 28,
-  alignItems: 'center',
-  flexWrap: 'wrap',
-}}>
-  <Filter size={15} style={{ color: 'var(--muted)', flexShrink: 0 }} />
-  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', flex: 1 }}>
-    {[
-      { val: '',        label: 'Toutes'      },
-      { val: 'faible',  label: 'Faible',  icon: <Clock size={13} /> },
-      { val: 'normale', label: 'Normale', icon: <AlertTriangle size={13} /> },
-      { val: 'urgente', label: 'Urgente', icon: <Flame size={13} /> },
-    ].map(f => (
-      <button
-        key={f.val}
-        className={filter === f.val ? 'btn-primary' : 'btn-secondary'}
-        onClick={() => setFilter(f.val)}
-        style={{ padding: '8px 14px', fontSize: 13 }}
-      >
-        {f.icon} {f.label}
-      </button>
-    ))}
-  </div>
-</div>
-
         {loading ? (
           <div className="empty-state">
             <span className="spinner" style={{ width: 32, height: 32, borderWidth: 3 }} />
@@ -93,7 +57,6 @@ const DemandesPrestataire = () => {
         ) : (
           <div className="demandes-grid">
             {filtered.map((d, i) => {
-              const u = urgenceConfig[d.urgence] || urgenceConfig['normale'];
               return (
                 <div
                   key={d._id}
@@ -104,9 +67,6 @@ const DemandesPrestataire = () => {
                     <div>
                       <div className="demande-card-title">{d.titre}</div>
                       <div className="demande-card-cat">{d.categorie}</div>
-                    </div>
-                    <div className="demande-card-badges">
-                      <span className={u.className}>{u.label}</span>
                     </div>
                   </div>
 

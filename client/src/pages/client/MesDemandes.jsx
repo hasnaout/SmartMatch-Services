@@ -13,11 +13,6 @@ const statusConfig = {
   annulée:  { label: 'Annulée',  className: 'badge badge-danger'  },
 };
 
-const urgenceConfig = {
-  faible:  { label: 'Faible',  className: 'badge badge-muted'   },
-  normale: { label: 'Normale', className: 'badge badge-warning' },
-  urgente: { label: 'Urgente', className: 'badge badge-danger'  },
-};
 
 // ── Modal Avis ──
 const ModalAvis = ({ demande, onClose, onSuccess }) => {
@@ -219,7 +214,6 @@ const MesDemandes = () => {
           <div className="demandes-grid">
             {filtered.map((d, i) => {
               const s = statusConfig[d.statut]   || statusConfig['publiée'];
-              const u = urgenceConfig[d.urgence] || urgenceConfig['normale'];
               const dejaNote = avisExistants.includes(d._id);
               return (
                 <div key={d._id} className="demande-card client-style" style={{ animationDelay:`${i*0.06}s` }}>
@@ -229,8 +223,7 @@ const MesDemandes = () => {
                       <div className="demande-card-cat">{d.categorie}</div>
                     </div>
                     <div className="demande-card-badges">
-                      <span className={s.className}>{s.label}</span>
-                      <span className={u.className}>{u.label}</span>
+                      {d.statut !== 'publiée' && <span className={s.className}>{s.label}</span>}
                     </div>
                   </div>
 

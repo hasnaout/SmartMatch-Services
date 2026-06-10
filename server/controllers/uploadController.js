@@ -11,6 +11,7 @@ const uploadFichiers = async (req, res) => {
 
     const uploadPromises = req.files.map(async (file) => {
       const formData = new FormData();
+      // ImgBB attend le fichier en base64 via le champ "image"
       formData.append('image', file.buffer.toString('base64'));
 
       const response = await axios.post(
@@ -18,8 +19,6 @@ const uploadFichiers = async (req, res) => {
         formData,
         { headers: formData.getHeaders() }
       );
-
-      console.log('✅ Image uploadée:', response.data.data.url);
 
       return {
         url:  response.data.data.url,
@@ -29,6 +28,7 @@ const uploadFichiers = async (req, res) => {
     });
 
     const fichiers = await Promise.all(uploadPromises);
+    console.log('✅ Fichiers uploadés:', fichiers.map(f => f.nom));
 
     res.status(200).json({
       message: '✅ Fichiers uploadés avec succès',
@@ -37,10 +37,7 @@ const uploadFichiers = async (req, res) => {
 
   } catch (error) {
     console.error('❌ Erreur upload:', error.response?.data || error.message);
-    res.status(500).json({
-      message: '❌ Erreur upload',
-      error: error.message,
-    });
+    res.status(500).json({ message: '❌ Erreur upload', error: error.message });
   }
 };
 

@@ -6,6 +6,7 @@ import Chatbot from "../../components/Chatbot";
 // Images
 import ph from "../../assets/ph.jpg";
 import vid from "../../assets/vid.mp4";
+import logo from "../../assets/logo.png";
 
 // Icônes SVG
 const UserIcon = () => (
@@ -199,6 +200,7 @@ const LandingPage = () => {
       {/* HEADER */}
       <header className="header">
         <div className="logo-container">
+          <img src={logo} alt="SmartMatch logo" className="logo-img" />
           <span className="logo">SmartMatch</span>
         </div>
 

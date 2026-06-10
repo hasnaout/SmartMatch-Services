@@ -4,8 +4,8 @@ import Navbar from '../../components/layout/Navbar';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 import {
-  Send, Upload, X, Image, FileText, Tags, Zap,
-  Wallet, MapPin, Images, CheckCircle, Clock, AlertTriangle, Flame
+  Send, Upload, X, Image, FileText, Tags,
+  Wallet, MapPin, Images, CheckCircle
 } from 'lucide-react';
 import { geocoderVille } from '../../utils/geocoder';
 
@@ -25,7 +25,7 @@ const CreerDemande = () => {
   const [coordonnees, setCoordonnees] = useState(null);
   const [form, setForm] = useState({
     titre: '', description: '', categorie: '',
-    urgence: 'normale', budgetMin: '', budgetMax: '',
+    budgetMin: '', budgetMax: '',
     ville: '', region: '', adresse: '',
   });
   
@@ -156,24 +156,6 @@ const CreerDemande = () => {
                       className={`cat-btn ${form.categorie === cat ? 'active' : ''}`}
                       onClick={() => setForm({ ...form, categorie: cat })}>
                       {cat}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Urgence */}
-              <div className="form-section">
-                <div className="form-section-title"><Zap size={16} /> Niveau d&apos;urgence</div>
-                <div className="urgence-selector">
-                  {[
-                    { key: 'faible', label: 'Faible', icon: <Clock size={14} /> },
-                    { key: 'normale', label: 'Normale', icon: <AlertTriangle size={14} /> },
-                    { key: 'urgente', label: 'Urgente', icon: <Flame size={14} /> },
-                  ].map(u => (
-                    <button key={u.key} type="button"
-                      className={`urgence-btn ${u.key} ${form.urgence === u.key ? 'active' : ''}`}
-                      onClick={() => setForm({ ...form, urgence: u.key })}>
-                      {u.icon} {u.label}
                     </button>
                   ))}
                 </div>

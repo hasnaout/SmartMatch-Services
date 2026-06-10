@@ -37,6 +37,7 @@ services:
       JWT_EXPIRES_IN:    ${JWT_EXPIRES_IN:-7d}
       GROQ_API_KEY:      ${GROQ_API_KEY}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      IMGBB_API_KEY:     ${IMGBB_API_KEY}
     volumes:
       - uploads_data:/app/uploads
     networks:

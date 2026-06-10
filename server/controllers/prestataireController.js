@@ -90,6 +90,8 @@ const updateProfil = async (req, res) => {
       region,
       rayon,
       experience,
+      coordonneesLat,
+      coordonneesLng,
     } = req.body;
 
     const prestataire = await Prestataire.findOne({ user: req.user._id });
@@ -126,8 +128,9 @@ const updateProfil = async (req, res) => {
       prestataire,
     });
   } catch (error) {
+    console.error('❌ ERREUR updateProfil:', error);
     res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
-  }
+}
 };
 
 // ─────────────────────────────────────────

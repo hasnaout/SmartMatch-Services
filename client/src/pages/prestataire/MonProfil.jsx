@@ -260,7 +260,7 @@ const MonProfil = () => {
               <div className="form-grid-2">
                 <div className="form-field">
                   <label className="form-label">Ville</label>
-                  <input className="form-input" placeholder="Casablanca"
+                  <input className="form-input" placeholder="Casablanca" name="ville"
                     value={form.ville} onChange={handleLocalisationChange} />
                 </div>
                 {coordonnees && (
@@ -271,11 +271,13 @@ const MonProfil = () => {
                 <div className="form-field">
                   <label className="form-label">Région</label>
                   <input className="form-input" placeholder="Casablanca-Settat"
+                    name="region"
                     value={form.region} onChange={handleLocalisationChange} />
                 </div>
                 <div className="form-field">
                   <label className="form-label">Rayon d'intervention (km)</label>
                   <input className="form-input" type="number" placeholder="20"
+                    name="rayon"
                     value={form.rayon} onChange={(e) => setForm({ ...form, rayon: e.target.value })} />
                 </div>
               </div>

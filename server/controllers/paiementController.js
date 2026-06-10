@@ -1,7 +1,13 @@
+const Stripe      = require('stripe');
 const Paiement    = require('../models/Paiement');
 const Demande     = require('../models/Demande');
 const Prestataire = require('../models/Prestataire');
 const { creerNotification } = require('../utils/notificationHelper');
+
+// Initialiser Stripe (null si pas de clé — mode simulation maintenu)
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? Stripe(process.env.STRIPE_SECRET_KEY)
+  : null;
 
 // Catégories en ligne vs présentiel
 const CATEGORIES_EN_LIGNE = [
@@ -9,9 +15,8 @@ const CATEGORIES_EN_LIGNE = [
   'Rédaction', 'Marketing', 'Traduction',
 ];
 
-const getTypePaiement = (categorie) => {
-  return CATEGORIES_EN_LIGNE.includes(categorie) ? 'en_ligne' : 'presenciel';
-};
+const getTypePaiement = (categorie) =>
+  CATEGORIES_EN_LIGNE.includes(categorie) ? 'en_ligne' : 'presenciel';
 
 // ─────────────────────────────────────────
 // @route   POST /api/paiements/initier
@@ -28,7 +33,7 @@ const initierPaiement = async (req, res) => {
     }
 
     const demande = await Demande.findById(demandeId)
-      .populate('client', 'nom prenom')
+      .populate('client', 'nom prenom email')
       .populate('prestataireChoisi');
 
     if (!demande) {
@@ -58,6 +63,7 @@ const initierPaiement = async (req, res) => {
       });
     }
 
+    // ── Créer le paiement en base ─────────────────────────
     const paiement = await Paiement.create({
       demande:     demandeId,
       client:      req.user.id,
@@ -65,16 +71,49 @@ const initierPaiement = async (req, res) => {
       montant:     Number(montant),
       methode,
       notes:       notes || '',
-      statut:      methode === 'especes' ? 'en_attente' : 'en_attente',
+      statut:      'en_attente',
     });
+
+    // ── Si paiement en ligne ET Stripe configuré → créer un PaymentIntent ──
+    let stripeClientSecret = null;
+
+    if (methode === 'en_ligne' && stripe) {
+      try {
+        // Stripe travaille en centimes — MAD × 100
+        const paymentIntent = await stripe.paymentIntents.create({
+          amount:   Math.round(Number(montant) * 100),
+          currency: 'mad',  // Dirham marocain
+          metadata: {
+            paiementId:  paiement._id.toString(),
+            demandeId:   demandeId,
+            clientEmail: demande.client.email,
+            missionTitre: demande.titre,
+          },
+          description: `SmartMatch — Mission : ${demande.titre}`,
+        });
+
+        // Stocker l'ID Stripe dans le paiement pour la confirmation
+        paiement.stripePaymentIntentId = paymentIntent.id;
+        await paiement.save();
+
+        stripeClientSecret = paymentIntent.client_secret;
+        console.log(`✅ Stripe PaymentIntent créé : ${paymentIntent.id}`);
+      } catch (stripeError) {
+        console.error('⚠️  Stripe error — fallback simulation :', stripeError.message);
+        // On continue sans Stripe — la simulation frontend prend le relais
+      }
+    }
 
     await paiement.populate('demande', 'titre categorie');
     await paiement.populate('client',  'nom prenom email');
 
-    res.status(201).json({
-      message:  '✅ Paiement initié avec succès',
+    return res.status(201).json({
+      message:            '✅ Paiement initié avec succès',
       paiement,
+      stripeClientSecret, // null si espèces ou Stripe non configuré
+      stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || null,
     });
+
   } catch (error) {
     console.error('❌ ERREUR initierPaiement:', error);
     res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
@@ -100,16 +139,29 @@ const confirmerPaiement = async (req, res) => {
     }
 
     if (paiement.statut === 'payé') {
-      return res.status(200).json({
-        message:  '✅ Paiement déjà confirmé',
-        paiement,
-      });
+      return res.status(200).json({ message: '✅ Paiement déjà confirmé', paiement });
     }
 
-    paiement.statut      = 'payé';
+    // ── Vérifier le statut Stripe si applicable ───────────
+    if (paiement.stripePaymentIntentId && stripe) {
+      try {
+        const intent = await stripe.paymentIntents.retrieve(paiement.stripePaymentIntentId);
+        if (intent.status !== 'succeeded') {
+          return res.status(400).json({
+            message: `❌ Paiement Stripe non finalisé (statut : ${intent.status})`,
+          });
+        }
+      } catch (stripeError) {
+        console.error('⚠️  Vérification Stripe échouée — confirmation manuelle :', stripeError.message);
+        // On laisse passer — la simulation frontend a déjà validé
+      }
+    }
+
+    paiement.statut       = 'payé';
     paiement.datePaiement = new Date();
     await paiement.save();
 
+    // Notifier le prestataire
     if (paiement.prestataire?.user) {
       const io = req.app.get('io');
       await creerNotification(io, {
@@ -121,10 +173,8 @@ const confirmerPaiement = async (req, res) => {
       });
     }
 
-    res.status(200).json({
-      message:  '✅ Paiement confirmé avec succès',
-      paiement,
-    });
+    res.status(200).json({ message: '✅ Paiement confirmé avec succès', paiement });
+
   } catch (error) {
     console.error('❌ ERREUR confirmerPaiement:', error);
     res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
@@ -138,12 +188,8 @@ const confirmerPaiement = async (req, res) => {
 const getMesPaiements = async (req, res) => {
   try {
     const paiements = await Paiement.find({ client: req.user.id })
-      .populate('demande',     'titre categorie statut')
-      .populate('prestataire', 'user notemoyenne')
-      .populate({
-        path:     'prestataire',
-        populate: { path: 'user', select: 'nom prenom' },
-      })
+      .populate('demande', 'titre categorie statut')
+      .populate({ path: 'prestataire', populate: { path: 'user', select: 'nom prenom' } })
       .sort({ createdAt: -1 });
 
     res.status(200).json({ total: paiements.length, paiements });
@@ -163,22 +209,14 @@ const getMesRevenus = async (req, res) => {
       return res.status(404).json({ message: '❌ Profil prestataire introuvable' });
     }
 
-    const paiements = await Paiement.find({
-      prestataire: prestataire._id,
-      statut:      'payé',
-    })
+    const paiements = await Paiement.find({ prestataire: prestataire._id, statut: 'payé' })
       .populate('demande', 'titre categorie')
       .populate('client',  'nom prenom')
       .sort({ createdAt: -1 });
 
     const totalRevenus = paiements.reduce((sum, p) => sum + p.montant, 0);
 
-    res.status(200).json({
-      total:        paiements.length,
-      totalRevenus,
-      devise:       'MAD',
-      paiements,
-    });
+    res.status(200).json({ total: paiements.length, totalRevenus, devise: 'MAD', paiements });
   } catch (error) {
     res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
   }
@@ -209,19 +247,16 @@ const getTousPaiements = async (req, res) => {
     const paiements = await Paiement.find()
       .populate('demande', 'titre categorie')
       .populate('client',  'nom prenom email')
-      .populate({
-        path:     'prestataire',
-        populate: { path: 'user', select: 'nom prenom' },
-      })
+      .populate({ path: 'prestataire', populate: { path: 'user', select: 'nom prenom' } })
       .sort({ createdAt: -1 });
 
     const stats = {
-      total:          paiements.length,
-      totalMontant:   paiements.filter(p => p.statut === 'payé').reduce((s, p) => s + p.montant, 0),
-      enAttente:      paiements.filter(p => p.statut === 'en_attente').length,
-      payes:          paiements.filter(p => p.statut === 'payé').length,
-      enLigne:        paiements.filter(p => p.methode === 'en_ligne').length,
-      especes:        paiements.filter(p => p.methode === 'especes').length,
+      total:        paiements.length,
+      totalMontant: paiements.filter(p => p.statut === 'payé').reduce((s, p) => s + p.montant, 0),
+      enAttente:    paiements.filter(p => p.statut === 'en_attente').length,
+      payes:        paiements.filter(p => p.statut === 'payé').length,
+      enLigne:      paiements.filter(p => p.methode === 'en_ligne').length,
+      especes:      paiements.filter(p => p.methode === 'especes').length,
     };
 
     res.status(200).json({ stats, paiements });

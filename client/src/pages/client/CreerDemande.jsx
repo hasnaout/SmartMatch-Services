@@ -7,6 +7,7 @@ import {
   Send, Upload, X, Image, FileText, Tags, Zap,
   Wallet, MapPin, Images, CheckCircle, Clock, AlertTriangle, Flame
 } from 'lucide-react';
+import { geocoderVille } from '../../utils/geocoder';
 
 const CATEGORIES = [
   'Plomberie', 'Électricité', 'Informatique', 'Jardinage',
@@ -21,20 +22,36 @@ const CreerDemande = () => {
   const [dragging,  setDragging]  = useState(false);
   const [fichiers,  setFichiers]  = useState([]); // urls cloudinary
   const [previews,  setPreviews]  = useState([]); // previews locaux
+  const [coordonnees, setCoordonnees] = useState(null);
   const [form, setForm] = useState({
     titre: '', description: '', categorie: '',
     urgence: 'normale', budgetMin: '', budgetMax: '',
     ville: '', region: '', adresse: '',
   });
+  
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  const handleLocalisationChange = async (e) => {
+    const { name, value } = e.target;
+    const newForm = { ...form, [name]: value };
+    setForm(newForm);
+    if (name === 'ville' || name === 'region') {
+      const ville  = name === 'ville'  ? value : form.ville;
+      const region = name === 'region' ? value : form.region;
+      if (ville.trim().length >= 3) {
+        const coords = await geocoderVille(ville, region);
+        setCoordonnees(coords);
+      } else {
+        setCoordonnees(null);
+      }
+  }
+};
   // ── Upload fichiers ──
   const handleFiles = async (files) => {
     if (!files || files.length === 0) return;
     const filesArray = Array.from(files);
-
     // Prévisualisation locale
     filesArray.forEach(file => {
       if (file.type.startsWith('image/')) {
@@ -82,7 +99,14 @@ const CreerDemande = () => {
     if (!form.categorie) { toast.error('Choisissez une catégorie'); return; }
     setLoading(true);
     try {
-      await api.post('/demandes', { ...form, fichiers });
+      await api.post('/demandes', {
+  ...form,
+  fichiers,
+  ...(coordonnees && {
+    coordonneesLat: coordonnees.lat,
+    coordonneesLng: coordonnees.lng,
+  }),
+});
       toast.success('Demande publiée avec succès !');
       navigate('/client/demandes');
     } catch (err) {
@@ -180,12 +204,17 @@ const CreerDemande = () => {
                   <div className="form-field">
                     <label className="form-label">Ville</label>
                     <input className="form-input" name="ville" placeholder="Casablanca"
-                      value={form.ville} onChange={handleChange} />
+                      value={form.ville} onChange={handleLocalisationChange} />
+                      {coordonnees && (
+  <span style={{ fontSize: 12, color: '#22c55e', marginTop: 4, display: 'block' }}>
+     Position détectée ({coordonnees.lat.toFixed(4)}, {coordonnees.lng.toFixed(4)})
+  </span>
+)}
                   </div>
                   <div className="form-field">
                     <label className="form-label">Région</label>
                     <input className="form-input" name="region" placeholder="Casablanca-Settat"
-                      value={form.region} onChange={handleChange} />
+                      value={form.region} onChange={handleLocalisationChange} />
                   </div>
                   <div className="form-field" style={{ gridColumn:'1 / -1' }}>
                     <label className="form-label">Adresse précise</label>

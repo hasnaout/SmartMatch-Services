@@ -4,7 +4,7 @@ import Navbar from '../../components/layout/Navbar';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 import { Save, Plus, X, CheckCircle, Clock } from 'lucide-react';
-
+import { geocoderVille } from '../../utils/geocoder';
 const CATEGORIES = [
   'Plomberie', 'Électricité', 'Informatique', 'Jardinage',
   'Peinture', 'Maçonnerie', 'Menuiserie', 'Climatisation',
@@ -23,7 +23,7 @@ const MonProfil = () => {
   const [loading,    setLoading]    = useState(false);
   const [saving,     setSaving]     = useState(false);
   const [profil, setProfil] = useState(null);
-
+  const [coordonnees, setCoordonnees] = useState(null);
   useEffect(() => {
     setLoading(true);
     api.get('/prestataires/moi')
@@ -70,7 +70,13 @@ const MonProfil = () => {
     e.preventDefault();
     setSaving(true);
     try {
-      await api.put('/prestataires/profil', form);
+      await api.put('/prestataires/profil', {
+  ...form,
+  ...(coordonnees && {
+    coordonneesLat: coordonnees.lat,
+    coordonneesLng: coordonnees.lng,
+  }),
+});
       await api.put('/prestataires/disponibilite', { disponible });
       toast.success('Profil mis à jour !');
     } catch {
@@ -79,6 +85,20 @@ const MonProfil = () => {
       setSaving(false);
     }
   };
+  const handleLocalisationChange = async (e) => {
+  const { name, value } = e.target;
+  setForm({ ...form, [name]: value });
+  if (name === 'ville' || name === 'region') {
+    const ville  = name === 'ville'  ? value : form.ville;
+    const region = name === 'region' ? value : form.region;
+    if (ville.trim().length >= 3) {
+      const coords = await geocoderVille(ville, region);
+      setCoordonnees(coords);
+    } else {
+      setCoordonnees(null);
+    }
+  }
+};
 
   if (loading) {
     return (
@@ -241,12 +261,17 @@ const MonProfil = () => {
                 <div className="form-field">
                   <label className="form-label">Ville</label>
                   <input className="form-input" placeholder="Casablanca"
-                    value={form.ville} onChange={(e) => setForm({ ...form, ville: e.target.value })} />
+                    value={form.ville} onChange={handleLocalisationChange} />
                 </div>
+                {coordonnees && (
+  <span style={{ fontSize: 12, color: '#22c55e', marginTop: 4, display: 'block' }}>
+     Position détectée ({coordonnees.lat.toFixed(4)}, {coordonnees.lng.toFixed(4)})
+  </span>
+)}
                 <div className="form-field">
                   <label className="form-label">Région</label>
                   <input className="form-input" placeholder="Casablanca-Settat"
-                    value={form.region} onChange={(e) => setForm({ ...form, region: e.target.value })} />
+                    value={form.region} onChange={handleLocalisationChange} />
                 </div>
                 <div className="form-field">
                   <label className="form-label">Rayon d'intervention (km)</label>

@@ -106,11 +106,16 @@ const updateProfil = async (req, res) => {
     if (tarifMax !== undefined) prestataire.tarifMax = tarifMax;
     if (experience !== undefined) prestataire.experience = experience;
 
-    if (ville || region || rayon) {
+    if (ville || region || rayon || coordonneesLat || coordonneesLng) {
       prestataire.zoneGeographique = {
-        ville: ville || prestataire.zoneGeographique.ville,
-        region: region || prestataire.zoneGeographique.region,
-        rayon: rayon || prestataire.zoneGeographique.rayon,
+        ville:  ville  || prestataire.zoneGeographique?.ville,
+        region: region || prestataire.zoneGeographique?.region,
+        rayon:  rayon  || prestataire.zoneGeographique?.rayon || 20,
+        // Coordonnees GPS geocodees cote client (Nominatim)
+        coordonnees: {
+          lat: coordonneesLat ? Number(coordonneesLat) : (prestataire.zoneGeographique?.coordonnees?.lat || null),
+          lng: coordonneesLng ? Number(coordonneesLng) : (prestataire.zoneGeographique?.coordonnees?.lng || null),
+        },
       };
     }
 
@@ -140,7 +145,7 @@ const updateDisponibilite = async (req, res) => {
     const prestataire = await Prestataire.findOneAndUpdate(
       { user: req.user._id },
       { disponible },
-      { new: true }
+      { returnDocument: 'after' }
     );
 
     if (!prestataire) {

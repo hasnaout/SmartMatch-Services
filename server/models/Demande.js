@@ -32,11 +32,22 @@ const demandeSchema = new mongoose.Schema(
       max:    { type: Number, default: 0 },
       devise: { type: String, default: 'MAD' },
     },
+
     localisation: {
       ville:   { type: String, trim: true },
       region:  { type: String, trim: true },
       adresse: { type: String, trim: true },
+
+      // ── Coordonnées GPS de la demande ────────────────────────────
+      // Alimentées par le composant CreerDemande.jsx via
+      // l'API Nominatim (OpenStreetMap) au moment de la saisie.
+      // Permettent le calcul Haversine dans le moteur de matching.
+      coordonnees: {
+        lat: { type: Number, default: null },
+        lng: { type: Number, default: null },
+      },
     },
+
     fichiers: [
       {
         url:  { type: String },

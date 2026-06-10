@@ -13,7 +13,7 @@ const creerDemande = async (req, res) => {
 
     const {
       titre, description, categorie, urgence,
-      budgetMin, budgetMax, ville, region, adresse, fichiers,
+      budgetMin, budgetMax, ville, region, adresse, fichiers, coordonneesLat, coordonneesLng,
     } = req.body;
 
     if (!titre || !description || !categorie) {
@@ -38,6 +38,11 @@ const creerDemande = async (req, res) => {
         ville:   ville   || '',
         region:  region  || '',
         adresse: adresse || '',
+        // Coordonnées GPS envoyées par le client (géocodage Nominatim)
+        coordonnees: {
+          lat: coordonneesLat ? Number(coordonneesLat) : null,
+          lng: coordonneesLng ? Number(coordonneesLng) : null,
+        },
       },
       fichiers: Array.isArray(fichiers) ? fichiers : [],
     });

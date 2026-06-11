@@ -152,9 +152,8 @@ useEffect(() => {
                         <div className="demande-card-cat">{d.categorie}</div>
                       </div>
                       <div className="demande-card-badges">
-                        <span className={s.className}>{s.label}</span>
-                        <span className={u.className}>{u.label}</span>
-                      </div>
+  <span className={s.className}>{s.label}</span>
+</div>
                     </div>
 
                     <p className="demande-card-body">{d.description}</p>

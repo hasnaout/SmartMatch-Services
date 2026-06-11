@@ -150,7 +150,6 @@ useEffect(() => {
         {/* Logo */}
         <NavLink to="/" className="navbar-logo">
           <img src={logo} alt="SmartMatch logo" className="navbar-logo-image" />
-          <span className="navbar-logo-text">SmartMatch</span>
         </NavLink>
 
         {/* Links desktop */}

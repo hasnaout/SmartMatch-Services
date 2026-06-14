@@ -9,7 +9,7 @@ const { creerNotification } = require('../utils/notificationHelper');
 // ─────────────────────────────────────────
 const creerDemande = async (req, res) => {
   try {
-    console.log('📋 Body reçu:', JSON.stringify(req.body, null, 2));
+    console.log(' Body reçu:', JSON.stringify(req.body, null, 2));
 
     const {
       titre, description, categorie,
@@ -22,7 +22,7 @@ const creerDemande = async (req, res) => {
       });
     }
 
-    console.log('📸 Fichiers reçus dans body:', fichiers);
+    console.log(' Fichiers reçus dans body:', fichiers);
 
     const demande = await Demande.create({
       client:      req.user.id,
@@ -54,15 +54,15 @@ const creerDemande = async (req, res) => {
       disponible:  true,
     }).populate('user', 'nom prenom email telephone avatar isVerified');
 
-    console.log('🔍 Catégorie recherchée:', categorie);
-    console.log('🎯 Prestataires trouvés:', prestataires.length);
+    console.log(' Catégorie recherchée:', categorie);
+    console.log(' Prestataires trouvés:', prestataires.length);
 
     const recommandations = prestataires
       .map(p => ({ prestataire: p._id, score: calculerScore(p, demande) }))
       .sort((a, b) => b.score - a.score)
       .slice(0, 5);
 
-    console.log('📋 Recommandations:', recommandations.length);
+    console.log(' Recommandations:', recommandations.length);
 
     demande.prestatairesRecommandes = recommandations;
     await demande.save();
@@ -77,7 +77,7 @@ const creerDemande = async (req, res) => {
         await creerNotification(io, {
           destinataire: prest.user._id,
           type:    'nouvelle_demande',
-          titre:   '🔔 Nouvelle mission disponible',
+          titre:   ' Nouvelle mission disponible',
           message: `Une nouvelle demande "${titre}" correspond à votre profil`,
           lien:    '/prestataire/demandes',
         });
@@ -294,7 +294,7 @@ const choisirPrestataire = async (req, res) => {
       await creerNotification(io, {
         destinataire: prest.user,
         type:    'demande_acceptee',
-        titre:   '🎉 Mission acceptée !',
+        titre:   '  Mission acceptée !',
         message: `Vous avez été choisi pour la mission "${demande.titre}"`,
         lien:    '/prestataire/demandes',
       });

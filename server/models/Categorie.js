@@ -15,7 +15,7 @@ const categorieSchema = new mongoose.Schema(
     },
     icone: {
       type: String,
-      default: '🔧',
+      default: '',
     },
     isActive: {
       type: Boolean,

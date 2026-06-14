@@ -269,7 +269,7 @@ const AdminUsers = () => {
               </div>
             ) : demandesSuppr.length === 0 ? (
               <div className="empty-state">
-                <p className="empty-state-title">Aucune demande en attente 🎉</p>
+                <p className="empty-state-title">Aucune demande en attente  </p>
               </div>
             ) : (
               <table>

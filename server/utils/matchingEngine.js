@@ -101,26 +101,26 @@ const scorerLocalisation = (prestataire, demande) => {
 const calculerScore = (prestataire, demande) => {
   let score = 0;
 
-  // 1️⃣ Catégorie / Compétences — 40 points
+
   if (prestataire.categories.includes(demande.categorie)) {
     score += 40;
   }
 
-  // 2️⃣ Localisation — 20 points
+
   const { points: pointsLoc } = scorerLocalisation(prestataire, demande);
   score += pointsLoc;
 
-  // 3️⃣ Disponibilité — 15 points
+
   if (prestataire.disponible) {
     score += 15;
   }
 
-  // 4️⃣ Note moyenne — 15 points (note/5 → score/15)
+
   if (prestataire.notemoyenne > 0) {
     score += (prestataire.notemoyenne / 5) * 15;
   }
 
-  // 5️⃣ Historique missions réussies — 10 points (plafonné à 10)
+
   const missions = Math.min(prestataire.nombreMissionsReussies || 0, 10);
   score += missions;
 

@@ -9,7 +9,7 @@ const creerNotification = async (io, { destinataire, type, titre, message, lien 
     });
 
     console.log('   Notification créée:', notif._id);
-    console.log('📡 Envoi socket vers room:', `user_${destinataire}`);
+    console.log(' Envoi socket vers room:', `user_${destinataire}`);
 
     io.to(`user_${destinataire}`).emit('nouvelle_notification', {
       _id:       notif._id,

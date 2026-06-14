@@ -14,21 +14,21 @@ const initCategories = async () => {
   const count = await Categorie.countDocuments();
   if (count === 0) {
     await Categorie.insertMany([
-      { nom: 'Plomberie',        icone: '🔧', ordre: 1 },
-      { nom: 'Électricité',      icone: '⚡', ordre: 2 },
-      { nom: 'Informatique',     icone: '💻', ordre: 3 },
-      { nom: 'Jardinage',        icone: '🌿', ordre: 4 },
-      { nom: 'Peinture',         icone: '🎨', ordre: 5 },
-      { nom: 'Maçonnerie',       icone: '🏗️', ordre: 6 },
-      { nom: 'Menuiserie',       icone: '🪚', ordre: 7 },
-      { nom: 'Climatisation',    icone: '❄️', ordre: 8 },
-      { nom: 'Déménagement',     icone: '📦', ordre: 9 },
-      { nom: 'Nettoyage',        icone: '🧹', ordre: 10 },
-      { nom: 'Cuisine',          icone: '👨‍🍳', ordre: 11 },
-      { nom: 'Design',           icone: '✏️', ordre: 12 },
-      { nom: 'Marketing',        icone: '📢', ordre: 13 },
-      { nom: 'Traduction',       icone: '🌐', ordre: 14 },
-      { nom: 'Autre',            icone: '🔨', ordre: 15 },
+      { nom: 'Plomberie',ordre: 1 },
+      { nom: 'Électricité',ordre: 2 },
+      { nom: 'Informatique', ordre: 3 },
+      { nom: 'Jardinage', ordre: 4 },
+      { nom: 'Peinture', ordre: 5 },
+      { nom: 'Maçonnerie', ordre: 6 },
+      { nom: 'Menuiserie',  ordre: 7 },
+      { nom: 'Climatisation', ordre: 8 },
+      { nom: 'Déménagement',ordre: 9 },
+      { nom: 'Nettoyage', ordre: 10 },
+      { nom: 'Cuisine',  ordre: 11 },
+      { nom: 'Design', ordre: 12 },
+      { nom: 'Marketing', ordre: 13 },
+      { nom: 'Traduction',    ordre: 14 },
+      { nom: 'Autre',    rdre: 15 },
     ]);
     console.log('   Catégories initialisées');
   }

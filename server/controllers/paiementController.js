@@ -99,7 +99,7 @@ const initierPaiement = async (req, res) => {
         stripeClientSecret = paymentIntent.client_secret;
         console.log(`   Stripe PaymentIntent créé : ${paymentIntent.id}`);
       } catch (stripeError) {
-        console.error('⚠️  Stripe error — fallback simulation :', stripeError.message);
+        console.error('  Stripe error — fallback simulation :', stripeError.message);
         // On continue sans Stripe — la simulation frontend prend le relais
       }
     }
@@ -174,7 +174,7 @@ const confirmerPaiement = async (req, res) => {
       await creerNotification(io, {
         destinataire: paiement.prestataire.user,
         type:    'demande_terminee',
-        titre:   '💰 Paiement reçu !',
+        titre:   ' Paiement reçu !',
         message: `Vous avez reçu un paiement de ${paiement.montant} ${paiement.devise} pour la mission "${paiement.demande?.titre || 'votre mission'}"`,
         lien:    '/prestataire/dashboard',
       });

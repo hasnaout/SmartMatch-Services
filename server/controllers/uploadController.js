@@ -3,7 +3,7 @@ const FormData = require('form-data');
 
 const uploadFichiers = async (req, res) => {
   try {
-    console.log('📁 Fichiers reçus:', req.files?.length);
+    console.log(' Fichiers reçus:', req.files?.length);
 
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ message: '  Aucun fichier reçu' });

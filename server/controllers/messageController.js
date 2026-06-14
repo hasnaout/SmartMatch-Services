@@ -21,7 +21,7 @@ const envoyerMessage = async (req, res) => {
     }
 
     const roomId = genererRoomId(demandeId, req.user.id, destinataireId);
-    console.log('💬 RoomId généré:', roomId);
+    console.log(' RoomId généré:', roomId);
 
     const message = await Message.create({
       roomId,
@@ -45,7 +45,7 @@ const getMessages = async (req, res) => {
   try {
     const { demandeId, userId } = req.params;
     const roomId = genererRoomId(demandeId, req.user.id, userId);
-    console.log('📨 Récupération messages roomId:', roomId);
+    console.log(' Récupération messages roomId:', roomId);
 
     const messages = await Message.find({ roomId })
       .populate('expediteur',   'nom prenom avatar')

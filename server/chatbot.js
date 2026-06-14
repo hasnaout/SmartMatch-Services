@@ -82,7 +82,7 @@ router.post("/", async (req, res) => {
 
   // ── Fallback rule-based si pas de clé API ──────────────
   if (!apiKey) {
-    console.warn("⚠️  Aucune clé GROQ_API_KEY trouvée — fallback rule-based actif.");
+    console.warn("    Aucune clé GROQ_API_KEY trouvée — fallback rule-based actif.");
     return res.json({ response: getFallbackResponse(message.trim()) });
   }
 

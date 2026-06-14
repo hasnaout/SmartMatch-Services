@@ -8,7 +8,7 @@ import logo from '../../assets/logo.png';
 
 import {
   Zap, LayoutDashboard, FileText, PlusCircle,
-  Users, Settings, LogOut, ShieldCheck,
+  Users, Settings, LogOut, ShieldCheck, User,
   MessageCircle, Bell, CheckCheck, MapPin, CreditCard, TrendingUp, Tag, Star,
   CheckCircle, PartyPopper, BadgeCheck
 } from 'lucide-react';
@@ -126,7 +126,7 @@ useEffect(() => {
     { to: '/prestataire/dashboard', icon: <LayoutDashboard size={15} />, label: 'Tableau de bord' },
     { to: '/prestataire/demandes',  icon: <FileText size={15} />,        label: 'Missions'        },
     { to: '/messages',              icon: <MessageCircle size={15} />,   label: 'Messages'        },
-     { to: '/prestataire/profil',    icon: <Settings size={15} />,        label: 'Mon profil'      },
+     { to: '/prestataire/profil',    icon: <User size={15} />,        label: 'Mon profil'      },
      { to: '/prestataire/revenus', icon: <TrendingUp size={15} />, label: 'Revenus' },
      { to: '/settings', icon: <Settings size={15} />, label: 'Paramètres' },
   ];
@@ -232,10 +232,10 @@ useEffect(() => {
   )}
 
           {/* User */}
-          <div className="navbar-user">
+          <button className="navbar-user" onClick={() => navigate('/settings')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
     <div className={`navbar-avatar ${role}`}>{initiales}</div>
     <span className="navbar-username">{user?.prenom} {user?.nom}</span>
-  </div>
+  </button>
 
           <button className="navbar-logout" onClick={handleLogout}>
     <LogOut size={14} /> Déconnecter

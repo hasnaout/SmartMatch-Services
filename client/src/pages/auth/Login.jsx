@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
-import { Eye, EyeOff, Zap, CheckCircle, Users, Star } from 'lucide-react';
+import { Eye, EyeOff, CheckCircle, Users, Star } from 'lucide-react';
 import api from '../../services/api';
+import logo from '../../assets/logo.png';
 
 const Login = () => {
   const [email,      setEmail]      = useState('');
@@ -99,9 +100,7 @@ const Login = () => {
         <div className="auth-left-orb auth-left-orb-3" />
         <div className="auth-left-content">
           <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:48 }}>
-            <div style={{ width:48, height:48, borderRadius:14, background:'rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-              <Zap size={24} color="#fff" />
-            </div>
+            <img src={logo} alt="SmartMatch" style={{ width:48, height:48, objectFit:'contain' }} />
             <span style={{ fontFamily:"'Syne',sans-serif", fontSize:24, fontWeight:800, color:'#fff' }}>SmartMatch</span>
           </div>
           <h2 className="auth-left-title">La plateforme qui connecte talents et besoins</h2>
@@ -125,9 +124,7 @@ const Login = () => {
       <div className="auth-right">
         <div className="auth-container">
           <div className="auth-logo">
-            <div className="auth-logo-icon">
-              <Zap size={20} color="#fff" strokeWidth={2.5} />
-            </div>
+            <img src={logo} alt="SmartMatch" style={{ width:36, height:36, objectFit:'contain' }} />
             <span className="auth-logo-text">SmartMatch</span>
           </div>
 

@@ -18,7 +18,7 @@ const creerDemande = async (req, res) => {
 
     if (!titre || !description || !categorie) {
       return res.status(400).json({
-        message: '❌ Titre, description et catégorie sont obligatoires',
+        message: '  Titre, description et catégorie sont obligatoires',
       });
     }
 
@@ -46,7 +46,7 @@ const creerDemande = async (req, res) => {
       fichiers: Array.isArray(fichiers) ? fichiers : [],
     });
 
-    console.log('✅ Demande créée:', demande._id);
+    console.log('   Demande créée:', demande._id);
 
     // ── Matching ──
     const prestataires = await Prestataire.find({
@@ -93,12 +93,12 @@ const creerDemande = async (req, res) => {
     ]);
 
     res.status(201).json({
-      message: '✅ Demande créée avec succès',
+      message: '   Demande créée avec succès',
       demande,
     });
   } catch (error) {
-    console.error('❌ ERREUR creerDemande:', error);
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    console.error('  ERREUR creerDemande:', error);
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -122,8 +122,8 @@ const getMesDemandes = async (req, res) => {
 
     res.status(200).json({ total: demandes.length, demandes });
   } catch (error) {
-    console.error('❌ ERREUR getMesDemandes:', error);
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    console.error('  ERREUR getMesDemandes:', error);
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -135,7 +135,7 @@ const getDemandesDisponibles = async (req, res) => {
   try {
     const prestataire = await Prestataire.findOne({ user: req.user.id });
     if (!prestataire) {
-      return res.status(404).json({ message: '❌ Profil prestataire introuvable' });
+      return res.status(404).json({ message: '  Profil prestataire introuvable' });
     }
 
     const demandes = await Demande.find({
@@ -147,8 +147,8 @@ const getDemandesDisponibles = async (req, res) => {
 
     res.status(200).json({ total: demandes.length, demandes });
   } catch (error) {
-    console.error('❌ ERREUR getDemandesDisponibles:', error);
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    console.error('  ERREUR getDemandesDisponibles:', error);
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -170,7 +170,7 @@ const getDemande = async (req, res) => {
       });
 
     if (!demande) {
-      return res.status(404).json({ message: '❌ Demande introuvable' });
+      return res.status(404).json({ message: '  Demande introuvable' });
     }
 
     const isClient = demande.client._id.toString() === req.user.id;
@@ -193,7 +193,7 @@ const getDemande = async (req, res) => {
             || r.prestataire?.toString() === pid
         );
 
-        // ✅ Prestataire dont la catégorie correspond (accès depuis /disponibles)
+        //    Prestataire dont la catégorie correspond (accès depuis /disponibles)
         const categorieMatch = prestataire.categories?.includes(demande.categorie);
 
         isPrestataireAutorise = choisi === pid || recommande || categorieMatch;
@@ -201,13 +201,13 @@ const getDemande = async (req, res) => {
     }
 
     if (!isClient && !isPrestataireAutorise && !isAdmin) {
-      return res.status(403).json({ message: '❌ Non autorisé' });
+      return res.status(403).json({ message: '  Non autorisé' });
     }
 
     res.status(200).json({ demande });
   } catch (error) {
-    console.error('❌ ERREUR getDemande:', error);
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    console.error('  ERREUR getDemande:', error);
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -221,16 +221,16 @@ const updateStatut = async (req, res) => {
     const statutsValides = ['publiée', 'en_cours', 'terminée', 'annulée'];
 
     if (!statutsValides.includes(statut)) {
-      return res.status(400).json({ message: '❌ Statut invalide' });
+      return res.status(400).json({ message: '  Statut invalide' });
     }
 
     const demande = await Demande.findById(req.params.id);
     if (!demande) {
-      return res.status(404).json({ message: '❌ Demande introuvable' });
+      return res.status(404).json({ message: '  Demande introuvable' });
     }
 
     if (demande.client.toString() !== req.user.id && req.user.role !== 'admin') {
-      return res.status(403).json({ message: '❌ Non autorisé' });
+      return res.status(403).json({ message: '  Non autorisé' });
     }
 
     const ancienStatut = demande.statut;
@@ -249,7 +249,7 @@ const updateStatut = async (req, res) => {
         await creerNotification(io, {
           destinataire: prest.user,
           type:    'demande_terminee',
-          titre:   '✅ Mission terminée',
+          titre:   '   Mission terminée',
           message: `La mission "${demande.titre}" a été marquée comme terminée`,
           lien:    '/prestataire/dashboard',
         });
@@ -257,12 +257,12 @@ const updateStatut = async (req, res) => {
     }
 
     res.status(200).json({
-      message: `✅ Statut mis à jour : ${statut}`,
+      message: `   Statut mis à jour : ${statut}`,
       demande,
     });
   } catch (error) {
-    console.error('❌ ERREUR updateStatut:', error);
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    console.error('  ERREUR updateStatut:', error);
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -277,11 +277,11 @@ const choisirPrestataire = async (req, res) => {
       .populate('client', 'nom prenom');
 
     if (!demande) {
-      return res.status(404).json({ message: '❌ Demande introuvable' });
+      return res.status(404).json({ message: '  Demande introuvable' });
     }
 
     if (demande.client._id.toString() !== req.user.id) {
-      return res.status(403).json({ message: '❌ Non autorisé' });
+      return res.status(403).json({ message: '  Non autorisé' });
     }
 
     demande.prestataireChoisi = prestataireId;
@@ -300,10 +300,10 @@ const choisirPrestataire = async (req, res) => {
       });
     }
 
-    res.status(200).json({ message: '✅ Prestataire choisi', demande });
+    res.status(200).json({ message: '   Prestataire choisi', demande });
   } catch (error) {
-    console.error('❌ ERREUR choisirPrestataire:', error);
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    console.error('  ERREUR choisirPrestataire:', error);
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -317,12 +317,12 @@ const terminerMission = async (req, res) => {
       .populate('client', 'nom prenom');
 
     if (!demande) {
-      return res.status(404).json({ message: '❌ Demande introuvable' });
+      return res.status(404).json({ message: '  Demande introuvable' });
     }
 
     const prestataire = await Prestataire.findOne({ user: req.user.id });
     if (!prestataire) {
-      return res.status(404).json({ message: '❌ Profil prestataire introuvable' });
+      return res.status(404).json({ message: '  Profil prestataire introuvable' });
     }
 
     const prestataireChoisiId = demande.prestataireChoisi?._id?.toString()
@@ -330,13 +330,13 @@ const terminerMission = async (req, res) => {
 
     if (prestataireChoisiId !== prestataire._id.toString()) {
       return res.status(403).json({
-        message: '❌ Vous n\'êtes pas assigné à cette mission',
+        message: '  Vous n\'êtes pas assigné à cette mission',
       });
     }
 
     if (demande.statut !== 'en_cours') {
       return res.status(400).json({
-        message: '❌ La mission doit être en cours pour être terminée',
+        message: '  La mission doit être en cours pour être terminée',
       });
     }
 
@@ -351,18 +351,18 @@ const terminerMission = async (req, res) => {
     await creerNotification(io, {
       destinataire: demande.client._id,
       type:    'demande_terminee',
-      titre:   '✅ Mission terminée !',
+      titre:   '   Mission terminée !',
       message: `Le prestataire a terminé la mission "${demande.titre}"`,
       lien:    `/client/demandes/${demande._id}`,
     });
 
     res.status(200).json({
-      message: '✅ Mission marquée comme terminée',
+      message: '   Mission marquée comme terminée',
       demande,
     });
   } catch (error) {
-    console.error('❌ ERREUR terminerMission:', error);
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    console.error('  ERREUR terminerMission:', error);
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 

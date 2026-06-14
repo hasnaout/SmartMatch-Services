@@ -497,7 +497,7 @@ const Paiement = () => {
                 <CheckCircle size={40} color="var(--success)" />
               </div>
 
-              <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 8 }}>Paiement effectué ✅</h2>
+              <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 8 }}>Paiement effectué   </h2>
               <p style={{ color: 'var(--muted)', marginBottom: 28, fontSize: 14 }}>
                 Votre paiement a été enregistré avec succès
               </p>

@@ -17,16 +17,16 @@ const register = async (req, res) => {
     const { nom, prenom, email, password, role, telephone } = req.body;
 
     if (!nom || !prenom || !email || !password || !role) {
-      return res.status(400).json({ message: '❌ Tous les champs sont obligatoires' });
+      return res.status(400).json({ message: '  Tous les champs sont obligatoires' });
     }
 
     if (!['client', 'prestataire'].includes(role)) {
-      return res.status(400).json({ message: '❌ Rôle invalide' });
+      return res.status(400).json({ message: '  Rôle invalide' });
     }
 
     const userExiste = await User.findOne({ email });
     if (userExiste) {
-      return res.status(400).json({ message: '❌ Cet email est déjà utilisé' });
+      return res.status(400).json({ message: '  Cet email est déjà utilisé' });
     }
 
     const user = await User.create({ nom, prenom, email, password, role, telephone });
@@ -38,7 +38,7 @@ const register = async (req, res) => {
     const token = generateToken(user._id);
 
     return res.status(201).json({
-      message: '✅ Compte créé avec succès',
+      message: '   Compte créé avec succès',
       token,
       user: {
         id: user._id,
@@ -50,7 +50,7 @@ const register = async (req, res) => {
       },
     });
   } catch (error) {
-    return res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    return res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 // ─────────────────────────────────────────
@@ -63,31 +63,31 @@ const login = async (req, res) => {
 
     // Vérifier les champs
     if (!email || !password) {
-      return res.status(400).json({ message: '❌ Email et mot de passe requis' });
+      return res.status(400).json({ message: '  Email et mot de passe requis' });
     }
 
     // Chercher l'utilisateur avec le password (select: false par défaut)
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
-      return res.status(401).json({ message: '❌ Email ou mot de passe incorrect' });
+      return res.status(401).json({ message: '  Email ou mot de passe incorrect' });
     }
 
     // Vérifier le mot de passe
     const passwordCorrect = await user.comparePassword(password);
     if (!passwordCorrect) {
-      return res.status(401).json({ message: '❌ Email ou mot de passe incorrect' });
+      return res.status(401).json({ message: '  Email ou mot de passe incorrect' });
     }
 
     // Vérifier si le compte est actif
     if (!user.isActive) {
-      return res.status(403).json({ message: '❌ Compte suspendu, contactez l\'administrateur' });
+      return res.status(403).json({ message: '  Compte suspendu, contactez l\'administrateur' });
     }
 
     // Générer le token
     const token = generateToken(user._id);
 
     res.status(200).json({
-      message: '✅ Connexion réussie',
+      message: '   Connexion réussie',
       token,
       user: {
         id: user._id,
@@ -99,7 +99,7 @@ const login = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -112,7 +112,7 @@ const getMe = async (req, res) => {
     const user = await User.findById(req.user._id);
     res.status(200).json({ user });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -126,14 +126,14 @@ const motDePasseOublie = async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) {
-      return res.status(400).json({ message: '❌ Email requis' });
+      return res.status(400).json({ message: '  Email requis' });
     }
 
     const user = await User.findOne({ email });
     if (!user) {
       // Pour la sécurité, on répond pareil même si l'email n'existe pas
       return res.status(200).json({
-        message: '✅ Si cet email existe, un code a été envoyé',
+        message: '   Si cet email existe, un code a été envoyé',
       });
     }
 
@@ -149,12 +149,12 @@ const motDePasseOublie = async (req, res) => {
     console.log(`🔑 Code de réinitialisation pour ${email}: ${code}`);
 
     res.status(200).json({
-      message: '✅ Code de réinitialisation généré',
+      message: '   Code de réinitialisation généré',
       // En développement, on renvoie le code directement
-      code: process.env.NODE_ENV === 'development' ? code : undefined,
+      code: code,
     });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -167,7 +167,7 @@ const reinitialiserMotDePasse = async (req, res) => {
     const { email, code, nouveauMotDePasse } = req.body;
 
     if (!email || !code || !nouveauMotDePasse) {
-      return res.status(400).json({ message: '❌ Tous les champs sont requis' });
+      return res.status(400).json({ message: '  Tous les champs sont requis' });
     }
 
     const user = await User.findOne({
@@ -177,7 +177,7 @@ const reinitialiserMotDePasse = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(400).json({ message: '❌ Code invalide ou expiré' });
+      return res.status(400).json({ message: '  Code invalide ou expiré' });
     }
 
     user.password        = nouveauMotDePasse;
@@ -185,9 +185,9 @@ const reinitialiserMotDePasse = async (req, res) => {
     user.resetCodeExpire = undefined;
     await user.save();
 
-    res.status(200).json({ message: '✅ Mot de passe réinitialisé avec succès' });
+    res.status(200).json({ message: '   Mot de passe réinitialisé avec succès' });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 

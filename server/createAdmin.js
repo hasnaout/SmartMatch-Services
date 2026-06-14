@@ -16,10 +16,10 @@ const createAdmin = async () => {
       isVerified: true,
       isActive: true,
     });
-    console.log('✅ Admin créé :', admin.email);
+    console.log('   Admin créé :', admin.email);
     process.exit(0);
   } catch (error) {
-    console.error('❌ Erreur de création admin :', error.message);
+    console.error('  Erreur de création admin :', error.message);
     process.exit(1);
   }
 };

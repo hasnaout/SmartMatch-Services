@@ -8,7 +8,7 @@ const creerNotification = async (io, { destinataire, type, titre, message, lien 
       destinataire, type, titre, message, lien,
     });
 
-    console.log('✅ Notification créée:', notif._id);
+    console.log('   Notification créée:', notif._id);
     console.log('📡 Envoi socket vers room:', `user_${destinataire}`);
 
     io.to(`user_${destinataire}`).emit('nouvelle_notification', {
@@ -21,10 +21,10 @@ const creerNotification = async (io, { destinataire, type, titre, message, lien 
       createdAt: notif.createdAt,
     });
 
-    console.log('✅ Socket émis');
+    console.log('   Socket émis');
     return notif;
   } catch (error) {
-    console.error('❌ Erreur notification:', error.message);
+    console.error('  Erreur notification:', error.message);
   }
 };
 

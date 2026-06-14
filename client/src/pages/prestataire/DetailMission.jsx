@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
-const socket = io('http://localhost:5001');
+const socket = io({ transports: ['websocket', 'polling'] });
 
 const statusConfig = {
   publiée:  { label: 'Publiée',  className: 'badge badge-accent'  },

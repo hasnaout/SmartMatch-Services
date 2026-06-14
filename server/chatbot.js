@@ -131,7 +131,7 @@ router.post("/", async (req, res) => {
     return res.json({ response: botResponse });
 
   } catch (error) {
-    console.error("❌ Erreur LLM :", error.response?.data || error.message);
+    console.error("  Erreur LLM :", error.response?.data || error.message);
 
     // Fallback gracieux si l'API est indisponible
     const fallback = getFallbackResponse(message.trim());

@@ -9,7 +9,7 @@ const fileFilter = (_req, file, cb) => {
   const ext     = allowed.test(path.extname(file.originalname).toLowerCase());
   const mime    = allowed.test(file.mimetype);
   if (ext && mime) return cb(null, true);
-  cb(new Error('❌ Type non autorisé (jpg, png, webp, pdf)'));
+  cb(new Error('  Type non autorisé (jpg, png, webp, pdf)'));
 };
 
 const upload = multer({
@@ -22,8 +22,8 @@ const handleUploadError = (uploadFn) => (req, res, next) => {
   uploadFn(req, res, (err) => {
     if (err instanceof multer.MulterError) {
       if (err.code === 'LIMIT_FILE_SIZE')
-        return res.status(400).json({ message: '❌ Fichier trop lourd (5MB max)' });
-      return res.status(400).json({ message: `❌ Erreur upload : ${err.message}` });
+        return res.status(400).json({ message: '  Fichier trop lourd (5MB max)' });
+      return res.status(400).json({ message: `  Erreur upload : ${err.message}` });
     }
     if (err) return res.status(400).json({ message: err.message });
     next();

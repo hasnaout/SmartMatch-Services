@@ -12,12 +12,12 @@ const envoyerMessage = async (req, res) => {
     const { destinataireId, demandeId, contenu } = req.body;
 
     if (!destinataireId || !demandeId || !contenu) {
-      return res.status(400).json({ message: '❌ Tous les champs sont obligatoires' });
+      return res.status(400).json({ message: '  Tous les champs sont obligatoires' });
     }
 
     const demande = await Demande.findById(demandeId);
     if (!demande) {
-      return res.status(404).json({ message: '❌ Demande introuvable' });
+      return res.status(404).json({ message: '  Demande introuvable' });
     }
 
     const roomId = genererRoomId(demandeId, req.user.id, destinataireId);
@@ -34,10 +34,10 @@ const envoyerMessage = async (req, res) => {
     await message.populate('expediteur',   'nom prenom avatar');
     await message.populate('destinataire', 'nom prenom avatar');
 
-    res.status(201).json({ message: '✅ Message envoyé', data: message });
+    res.status(201).json({ message: '   Message envoyé', data: message });
   } catch (error) {
-    console.error('❌ ERREUR envoyerMessage:', error);
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    console.error('  ERREUR envoyerMessage:', error);
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -59,7 +59,7 @@ const getMessages = async (req, res) => {
 
     res.status(200).json({ total: messages.length, messages });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -96,7 +96,7 @@ const getConversations = async (req, res) => {
       conversations: Object.values(conversations),
     });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 

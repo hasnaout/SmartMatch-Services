@@ -27,7 +27,7 @@ const getTousUsers = async (req, res) => {
 
     res.status(200).json({ total, page: Number(page), users });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -44,12 +44,12 @@ const activerUser = async (req, res) => {
     );
 
     if (!user) {
-      return res.status(404).json({ message: '❌ Utilisateur introuvable' });
+      return res.status(404).json({ message: '  Utilisateur introuvable' });
     }
 
-    res.status(200).json({ message: '✅ Compte activé', user });
+    res.status(200).json({ message: '   Compte activé', user });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -66,12 +66,12 @@ const suspendrUser = async (req, res) => {
     );
 
     if (!user) {
-      return res.status(404).json({ message: '❌ Utilisateur introuvable' });
+      return res.status(404).json({ message: '  Utilisateur introuvable' });
     }
 
-    res.status(200).json({ message: '✅ Compte suspendu', user });
+    res.status(200).json({ message: '   Compte suspendu', user });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -88,21 +88,21 @@ const verifierUser = async (req, res) => {
     );
 
     if (!user) {
-      return res.status(404).json({ message: '❌ Utilisateur introuvable' });
+      return res.status(404).json({ message: '  Utilisateur introuvable' });
     }
 
     const io = req.app.get('io');
     await creerNotification(io, {
       destinataire: user._id,
       type:    'compte_verifie',
-      titre:   '✅ Compte vérifié !',
+      titre:   '   Compte vérifié !',
       message: 'Votre compte a été vérifié par l\'administrateur. Vous apparaissez maintenant comme prestataire certifié.',
       lien:    '/prestataire/profil',
     });
 
-    res.status(200).json({ message: '✅ Compte vérifié', user });
+    res.status(200).json({ message: '   Compte vérifié', user });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -115,14 +115,14 @@ const supprimerUser = async (req, res) => {
     const user = await User.findByIdAndDelete(req.params.id);
 
     if (!user) {
-      return res.status(404).json({ message: '❌ Utilisateur introuvable' });
+      return res.status(404).json({ message: '  Utilisateur introuvable' });
     }
 
     await Prestataire.findOneAndDelete({ user: req.params.id });
 
-    res.status(200).json({ message: '✅ Utilisateur supprimé' });
+    res.status(200).json({ message: '   Utilisateur supprimé' });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -139,7 +139,7 @@ const getDemandesSuppression = async (req, res) => {
 
     res.status(200).json({ total: users.length, users });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -151,14 +151,14 @@ const getDemandesSuppression = async (req, res) => {
 const validerSuppression = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ message: '❌ Utilisateur introuvable' });
+    if (!user) return res.status(404).json({ message: '  Utilisateur introuvable' });
 
     await Prestataire.findOneAndDelete({ user: req.params.id });
     await User.findByIdAndDelete(req.params.id);
 
-    res.status(200).json({ message: '✅ Compte supprimé suite à la demande utilisateur' });
+    res.status(200).json({ message: '   Compte supprimé suite à la demande utilisateur' });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -178,11 +178,11 @@ const refuserSuppression = async (req, res) => {
       },
       { new: true }
     );
-    if (!user) return res.status(404).json({ message: '❌ Utilisateur introuvable' });
+    if (!user) return res.status(404).json({ message: '  Utilisateur introuvable' });
 
-    res.status(200).json({ message: '✅ Demande de suppression refusée', user });
+    res.status(200).json({ message: '   Demande de suppression refusée', user });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -198,7 +198,7 @@ const getTousAvis = async (req, res) => {
 
     res.status(200).json({ total: avis.length, avis });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -209,10 +209,10 @@ const masquerAvis = async (req, res) => {
       { isVisible: false },
       { new: true }
     );
-    if (!avis) return res.status(404).json({ message: '❌ Avis introuvable' });
-    res.status(200).json({ message: '✅ Avis masqué', avis });
+    if (!avis) return res.status(404).json({ message: '  Avis introuvable' });
+    res.status(200).json({ message: '   Avis masqué', avis });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -223,10 +223,10 @@ const afficherAvis = async (req, res) => {
       { isVisible: true },
       { new: true }
     );
-    if (!avis) return res.status(404).json({ message: '❌ Avis introuvable' });
-    res.status(200).json({ message: '✅ Avis affiché', avis });
+    if (!avis) return res.status(404).json({ message: '  Avis introuvable' });
+    res.status(200).json({ message: '   Avis affiché', avis });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -248,7 +248,7 @@ const getStats = async (req, res) => {
       suppressions: { enAttente: demandesSuppr },
     });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 

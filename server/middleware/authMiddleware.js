@@ -6,7 +6,7 @@ const protect = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ message: '❌ Non autorisé, token manquant' });
+      return res.status(401).json({ message: '  Non autorisé, token manquant' });
     }
 
     const token = authHeader.split(' ')[1];
@@ -16,11 +16,11 @@ const protect = async (req, res, next) => {
     const user = await User.findById(decoded.id).select('-password');
 
     if (!user) {
-      return res.status(401).json({ message: '❌ Utilisateur introuvable' });
+      return res.status(401).json({ message: '  Utilisateur introuvable' });
     }
 
     if (!user.isActive) {
-      return res.status(403).json({ message: '❌ Compte suspendu' });
+      return res.status(403).json({ message: '  Compte suspendu' });
     }
 
     // Assigner un objet avec id (string), _id (ObjectId), et autres propriétés essentielles
@@ -36,9 +36,9 @@ const protect = async (req, res, next) => {
 
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({ message: '❌ Token expiré, reconnectez-vous' });
+      return res.status(401).json({ message: '  Token expiré, reconnectez-vous' });
     }
-    return res.status(401).json({ message: '❌ Token invalide' });
+    return res.status(401).json({ message: '  Token invalide' });
   }
 };
 

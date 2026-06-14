@@ -30,7 +30,7 @@ const initCategories = async () => {
       { nom: 'Traduction',       icone: '🌐', ordre: 14 },
       { nom: 'Autre',            icone: '🔨', ordre: 15 },
     ]);
-    console.log('✅ Catégories initialisées');
+    console.log('   Catégories initialisées');
   }
 };
 initCategories();
@@ -39,8 +39,9 @@ const app    = express();
 const server = http.createServer(app);
 
 // ── Socket.io ──
+const allowedOrigins = ['http://localhost:5173', 'http://localhost', 'http://localhost:80'];
 const io = new Server(server, {
-  cors: { origin: 'http://localhost:5173', methods: ['GET', 'POST'] },
+  cors: { origin: allowedOrigins, methods: ['GET', 'POST'] },
 });
 
 app.set('io', io);
@@ -62,12 +63,12 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log(`❌ Déconnecté : ${socket.id}`);
+    console.log(`  Déconnecté : ${socket.id}`);
   });
 });
 
 // ── Middlewares ──
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -85,14 +86,14 @@ app.use('/api/paiements',     require('./routes/paiementRoutes'));
 app.use('/api/categories',    require('./routes/categorieRoutes'));
 app.use('/api/chatbot',       require('./chatbot'));
 
-app.get('/', (req, res) => res.json({ message: '✅ SmartMatch API fonctionne !' }));
+app.get('/', (req, res) => res.json({ message: '   SmartMatch API fonctionne !' }));
 
-app.use((req, res) => res.status(404).json({ message: '❌ Route non trouvée' }));
+app.use((req, res) => res.status(404).json({ message: '  Route non trouvée' }));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: '❌ Erreur serveur', error: err.message });
+  res.status(500).json({ message: '  Erreur serveur', error: err.message });
 });
 
 const PORT = process.env.PORT || 5001;
-server.listen(PORT, () => console.log(`🚀 Serveur démarré sur le port ${PORT}`));
+server.listen(PORT, () => console.log(`  Serveur démarré sur le port ${PORT}`));

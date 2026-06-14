@@ -11,30 +11,30 @@ const creerAvis = async (req, res) => {
     const { prestataireId, demandeId, note, commentaire } = req.body;
 
     if (!prestataireId || !demandeId || !note) {
-      return res.status(400).json({ message: '❌ Prestataire, demande et note sont obligatoires' });
+      return res.status(400).json({ message: '  Prestataire, demande et note sont obligatoires' });
     }
 
     if (note < 1 || note > 5) {
-      return res.status(400).json({ message: '❌ La note doit être entre 1 et 5' });
+      return res.status(400).json({ message: '  La note doit être entre 1 et 5' });
     }
 
     // Vérifier que la demande existe et est terminée
     const demande = await Demande.findById(demandeId);
     if (!demande) {
-      return res.status(404).json({ message: '❌ Demande introuvable' });
+      return res.status(404).json({ message: '  Demande introuvable' });
     }
     if (demande.statut !== 'terminée') {
-      return res.status(400).json({ message: '❌ Vous ne pouvez noter que les demandes terminées' });
+      return res.status(400).json({ message: '  Vous ne pouvez noter que les demandes terminées' });
     }
 
     // Vérifier que c'est bien le client de cette demande
     if (demande.client.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: '❌ Non autorisé' });
+      return res.status(403).json({ message: '  Non autorisé' });
     }
 
     // Vérifier que le prestataireId correspond au prestataire choisi pour cette demande
     if (demande.prestataireChoisi?.toString() !== prestataireId) {
-      return res.status(400).json({ message: '❌ Le prestataire spécifié ne correspond pas à cette demande' });
+      return res.status(400).json({ message: '  Le prestataire spécifié ne correspond pas à cette demande' });
     }
 
     // Vérifier si un avis existe déjà
@@ -43,7 +43,7 @@ const creerAvis = async (req, res) => {
       demande: demandeId,
     });
     if (avisExiste) {
-      return res.status(400).json({ message: '❌ Vous avez déjà noté cette prestation' });
+      return res.status(400).json({ message: '  Vous avez déjà noté cette prestation' });
     }
 
     const avis = await Avis.create({
@@ -56,9 +56,9 @@ const creerAvis = async (req, res) => {
 
     await avis.populate('client', 'nom prenom avatar');
 
-    res.status(201).json({ message: '✅ Avis publié avec succès', avis });
+    res.status(201).json({ message: '   Avis publié avec succès', avis });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -78,7 +78,7 @@ const getAvisPrestataire = async (req, res) => {
 
     res.status(200).json({ total: avis.length, avis });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -95,7 +95,7 @@ const getMesAvis = async (req, res) => {
 
     res.status(200).json({ total: avis.length, avis });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 

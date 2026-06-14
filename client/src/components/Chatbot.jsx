@@ -7,7 +7,7 @@ import { FaRocket, FaTag, FaTools, FaEnvelope } from "react-icons/fa";
 // ─────────────────────────────────────────────
 //  Configuration
 // ─────────────────────────────────────────────
-const API_URL = "http://localhost:5001/api/chatbot";
+const API_URL = "/api/chatbot";
 
 // Identifiant de session unique par onglet — permet la mémoire de conversation
 const SESSION_ID = `session_${Date.now()}_${Math.random().toString(36).slice(2)}`;

@@ -28,7 +28,7 @@ const initierPaiement = async (req, res) => {
 
     if (!demandeId || !montant || !methode) {
       return res.status(400).json({
-        message: '❌ Demande, montant et méthode sont obligatoires',
+        message: '  Demande, montant et méthode sont obligatoires',
       });
     }
 
@@ -37,16 +37,16 @@ const initierPaiement = async (req, res) => {
       .populate('prestataireChoisi');
 
     if (!demande) {
-      return res.status(404).json({ message: '❌ Demande introuvable' });
+      return res.status(404).json({ message: '  Demande introuvable' });
     }
 
     if (demande.client._id.toString() !== req.user.id) {
-      return res.status(403).json({ message: '❌ Non autorisé' });
+      return res.status(403).json({ message: '  Non autorisé' });
     }
 
     if (demande.statut !== 'terminée') {
       return res.status(400).json({
-        message: '❌ La mission doit être terminée pour effectuer le paiement',
+        message: '  La mission doit être terminée pour effectuer le paiement',
       });
     }
 
@@ -58,7 +58,7 @@ const initierPaiement = async (req, res) => {
 
     if (paiementExiste) {
       return res.status(400).json({
-        message: '❌ Un paiement existe déjà pour cette mission',
+        message: '  Un paiement existe déjà pour cette mission',
         paiement: paiementExiste,
       });
     }
@@ -97,7 +97,7 @@ const initierPaiement = async (req, res) => {
         await paiement.save();
 
         stripeClientSecret = paymentIntent.client_secret;
-        console.log(`✅ Stripe PaymentIntent créé : ${paymentIntent.id}`);
+        console.log(`   Stripe PaymentIntent créé : ${paymentIntent.id}`);
       } catch (stripeError) {
         console.error('⚠️  Stripe error — fallback simulation :', stripeError.message);
         // On continue sans Stripe — la simulation frontend prend le relais
@@ -108,15 +108,15 @@ const initierPaiement = async (req, res) => {
     await paiement.populate('client',  'nom prenom email');
 
     return res.status(201).json({
-      message:            '✅ Paiement initié avec succès',
+      message:            '   Paiement initié avec succès',
       paiement,
       stripeClientSecret, // null si espèces ou Stripe non configuré
       stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || null,
     });
 
   } catch (error) {
-    console.error('❌ ERREUR initierPaiement:', error);
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    console.error('  ERREUR initierPaiement:', error);
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -131,15 +131,15 @@ const confirmerPaiement = async (req, res) => {
       .populate('prestataire');
 
     if (!paiement) {
-      return res.status(404).json({ message: '❌ Paiement introuvable' });
+      return res.status(404).json({ message: '  Paiement introuvable' });
     }
 
     if (paiement.client.toString() !== req.user.id) {
-      return res.status(403).json({ message: '❌ Non autorisé' });
+      return res.status(403).json({ message: '  Non autorisé' });
     }
 
     if (paiement.statut === 'payé') {
-      return res.status(200).json({ message: '✅ Paiement déjà confirmé', paiement });
+      return res.status(200).json({ message: '   Paiement déjà confirmé', paiement });
     }
 
     // ── Vérification Stripe bloquante ────────────────────
@@ -148,18 +148,18 @@ const confirmerPaiement = async (req, res) => {
     if (paiement.methode === 'en_ligne') {
       if (!paiement.stripePaymentIntentId) {
         return res.status(400).json({
-          message: '❌ Paiement en ligne non initié côté Stripe — confirmation impossible',
+          message: '  Paiement en ligne non initié côté Stripe — confirmation impossible',
         });
       }
       if (!stripe) {
         return res.status(500).json({
-          message: '❌ Stripe non configuré sur le serveur',
+          message: '  Stripe non configuré sur le serveur',
         });
       }
       const intent = await stripe.paymentIntents.retrieve(paiement.stripePaymentIntentId);
       if (intent.status !== 'succeeded') {
         return res.status(400).json({
-          message: `❌ Paiement Stripe non finalisé (statut : ${intent.status})`,
+          message: `  Paiement Stripe non finalisé (statut : ${intent.status})`,
         });
       }
     }
@@ -180,11 +180,11 @@ const confirmerPaiement = async (req, res) => {
       });
     }
 
-    res.status(200).json({ message: '✅ Paiement confirmé avec succès', paiement });
+    res.status(200).json({ message: '   Paiement confirmé avec succès', paiement });
 
   } catch (error) {
-    console.error('❌ ERREUR confirmerPaiement:', error);
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    console.error('  ERREUR confirmerPaiement:', error);
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -201,7 +201,7 @@ const getMesPaiements = async (req, res) => {
 
     res.status(200).json({ total: paiements.length, paiements });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -213,7 +213,7 @@ const getMesRevenus = async (req, res) => {
   try {
     const prestataire = await Prestataire.findOne({ user: req.user.id });
     if (!prestataire) {
-      return res.status(404).json({ message: '❌ Profil prestataire introuvable' });
+      return res.status(404).json({ message: '  Profil prestataire introuvable' });
     }
 
     const paiements = await Paiement.find({ prestataire: prestataire._id, statut: 'payé' })
@@ -225,7 +225,7 @@ const getMesRevenus = async (req, res) => {
 
     res.status(200).json({ total: paiements.length, totalRevenus, devise: 'MAD', paiements });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -241,7 +241,7 @@ const getPaiementDemande = async (req, res) => {
 
     res.status(200).json({ paiement: paiement || null });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -268,7 +268,7 @@ const getTousPaiements = async (req, res) => {
 
     res.status(200).json({ stats, paiements });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 

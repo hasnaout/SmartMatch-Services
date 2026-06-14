@@ -32,7 +32,7 @@ const getTousPrestataires = async (req, res) => {
       prestataires,
     });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -46,12 +46,12 @@ const getMonProfil = async (req, res) => {
       .populate('user', 'nom prenom email telephone avatar isVerified');
 
     if (!prestataire) {
-      return res.status(404).json({ message: '❌ Profil prestataire introuvable' });
+      return res.status(404).json({ message: '  Profil prestataire introuvable' });
     }
 
     res.status(200).json({ prestataire });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -65,12 +65,12 @@ const getPrestataire = async (req, res) => {
       .populate('user', 'nom prenom email telephone avatar isVerified');
 
     if (!prestataire) {
-      return res.status(404).json({ message: '❌ Prestataire introuvable' });
+      return res.status(404).json({ message: '  Prestataire introuvable' });
     }
 
     res.status(200).json({ prestataire });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 
@@ -97,7 +97,7 @@ const updateProfil = async (req, res) => {
     const prestataire = await Prestataire.findOne({ user: req.user._id });
 
     if (!prestataire) {
-      return res.status(404).json({ message: '❌ Profil prestataire introuvable' });
+      return res.status(404).json({ message: '  Profil prestataire introuvable' });
     }
 
     // Mettre à jour uniquement les champs envoyés
@@ -124,12 +124,12 @@ const updateProfil = async (req, res) => {
     await prestataire.save();
 
     res.status(200).json({
-      message: '✅ Profil mis à jour avec succès',
+      message: '   Profil mis à jour avec succès',
       prestataire,
     });
   } catch (error) {
-    console.error('❌ ERREUR updateProfil:', error);
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    console.error('  ERREUR updateProfil:', error);
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
 }
 };
 
@@ -142,7 +142,7 @@ const updateDisponibilite = async (req, res) => {
     const { disponible } = req.body;
 
     if (disponible === undefined) {
-      return res.status(400).json({ message: '❌ Champ disponible requis' });
+      return res.status(400).json({ message: '  Champ disponible requis' });
     }
 
     const prestataire = await Prestataire.findOneAndUpdate(
@@ -152,15 +152,15 @@ const updateDisponibilite = async (req, res) => {
     );
 
     if (!prestataire) {
-      return res.status(404).json({ message: '❌ Prestataire introuvable' });
+      return res.status(404).json({ message: '  Prestataire introuvable' });
     }
 
     res.status(200).json({
-      message: `✅ Disponibilité mise à jour : ${disponible ? 'Disponible' : 'Non disponible'}`,
+      message: `   Disponibilité mise à jour : ${disponible ? 'Disponible' : 'Non disponible'}`,
       disponible: prestataire.disponible,
     });
   } catch (error) {
-    res.status(500).json({ message: '❌ Erreur serveur', error: error.message });
+    res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
 

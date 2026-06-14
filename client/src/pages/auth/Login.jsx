@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import { Eye, EyeOff, Zap, CheckCircle, Users, Star } from 'lucide-react';
+import api from '../../services/api';
 
 const Login = () => {
   const [email,      setEmail]      = useState('');
@@ -53,9 +54,7 @@ const Login = () => {
     if (!forgotEmail) { toast.error('Entrez votre email'); return; }
     setForgotLoading(true);
     try {
-      const { data } = await import('../../services/api').then(m =>
-        m.default.post('/auth/mot-de-passe-oublie', { email: forgotEmail })
-      );
+      const { data } = await api.post('/auth/mot-de-passe-oublie', { email: forgotEmail });
       toast.success('Code envoyé !');
       setCodeEnvoye(true);
       if (data.code) {
@@ -73,13 +72,11 @@ const Login = () => {
     if (newPass.length < 6) { toast.error('Mot de passe trop court'); return; }
     setForgotLoading(true);
     try {
-      await import('../../services/api').then(m =>
-        m.default.post('/auth/reinitialiser-mot-de-passe', {
-          email: forgotEmail,
-          code:  forgotCode,
-          nouveauMotDePasse: newPass,
-        })
-      );
+      await api.post('/auth/reinitialiser-mot-de-passe', {
+        email: forgotEmail,
+        code:  forgotCode,
+        nouveauMotDePasse: newPass,
+      });
       toast.success(' Mot de passe réinitialisé !');
       setShowForgot(false);
       setCodeEnvoye(false);

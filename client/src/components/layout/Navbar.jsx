@@ -7,7 +7,7 @@ import socket from '../../services/socket';
 import logo from '../../assets/logo.png';
 
 import {
-  Zap, LayoutDashboard, FileText, PlusCircle,
+   LayoutDashboard, FileText,
   Users, Settings, LogOut, ShieldCheck, User,
   MessageCircle, Bell, CheckCheck, MapPin, CreditCard, TrendingUp, Tag, Star,
   CheckCircle, PartyPopper, BadgeCheck
@@ -22,6 +22,7 @@ const typeIcon = {
   compte_verifie:   BadgeCheck,
 };
 
+// eslint-disable-next-line react/prop-types
 const NotificationIcon = ({ type, size = 18 }) => {
   const Icon = typeIcon[type] || Bell;
   return <Icon size={size} strokeWidth={2.2} />;

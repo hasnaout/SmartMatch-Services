@@ -23,10 +23,10 @@ const protect = async (req, res, next) => {
       return res.status(403).json({ message: '  Compte suspendu' });
     }
 
-    // Assigner un objet avec id (string), _id (ObjectId), et autres propriétés essentielles
+
     req.user = {
       id: user._id.toString(),
-      _id: user._id,  // Garder l'ObjectId aussi
+      _id: user._id,
       role: user.role,
       email: user.email,
       nom: user.nom,

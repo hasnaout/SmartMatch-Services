@@ -1,18 +1,8 @@
-// server/chatbot.js
-// ─────────────────────────────────────────────────────────────────
-//  Chatbot intelligent — propulsé par un LLM (claude-haiku)
-//  Interface identique à l'ancienne version :
-//    POST /api/chatbot  { message: string } → { response: string }
-// ─────────────────────────────────────────────────────────────────
-
 const express = require("express");
 const router  = express.Router();
 const axios   = require("axios");
 
-// ─────────────────────────────────────────────
-//  Prompt système — contexte de la plateforme
-//  Le LLM connaît SmartMatch et répond en son nom
-// ─────────────────────────────────────────────
+
 const SYSTEM_PROMPT = `Tu es l'assistant virtuel de SmartMatch, une plateforme marocaine de mise en relation entre clients et prestataires de services (plomberie, électricité, informatique, design, jardinage, etc.).
 
 Voici tout ce que tu sais sur SmartMatch :
@@ -51,13 +41,10 @@ RÈGLES DE RÉPONSE :
 - N'invente jamais de fonctionnalités inexistantes.
 - Maximum 3 phrases par réponse — sois précis, pas verbeux.`;
 
-// ─────────────────────────────────────────────
-//  Historique de conversation par session
-//  Clé = sessionId (généré côté client), Valeur = tableau de messages
-// ─────────────────────────────────────────────
+
 const conversationHistory = new Map();
 
-// Nettoyage automatique des sessions inactives (30 min)
+
 setInterval(() => {
   const now = Date.now();
   for (const [key, session] of conversationHistory.entries()) {
@@ -67,26 +54,24 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000);
 
-// ─────────────────────────────────────────────
-//  POST /api/chatbot
-// ─────────────────────────────────────────────
+
 router.post("/", async (req, res) => {
   const { message, sessionId } = req.body;
 
-  // Validation
+
   if (!message || typeof message !== "string" || message.trim() === "") {
     return res.status(400).json({ error: "Message manquant ou invalide." });
   }
 
   const apiKey = process.env.GROQ_API_KEY;
 
-  // ── Fallback rule-based si pas de clé API ──────────────
+
   if (!apiKey) {
     console.warn("    Aucune clé GROQ_API_KEY trouvée — fallback rule-based actif.");
     return res.json({ response: getFallbackResponse(message.trim()) });
   }
 
-  // ── Gestion de l'historique de conversation ────────────
+
   const sid = sessionId || "default";
   if (!conversationHistory.has(sid)) {
     conversationHistory.set(sid, { messages: [], lastActivity: Date.now() });
@@ -94,10 +79,10 @@ router.post("/", async (req, res) => {
   const session = conversationHistory.get(sid);
   session.lastActivity = Date.now();
 
-  // Ajouter le message utilisateur
+
   session.messages.push({ role: "user", content: message.trim() });
 
-  // Limiter l'historique à 10 échanges (20 messages) pour économiser les tokens
+
   if (session.messages.length > 20) {
     session.messages = session.messages.slice(-20);
   }
@@ -105,11 +90,11 @@ router.post("/", async (req, res) => {
   try {
     let botResponse;
 
-    // ── Groq (LLaMA 3 — 100% gratuit) ─────────────────
+
     const result = await axios.post(
       "https://api.groq.com/openai/v1/chat/completions",
       {
-        model:     "llama-3.1-8b-instant",   // modèle gratuit et rapide
+        model:     "llama-3.1-8b-instant",
         max_tokens: 300,
         messages:   [
           { role: "system", content: SYSTEM_PROMPT },
@@ -125,7 +110,7 @@ router.post("/", async (req, res) => {
     );
     botResponse = result.data.choices[0].message.content;
 
-    // Ajouter la réponse du bot à l'historique
+
     session.messages.push({ role: "assistant", content: botResponse });
 
     return res.json({ response: botResponse });
@@ -133,16 +118,13 @@ router.post("/", async (req, res) => {
   } catch (error) {
     console.error("  Erreur LLM :", error.response?.data || error.message);
 
-    // Fallback gracieux si l'API est indisponible
+
     const fallback = getFallbackResponse(message.trim());
     return res.json({ response: fallback });
   }
 });
 
-// ─────────────────────────────────────────────
-//  Fallback rule-based (si pas de clé API ou erreur réseau)
-//  Conservé comme filet de sécurité
-// ─────────────────────────────────────────────
+
 const knowledgeBase = [
   { keywords: ["fonctionne", "marche", "comment", "utiliser", "principe"],
     response:  "Créez un compte, publiez votre demande, notre algorithme vous recommande les meilleurs prestataires. Vous choisissez, échangez via la messagerie, puis notez à la fin." },

@@ -1,17 +1,14 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Prestataire = require('../models/Prestataire');
-// Générer un token JWT
+
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
 
-// ─────────────────────────────────────────
-// @route   POST /api/auth/register
-// @access  Public
-// ─────────────────────────────────────────
+
 const register = async (req, res) => {
   try {
     const { nom, prenom, email, password, role, telephone } = req.body;
@@ -53,37 +50,34 @@ const register = async (req, res) => {
     return res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
 };
-// ─────────────────────────────────────────
-// @route   POST /api/auth/login
-// @access  Public
-// ─────────────────────────────────────────
+
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Vérifier les champs
+
     if (!email || !password) {
       return res.status(400).json({ message: '  Email et mot de passe requis' });
     }
 
-    // Chercher l'utilisateur avec le password (select: false par défaut)
+
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
       return res.status(401).json({ message: '  Email ou mot de passe incorrect' });
     }
 
-    // Vérifier le mot de passe
+
     const passwordCorrect = await user.comparePassword(password);
     if (!passwordCorrect) {
       return res.status(401).json({ message: '  Email ou mot de passe incorrect' });
     }
 
-    // Vérifier si le compte est actif
+
     if (!user.isActive) {
       return res.status(403).json({ message: '  Compte suspendu, contactez l\'administrateur' });
     }
 
-    // Générer le token
+
     const token = generateToken(user._id);
 
     res.status(200).json({
@@ -103,10 +97,7 @@ const login = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   GET /api/auth/me
-// @access  Privé (token requis)
-// ─────────────────────────────────────────
+
 const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
@@ -118,10 +109,7 @@ const getMe = async (req, res) => {
 
 const crypto = require('crypto');
 
-// ─────────────────────────────────────────
-// @route   POST /api/auth/mot-de-passe-oublie
-// @access  Public
-// ─────────────────────────────────────────
+
 const motDePasseOublie = async (req, res) => {
   try {
     const { email } = req.body;
@@ -131,17 +119,17 @@ const motDePasseOublie = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      // Pour la sécurité, on répond pareil même si l'email n'existe pas
+
       return res.status(200).json({
         message: '   Si cet email existe, un code a été envoyé',
       });
     }
 
-    // Générer un code à 6 chiffres
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiration = Date.now() + 15 * 60 * 1000; // 15 minutes
 
-    // Stocker le code dans l'utilisateur
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiration = Date.now() + 15 * 60 * 1000;
+
+
     user.resetCode       = code;
     user.resetCodeExpire = expiration;
     await user.save({ validateBeforeSave: false });
@@ -150,7 +138,7 @@ const motDePasseOublie = async (req, res) => {
 
     res.status(200).json({
       message: '   Code de réinitialisation généré',
-      // En développement, on renvoie le code directement
+
       code: code,
     });
   } catch (error) {
@@ -158,10 +146,7 @@ const motDePasseOublie = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   POST /api/auth/reinitialiser-mot-de-passe
-// @access  Public
-// ─────────────────────────────────────────
+
 const reinitialiserMotDePasse = async (req, res) => {
   try {
     const { email, code, nouveauMotDePasse } = req.body;

@@ -64,7 +64,7 @@ const ProfilPrestataire = () => {
       <Navbar />
       <div className="page-content">
 
-        {/* Retour */}
+
         <button
           className="btn-secondary"
           onClick={() => navigate(-1)}
@@ -73,7 +73,7 @@ const ProfilPrestataire = () => {
           <ArrowLeft size={15} /> Retour
         </button>
 
-        {/* Hero profil */}
+
         <div style={{
           background: 'radial-gradient(circle at 12% 0%, rgba(139,92,246,0.58), transparent 34%), radial-gradient(circle at 90% 8%, rgba(255,255,255,0.13), transparent 28%), linear-gradient(135deg, #10051f 0%, #261052 52%, #0d0418 100%)',
           borderRadius: 'var(--radius-xl)',
@@ -83,7 +83,7 @@ const ProfilPrestataire = () => {
           overflow: 'hidden',
           boxShadow: 'var(--shadow-md)',
         }}>
-          {/* Orb décoratif */}
+
           <div style={{
             position:'absolute', right:-40, top:-40,
             width:200, height:200, borderRadius:'50%',
@@ -97,10 +97,10 @@ const ProfilPrestataire = () => {
 
           <div style={{ position:'relative', zIndex:1 }}>
             <div style={{ display:'flex', alignItems:'flex-start', gap:20, flexWrap:'wrap' }}>
-              {/* Avatar */}
-         
 
-              {/* Infos */}
+
+
+
               <div style={{ flex:1 }}>
                 <h1 style={{ fontSize:26, fontWeight:800, color:'#fff', marginBottom:6 }}>
                   {u?.prenom} {u?.nom}
@@ -136,7 +136,7 @@ const ProfilPrestataire = () => {
                 )}
               </div>
 
-              {/* Actions */}
+
               <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                 <Link
                   to="/client/creer"
@@ -159,10 +159,10 @@ const ProfilPrestataire = () => {
 
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1.5fr', gap:20 }}>
 
-          {/* Colonne gauche */}
+
           <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
 
-            {/* Description */}
+
             {prestataire.description && (
               <div className="card">
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:12, color:'var(--prest-accent)' }}>
@@ -174,7 +174,7 @@ const ProfilPrestataire = () => {
               </div>
             )}
 
-            {/* Stats */}
+
             <div className="card">
               <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16, color:'var(--prest-accent)' }}>
                 Statistiques
@@ -201,7 +201,7 @@ const ProfilPrestataire = () => {
               </div>
             </div>
 
-            {/* Catégories */}
+
             {prestataire.categories?.length > 0 && (
               <div className="card">
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:12, color:'var(--prest-accent)' }}>
@@ -224,7 +224,7 @@ const ProfilPrestataire = () => {
               </div>
             )}
 
-            {/* Compétences */}
+
             {prestataire.competences?.length > 0 && (
               <div className="card">
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:12, color:'var(--prest-accent)' }}>
@@ -241,7 +241,7 @@ const ProfilPrestataire = () => {
             )}
           </div>
 
-          {/* Colonne droite — Avis */}
+
           <div>
             <div className="card">
               <button
@@ -260,7 +260,7 @@ const ProfilPrestataire = () => {
 
               {avisOpen && (
                 <>
-                  {/* Résumé note */}
+
                   {prestataire.notemoyenne > 0 && (
                     <div style={{
                       background:'var(--bg3)', borderRadius:12, padding:'16px',
@@ -281,7 +281,7 @@ const ProfilPrestataire = () => {
                     </div>
                   )}
 
-                  {/* Liste avis */}
+
                   {avis.length === 0 ? (
                     <div className="empty-state" style={{ padding:'40px 20px' }}>
                       <div className="empty-state-icon">

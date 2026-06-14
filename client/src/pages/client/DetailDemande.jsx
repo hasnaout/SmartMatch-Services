@@ -32,7 +32,7 @@ const DetailDemande = () => {
   const [sending,  setSending]  = useState(false);
   const messagesEndRef = useRef(null);
 
-  // ── Charger la demande ──
+
   useEffect(() => {
     const chargerDetail = async () => {
       setLoading(true);
@@ -56,7 +56,7 @@ const DetailDemande = () => {
     chargerDetail();
   }, [id]);
 
-  // ── Charger messages + rejoindre room Socket ──
+
   useEffect(() => {
     if (!demande?.prestataireChoisi) return;
 
@@ -80,12 +80,12 @@ const DetailDemande = () => {
     return () => socket.off('receive_message', handler);
   }, [demande, id, user]);
 
-  // ── Scroll vers le bas ──
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // ── Envoyer un message ──
+
   const handleSend = async () => {
     if (!newMsg.trim() || !demande) return;
 
@@ -119,7 +119,7 @@ const DetailDemande = () => {
     }
   };
 
-  // ── Choisir un prestataire ──
+
   const handleChoisirPrestataire = async (prestataireId) => {
     if (!window.confirm('Confirmer le choix de ce prestataire ?')) return;
     try {
@@ -132,7 +132,7 @@ const DetailDemande = () => {
     }
   };
 
-  // ── Terminer la demande ──
+
   const handleTerminer = async () => {
     if (!window.confirm('Marquer cette demande comme terminée ?')) return;
     try {
@@ -149,7 +149,7 @@ const DetailDemande = () => {
     }
   };
 
-  // ── Annuler la demande ──
+
   const handleAnnuler = async () => {
     if (!window.confirm('Annuler cette demande ?')) return;
     try {
@@ -172,7 +172,7 @@ const DetailDemande = () => {
       day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit',
     });
 
-  // ── Loading ──
+
   if (loading) return (
     <div className="layout"><Navbar />
       <div className="page-content">
@@ -204,12 +204,12 @@ const DetailDemande = () => {
       <Navbar />
       <div className="page-content">
 
-        {/* ── Header ── */}
+
         <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:24, flexWrap:'wrap' }}>
           <button className="btn-secondary" onClick={() => navigate(-1)} style={{ padding:'8px 12px' }}>
             <ArrowLeft size={16} />
           </button>
-          {/* Bouton Payer — visible si mission terminée */}
+
             {canPayer && (
              <Link
              to={`/client/paiement/${id}`}
@@ -245,10 +245,10 @@ const DetailDemande = () => {
 
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:20 }}>
 
-          {/* ── Colonne gauche ── */}
+
           <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
 
-            {/* Détails */}
+
             <div className="card">
               <h3 style={{ fontSize:15, fontWeight:700, marginBottom:14, color:'var(--accent2)' }}>
                 <ClipboardList size={16} /> Détails
@@ -276,7 +276,7 @@ const DetailDemande = () => {
               </div>
             </div>
 
-            {/* Paiement */}
+
             {canPayer && (
               <div className="card">
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:14, color:'var(--accent2)' }}>
@@ -362,7 +362,7 @@ const DetailDemande = () => {
               </div>
             )}
 
-            {/* Prestataire assigné */}
+
             {prestataireUser ? (
               <div className="card">
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:14, color:'var(--accent2)' }}>
@@ -406,7 +406,7 @@ const DetailDemande = () => {
               </div>
             )}
 
-            {/* Recommandations */}
+
             {!demande.prestataireChoisi && demande.prestatairesRecommandes?.length > 0 && (
               <div className="card">
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16, color:'var(--accent2)' }}>
@@ -464,7 +464,7 @@ const DetailDemande = () => {
               </div>
             )}
 
-            {/* Pas de recommandations */}
+
             {!demande.prestataireChoisi && demande.prestatairesRecommandes?.length === 0 && (
               <div className="card">
                 <div style={{ textAlign:'center', padding:'20px 0', color:'var(--muted)' }}>
@@ -476,7 +476,7 @@ const DetailDemande = () => {
               </div>
             )}
 
-            {/* Photos */}
+
             {demande.fichiers?.length > 0 && (
               <div className="card">
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:14, color:'var(--accent2)' }}>
@@ -503,7 +503,7 @@ const DetailDemande = () => {
             )}
           </div>
 
-          {/* ── Chat ── */}
+
           <div className="chat-box" style={{ height:560 }}>
             <div className="chat-header">
               <MessageCircle size={16} color="var(--accent)" />

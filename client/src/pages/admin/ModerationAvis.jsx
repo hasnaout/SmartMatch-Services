@@ -67,7 +67,7 @@ const ModerationAvis = () => {
           </p>
         </div>
 
-        {/* Stats */}
+
         <div className="stats-grid" style={{ marginBottom:24 }}>
           {[
             { value:avis.length,                                   label:'Total avis',   cls:'stat-icon-accent'  },
@@ -85,7 +85,7 @@ const ModerationAvis = () => {
           ))}
         </div>
 
-        {/* Filtres */}
+
         <div className="card" style={{ marginBottom:20, display:'flex', gap:16, alignItems:'center', flexWrap:'wrap' }}>
           <div style={{ position:'relative', flex:1, minWidth:200 }}>
             <Search size={15} style={{ position:'absolute', left:14, top:'50%', transform:'translateY(-50%)', color:'var(--muted)' }} />
@@ -102,7 +102,7 @@ const ModerationAvis = () => {
           </div>
         </div>
 
-        {/* Liste avis */}
+
         {loading ? (
           <div className="empty-state">
             <span className="spinner-dark" style={{ width:32, height:32, borderWidth:3 }} />

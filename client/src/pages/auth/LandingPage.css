@@ -1,4 +1,3 @@
-/* ========== RESET & BASE ========== */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 * {
@@ -17,7 +16,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ========== HEADER ========== */
+
 .header {
   position: fixed;
   top: 0;
@@ -117,7 +116,7 @@ body {
   color: #fff;
 }
 
-/* ========== HERO ========== */
+
 .hero {
   position: relative;
   height: 100vh;
@@ -221,7 +220,7 @@ body {
   }
 }
 
-/* ========== SERVICES ========== */
+
 .services {
   padding: 100px 8%;
   background: #f8fafc;
@@ -334,7 +333,7 @@ body {
   line-height: 1.8;
 }
 
-/* ========== ABOUT ========== */
+
 .about {
   padding: 100px 8%;
   background: #fff;
@@ -427,7 +426,7 @@ body {
   font-weight: 500;
 }
 
-/* ========== FOOTER ========== */
+
 .footer {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   color: #d1d5db;
@@ -475,17 +474,17 @@ body {
   font-size: 14px;
 }
 
-/* ========== RESPONSIVE ========== */
+
 @media (max-width: 1024px) {
   .about-wrapper {
     grid-template-columns: 1fr;
     gap: 50px;
   }
-  
+
   .about-image img {
     height: 400px;
   }
-  
+
   .about-overlay {
     bottom: -20px;
     right: 20px;
@@ -496,37 +495,37 @@ body {
   .header {
     padding: 15px 25px;
   }
-  
+
   .nav span {
     display: none;
   }
-  
+
   .hero-content h1 {
     font-size: 36px;
   }
-  
+
   .hero-content p {
     font-size: 16px;
   }
-  
+
   .hero-buttons {
     flex-direction: column;
     width: 100%;
     max-width: 300px;
   }
-  
+
   .section-title h2 {
     font-size: 32px;
   }
-  
+
   .about-content h2 {
     font-size: 32px;
   }
-  
+
   .about-stats {
     gap: 25px;
   }
-  
+
   .stat-number {
     font-size: 32px;
   }
@@ -536,24 +535,24 @@ body {
   .logo {
     font-size: 20px;
   }
-  
+
   .logo-img {
     width: 35px;
     height: 35px;
   }
-  
+
   .hero-content h1 {
     font-size: 28px;
   }
-  
+
   .about-image img {
     height: 300px;
   }
-  
+
   .about-overlay {
     padding: 25px 30px;
   }
-  
+
   .about-overlay h3 {
     font-size: 22px;
   }

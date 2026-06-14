@@ -32,7 +32,7 @@ const Register = () => {
   return (
     <div className="auth-page">
 
-      {/* Côté gauche */}
+
       <div className="auth-left">
         <div className="auth-left-orb auth-left-orb-1" />
         <div className="auth-left-orb auth-left-orb-2" />
@@ -63,7 +63,7 @@ const Register = () => {
         </div>
       </div>
 
-      {/* Côté droit */}
+
       <div className="auth-right">
         <div className="auth-container auth-container-wide">
 
@@ -78,7 +78,7 @@ const Register = () => {
               <p className="auth-subtitle">Rejoignez la plateforme intelligente</p>
             </div>
 
-            {/* Rôle */}
+
             <div className="role-selector">
               <button
                 type="button"

@@ -78,7 +78,7 @@ const DemandesPrestataire = () => {
                     </div>
                   )}
 
-                  {/* Client info */}
+
                   <div className="client-info-card">
                     <div className="client-avatar">
                       {d.client?.prenom?.[0]}{d.client?.nom?.[0]}

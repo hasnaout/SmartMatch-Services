@@ -1,6 +1,3 @@
-/* src/components/Chatbot.css */
-
-/* ── Variables ────────────────────────────── */
 :root {
   --chat-primary:    #7c3aed;
   --chat-primary-dk: #5b21b6;
@@ -18,7 +15,7 @@
   --chat-z:          9999;
 }
 
-/* ── Bulle flottante ─────────────────────── */
+
 .chat-bubble {
   position: fixed;
   bottom: 24px;
@@ -48,7 +45,7 @@
   font-size: 20px;
 }
 
-/* ── Fenêtre de chat ─────────────────────── */
+
 .chat-window {
   position: fixed;
   bottom: 92px;
@@ -71,7 +68,7 @@
   to   { opacity: 1; transform: translateY(0)   scale(1);    }
 }
 
-/* ── Header ──────────────────────────────── */
+
 .chat-header {
   background: var(--chat-primary);
   color: #7c3aed;
@@ -127,7 +124,7 @@
 }
 .chat-header__close:hover { opacity: 1; }
 
-/* ── Messages ────────────────────────────── */
+
 .chat-messages {
   flex: 1;
   overflow-y: auto;
@@ -164,7 +161,7 @@
   border-bottom-left-radius: 4px;
 }
 
-/* ── Indicateur de frappe ────────────────── */
+
 .typing-indicator {
   display: flex;
   gap: 4px;
@@ -187,7 +184,7 @@
   30%           { transform: translateY(-6px); }
 }
 
-/* ── Suggestions ─────────────────────────── */
+
 .chat-suggestions {
   display: flex;
   flex-wrap: wrap;
@@ -210,7 +207,7 @@
   color: #fff;
 }
 
-/* ── Zone de saisie ──────────────────────── */
+
 .chat-input-area {
   display: flex;
   align-items: center;
@@ -253,7 +250,7 @@
 .chat-send-btn:hover:not(:disabled) { background: var(--chat-primary-dk); }
 .chat-send-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* ── Responsive mobile ───────────────────── */
+
 @media (max-width: 420px) {
   .chat-window {
     width: calc(100vw - 20px);

@@ -30,7 +30,7 @@ const avisSchema = new mongoose.Schema(
     },
     isVisible: {
       type: Boolean,
-      default: true, // admin peut masquer
+      default: true,
     },
   },
   {
@@ -38,10 +38,10 @@ const avisSchema = new mongoose.Schema(
   }
 );
 
-// Empêcher un client de laisser 2 avis pour la même demande
+
 avisSchema.index({ client: 1, demande: 1 }, { unique: true });
 
-// Après chaque avis, recalculer la note moyenne du prestataire
+
 avisSchema.post('save', async function () {
   const Prestataire = require('./Prestataire');
   const Avis = this.constructor;

@@ -8,7 +8,6 @@ import { Lock, Trash2, Eye, EyeOff, ShieldAlert, CheckCircle } from 'lucide-reac
 const Settings = () => {
   const { user, logout } = useAuth();
 
-  // ── Changement de mot de passe ──────────────────────────────────
   const [mdpForm, setMdpForm] = useState({
     ancienMotDePasse: '',
     nouveauMotDePasse: '',
@@ -39,7 +38,6 @@ const Settings = () => {
     }
   };
 
-  // ── Demande de suppression ──────────────────────────────────────
   const [raison,         setRaison]         = useState('');
   const [suppLoading,    setSuppLoading]    = useState(false);
   const [demandeEnvoyee, setDemandeEnvoyee] = useState(false);
@@ -86,7 +84,6 @@ const Settings = () => {
       <Navbar />
       <div className="page-content">
 
-        {/* Header */}
         <div className="dashboard-header">
           <h1 className="dashboard-greeting">
             Paramètres du <span>compte</span>
@@ -98,7 +95,6 @@ const Settings = () => {
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, maxWidth: 900 }}>
 
-          {/* ── Bloc changement de mot de passe ── */}
           <div className="card" style={{ padding: 28 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
               <div style={{
@@ -118,7 +114,6 @@ const Settings = () => {
               </div>
             </div>
 
-            {/* Ancien MDP */}
             <div className="form-group">
               <label className="form-label">Mot de passe actuel</label>
               <div style={inputWrap}>
@@ -137,7 +132,6 @@ const Settings = () => {
               </div>
             </div>
 
-            {/* Nouveau MDP */}
             <div className="form-group">
               <label className="form-label">Nouveau mot de passe</label>
               <div style={inputWrap}>
@@ -156,7 +150,6 @@ const Settings = () => {
               </div>
             </div>
 
-            {/* Confirmation */}
             <div className="form-group" style={{ marginBottom: 20 }}>
               <label className="form-label">Confirmer le nouveau mot de passe</label>
               <div style={inputWrap}>
@@ -173,7 +166,7 @@ const Settings = () => {
                   {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
-              {/* Indicateur de correspondance */}
+
               {mdpForm.confirmation && mdpForm.nouveauMotDePasse && (
                 <p style={{
                   fontSize: 12, marginTop: 6,
@@ -198,7 +191,6 @@ const Settings = () => {
             </button>
           </div>
 
-          {/* ── Bloc suppression de compte ── */}
           <div className="card" style={{ padding: 28, borderColor: demandeEnvoyee ? 'var(--warning, #f59e0b)' : undefined }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
               <div style={{
@@ -221,7 +213,7 @@ const Settings = () => {
             </div>
 
             {demandeEnvoyee ? (
-              /* État : demande transmise */
+
               <div>
                 <div style={{
                   background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)',

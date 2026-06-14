@@ -37,7 +37,7 @@ const HistoriquePaiements = () => {
           <p className="dashboard-subtitle">Suivez tous vos paiements effectués</p>
         </div>
 
-        {/* Stats */}
+
         <div className="stats-grid prestataire-stats-grid" style={{ marginBottom:28 }}>
           {[
             { icon:<CreditCard size={22}/>, value:stats.total, label:'Total paiements', cls:'stat-icon-accent' },
@@ -54,7 +54,7 @@ const HistoriquePaiements = () => {
           ))}
         </div>
 
-        {/* Liste */}
+
         {loading ? (
           <div className="empty-state">
             <span className="spinner-dark" style={{ width:32, height:32, borderWidth:3 }} />

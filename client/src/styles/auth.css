@@ -1,4 +1,3 @@
-/* ── Auth Page ── */
 .auth-page {
   min-height: 100vh;
   display: flex;
@@ -6,7 +5,7 @@
   overflow: hidden;
 }
 
-/* Côté gauche — caché sur mobile */
+
 .auth-left {
   display: none;
   flex: 1;
@@ -52,7 +51,7 @@
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 
-/* Côté droit — formulaire */
+
 .auth-right {
   flex: 1;
   display: flex;
@@ -68,7 +67,7 @@
   .auth-right { padding: 32px 24px; }
 }
 
-/* ── Container ── */
+
 .auth-container {
   width: 100%;
   max-width: 420px;
@@ -76,7 +75,7 @@
 }
 .auth-container-wide { max-width: 460px; }
 
-/* ── Logo ── */
+
 .auth-logo {
   display: flex; align-items: center; gap: 10px; margin-bottom: 28px;
 }
@@ -93,7 +92,7 @@
   background-clip: text;
 }
 
-/* ── Card ── */
+
 .auth-card {
   width: 100%;
   background: var(--bg2);
@@ -111,7 +110,7 @@
 @media (min-width: 640px) { .auth-title { font-size: 26px; } }
 .auth-subtitle { font-size: 14px; color: var(--muted); }
 
-/* ── Rôle Selector ── */
+
 .role-selector { display: flex; gap: 10px; margin-bottom: 20px; }
 @media (max-width: 480px) {
   .role-selector { flex-direction: column; }
@@ -130,7 +129,7 @@
   box-shadow: 0 0 0 3px rgba(102,126,234,0.12);
 }
 
-/* ── Form ── */
+
 .auth-form { display: flex; flex-direction: column; gap: 16px; }
 
 .form-row { display: flex; gap: 12px; }
@@ -165,7 +164,7 @@
 
 .auth-submit { width: 100%; padding: 13px; margin-top: 4px; }
 
-/* ── Footer ── */
+
 .auth-footer {
   text-align: center; font-size: 14px;
   color: var(--muted); margin-top: 20px;
@@ -176,7 +175,7 @@
   background-clip: text; font-weight: 600;
 }
 
-/* ── Badges ── */
+
 .auth-badges { display: flex; gap: 8px; margin-top: 8px; justify-content: center; }
 .auth-badge {
   padding: 5px 12px; border-radius: 99px;

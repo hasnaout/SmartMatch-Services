@@ -22,11 +22,9 @@ const prestataireSchema = new mongoose.Schema(
     zoneGeographique: {
       ville:  { type: String, trim: true },
       region: { type: String, trim: true },
-      rayon:  { type: Number, default: 20 }, // rayon d'intervention en km
+      rayon:  { type: Number, default: 20 },
 
-      // ── Coordonnées GPS du prestataire ──────────────────────────
-      // Alimentées lors de la mise à jour du profil (MonProfil.jsx).
-      // Permettent le calcul Haversine dans le moteur de matching.
+
       coordonnees: {
         lat: { type: Number, default: null },
         lng: { type: Number, default: null },
@@ -34,7 +32,7 @@ const prestataireSchema = new mongoose.Schema(
     },
 
     disponible:            { type: Boolean, default: true },
-    experience:            { type: Number,  default: 0 },   // en années
+    experience:            { type: Number,  default: 0 },
     portfolio: [
       {
         titre:       String,

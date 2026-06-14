@@ -1,4 +1,3 @@
-/* ── Dashboard Header ── */
 .dashboard-header {
   margin-bottom: 32px;
   animation: fadeUp 0.5s ease-out;
@@ -20,7 +19,7 @@
 }
 .dashboard-subtitle { font-size: 15px; color: var(--muted); }
 
-/* ── Stats Grid ── */
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -50,13 +49,13 @@
   transform: translateY(-2px);
 }
 
-/* Client stat cards */
+
 .stat-card.client-card {
   border-left: 3px solid transparent;
   border-image: var(--client-gradient) 1;
 }
 
-/* Prestataire stat cards */
+
 .stats-grid .stat-card.prest-card {
   background: linear-gradient(135deg, #ececff 0%, #e3e4fb 100%);
   border: 1px solid rgba(104, 78, 214, 0.08);
@@ -120,7 +119,7 @@
 }
 .stat-label { font-size: 13px; color: var(--muted); }
 
-/* Prestataire dashboard stats inspired by the reference card layout */
+
 .prestataire-stats-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
@@ -225,7 +224,7 @@
   }
 }
 
-/* ── Section ── */
+
 .section-header {
   display: flex; align-items: flex-start;
   justify-content: space-between;
@@ -235,7 +234,7 @@
 .section-title  { font-size: 18px; font-weight: 700; }
 .section-subtitle { font-size: 13px; color: var(--muted); margin-top: 2px; }
 
-/* ── Table ── */
+
 .table-wrap {
   background: var(--bg2);
   border: 1px solid var(--border);
@@ -263,7 +262,7 @@ tbody td {
   vertical-align: middle;
 }
 
-/* ── Empty State ── */
+
 .empty-state {
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
@@ -279,7 +278,7 @@ tbody td {
 .empty-state-title  { font-size: 16px; font-weight: 600; color: var(--text); }
 .empty-state-text   { font-size: 14px; color: var(--muted); text-align: center; }
 
-/* ── Demande cards ── */
+
 .demandes-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -292,7 +291,7 @@ tbody td {
   .demandes-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
-/* Client demande card */
+
 .demande-card {
   position: relative;
   overflow: hidden;
@@ -514,7 +513,7 @@ tbody td {
   background: linear-gradient(135deg, #0c4a6e, #1d4ed8);
 }
 
-/* Prestataire dashboard missions - dark premium cards */
+
 .prestataire-stats-grid + div > .section-header {
   position: relative;
   overflow: hidden;
@@ -689,7 +688,7 @@ tbody td {
   font-size: 12px;
 }
 
-/* Unified premium card system */
+
 .card {
   position: relative;
   overflow: hidden;
@@ -925,7 +924,7 @@ tbody td {
   color: rgba(244, 240, 255, 0.68);
 }
 
-/* Mon profil prestataire */
+
 .mon-profil-page {
   --profile-dark: #10051f;
   --profile-mid: #261052;
@@ -1261,7 +1260,7 @@ tbody td {
   }
 }
 
-/* ── Welcome banner ── */
+
 .welcome-banner {
   border-radius: var(--radius-lg);
   padding: 28px 32px;
@@ -1296,7 +1295,7 @@ tbody td {
 }
 .welcome-banner-btn:hover { background: rgba(255,255,255,0.3); }
 
-/* ── Messagerie ── */
+
 .messages-layout {
   display: grid;
   grid-template-columns: 1fr;
@@ -1354,7 +1353,7 @@ background: radial-gradient(circle at 70% 30%, #8b5cf6, #5b21b6, #3b0d8f);
   font-size: 11px; font-weight: 700; color: #fff; padding: 0 6px;
 }
 
-/* ── Chat ── */
+
 .chat-box {
   background: var(--bg2);
   border: 1px solid var(--border);
@@ -1444,17 +1443,17 @@ background: radial-gradient(circle at 70% 30%, #8b5cf6, #5b21b6, #3b0d8f);
   align-items: center; justify-content: center;
   gap: 12px; color: var(--muted);
 }
-/* ── Responsive Mobile ── */
+
 @media (max-width: 767px) {
 
-  /* Page content */
+
   .page-content { padding: 16px 12px; }
 
-  /* Dashboard header */
+
   .dashboard-greeting { font-size: 22px; }
   .dashboard-subtitle { font-size: 13px; }
 
-  /* Stats grid — 2 colonnes sur mobile */
+
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
@@ -1465,25 +1464,25 @@ background: radial-gradient(circle at 70% 30%, #8b5cf6, #5b21b6, #3b0d8f);
   .stat-value { font-size: 20px; }
   .stat-label { font-size: 11px; }
 
-  /* Section header */
+
   .section-header { flex-direction: column; align-items: flex-start; }
 
-  /* Table — scroll horizontal */
+
   .table-wrap { overflow-x: auto; }
   table       { min-width: 600px; }
   thead th    { padding: 10px 12px; font-size: 10px; }
   tbody td    { padding: 12px; font-size: 13px; }
 
-  /* Demandes grid — 1 colonne */
+
   .demandes-grid { grid-template-columns: 1fr; }
   .demande-card  { padding: 16px; }
 
-  /* Welcome banner */
+
   .welcome-banner         { padding: 20px; flex-direction: column; }
   .welcome-banner-title   { font-size: 18px; }
   .welcome-banner-btn     { width: 100%; justify-content: center; }
 
-  /* Messages layout — colonne */
+
   .messages-layout {
     grid-template-columns: 1fr;
     height: auto;
@@ -1491,27 +1490,27 @@ background: radial-gradient(circle at 70% 30%, #8b5cf6, #5b21b6, #3b0d8f);
   .conversations-list { max-height: 280px; }
   .chat-box           { min-height: 400px; }
 
-  /* Form */
+
   .form-card    { padding: 16px; }
   .form-grid-2  { grid-template-columns: 1fr; }
   .form-page    { max-width: 100%; }
 
-  /* Urgence selector */
+
   .urgence-selector { flex-direction: column; }
   .urgence-btn      { width: 100%; }
 
-  /* Role selector auth */
+
   .role-selector    { flex-direction: column; }
 
-  /* Auth card */
+
   .auth-card { padding: 24px 20px; }
   .auth-title { font-size: 22px; }
 
-  /* Profil header */
+
   .profil-header  { flex-direction: column; align-items: flex-start; }
   .profil-avatar  { width: 56px; height: 56px; font-size: 20px; }
 
-  /* Carte — colonne */
+
   .carte-layout {
     grid-template-columns: 1fr !important;
     height: auto !important;
@@ -1519,13 +1518,13 @@ background: radial-gradient(circle at 70% 30%, #8b5cf6, #5b21b6, #3b0d8f);
   .carte-liste { max-height: 300px; }
   .carte-map   { height: 400px; }
 
-  /* Empty state */
+
   .empty-state { padding: 40px 16px; }
 
-  /* Notif dropdown */
+
   .notif-dropdown { width: 280px; right: -60px; }
 
-  /* Buttons */
+
   .btn-primary, .btn-secondary {
     font-size: 13px;
     padding: 10px 16px;

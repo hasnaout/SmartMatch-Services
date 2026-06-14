@@ -51,7 +51,7 @@ const paiementSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Générer une référence unique avant sauvegarde
+
 paiementSchema.pre('save', function () {
   if (!this.reference) {
     const timestamp = Date.now().toString(36).toUpperCase();

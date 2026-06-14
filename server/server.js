@@ -38,7 +38,7 @@ initCategories();
 const app    = express();
 const server = http.createServer(app);
 
-// ── Socket.io ──
+
 const allowedOrigins = ['http://localhost:5173', 'http://localhost', 'http://localhost:80'];
 const io = new Server(server, {
   cors: { origin: allowedOrigins, methods: ['GET', 'POST'] },
@@ -67,12 +67,12 @@ io.on('connection', (socket) => {
   });
 });
 
-// ── Middlewares ──
+
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ── Routes ──
+
 app.use('/api/auth',          require('./routes/authRoutes'));
 app.use('/api/users',         require('./routes/userRoutes'));
 app.use('/api/prestataires',  require('./routes/prestataireRoutes'));

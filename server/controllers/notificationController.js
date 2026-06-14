@@ -1,6 +1,6 @@
 const Notification = require('../models/Notification');
 
-// GET /api/notifications
+
 const getMesNotifications = async (req, res) => {
   try {
     const notifications = await Notification.find({
@@ -18,7 +18,7 @@ const getMesNotifications = async (req, res) => {
   }
 };
 
-// PUT /api/notifications/lire-tout
+
 const lireTout = async (req, res) => {
   try {
     await Notification.updateMany(
@@ -31,7 +31,7 @@ const lireTout = async (req, res) => {
   }
 };
 
-// PUT /api/notifications/:id/lire
+
 const lireNotification = async (req, res) => {
   try {
     await Notification.findByIdAndUpdate(req.params.id, { lu: true });

@@ -4,10 +4,6 @@ const Demande = require('../models/Demande');
 const Avis = require('../models/Avis');
 const { creerNotification } = require('../utils/notificationHelper');
 
-// ─────────────────────────────────────────
-// @route   GET /api/admin/users
-// @access  Privé (admin)
-// ─────────────────────────────────────────
 const getTousUsers = async (req, res) => {
   try {
     const { role, isActive, page = 1, limit = 10 } = req.query;
@@ -31,10 +27,6 @@ const getTousUsers = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   PUT /api/admin/users/:id/activer
-// @access  Privé (admin)
-// ─────────────────────────────────────────
 const activerUser = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
@@ -53,10 +45,6 @@ const activerUser = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   PUT /api/admin/users/:id/suspendre
-// @access  Privé (admin)
-// ─────────────────────────────────────────
 const suspendrUser = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
@@ -75,10 +63,6 @@ const suspendrUser = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   PUT /api/admin/users/:id/verifier
-// @access  Privé (admin)
-// ─────────────────────────────────────────
 const verifierUser = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
@@ -106,10 +90,6 @@ const verifierUser = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   DELETE /api/admin/users/:id
-// @access  Privé (admin)
-// ─────────────────────────────────────────
 const supprimerUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
@@ -126,11 +106,6 @@ const supprimerUser = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   GET /api/admin/demandes-suppression
-// @access  Privé (admin)
-// Retourne tous les users ayant une demande en attente
-// ─────────────────────────────────────────
 const getDemandesSuppression = async (req, res) => {
   try {
     const users = await User.find({ demandeSuppressionStatut: 'en_attente' })
@@ -143,11 +118,6 @@ const getDemandesSuppression = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   PUT /api/admin/users/:id/valider-suppression
-// @access  Privé (admin)
-// Valide la demande → supprime le compte
-// ─────────────────────────────────────────
 const validerSuppression = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -162,11 +132,6 @@ const validerSuppression = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   PUT /api/admin/users/:id/refuser-suppression
-// @access  Privé (admin)
-// Refuse la demande → remet les champs à null
-// ─────────────────────────────────────────
 const refuserSuppression = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
@@ -186,9 +151,6 @@ const refuserSuppression = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   GET /api/admin/avis
-// ─────────────────────────────────────────
 const getTousAvis = async (req, res) => {
   try {
     const avis = await Avis.find()

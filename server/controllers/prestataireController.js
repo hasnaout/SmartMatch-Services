@@ -1,15 +1,12 @@
 const Prestataire = require('../models/Prestataire');
 const User = require('../models/User');
 
-// ─────────────────────────────────────────
-// @route   GET /api/prestataires
-// @access  Public
-// ─────────────────────────────────────────
+
 const getTousPrestataires = async (req, res) => {
   try {
     const { categorie, ville, disponible, page = 1, limit = 10 } = req.query;
 
-    // Construire le filtre dynamiquement
+
     const filtre = {};
     if (categorie) filtre.categories = { $in: [categorie] };
     if (ville) filtre['zoneGeographique.ville'] = new RegExp(ville, 'i');
@@ -36,10 +33,7 @@ const getTousPrestataires = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   GET /api/prestataires/moi
-// @access  Privé (prestataire)
-// ─────────────────────────────────────────
+
 const getMonProfil = async (req, res) => {
   try {
     const prestataire = await Prestataire.findOne({ user: req.user._id })
@@ -55,10 +49,7 @@ const getMonProfil = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   GET /api/prestataires/:id
-// @access  Public
-// ─────────────────────────────────────────
+
 const getPrestataire = async (req, res) => {
   try {
     const prestataire = await Prestataire.findById(req.params.id)
@@ -74,10 +65,7 @@ const getPrestataire = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   PUT /api/prestataires/profil
-// @access  Privé (prestataire)
-// ─────────────────────────────────────────
+
 const updateProfil = async (req, res) => {
   try {
     const {
@@ -100,7 +88,7 @@ const updateProfil = async (req, res) => {
       return res.status(404).json({ message: '  Profil prestataire introuvable' });
     }
 
-    // Mettre à jour uniquement les champs envoyés
+
     if (description !== undefined) prestataire.description = description;
     if (competences !== undefined) prestataire.competences = competences;
     if (categories !== undefined) prestataire.categories = categories;
@@ -113,7 +101,7 @@ const updateProfil = async (req, res) => {
         ville:  ville  || prestataire.zoneGeographique?.ville,
         region: region || prestataire.zoneGeographique?.region,
         rayon:  rayon  || prestataire.zoneGeographique?.rayon || 20,
-        // Coordonnees GPS geocodees cote client (Nominatim)
+
         coordonnees: {
           lat: coordonneesLat ? Number(coordonneesLat) : (prestataire.zoneGeographique?.coordonnees?.lat || null),
           lng: coordonneesLng ? Number(coordonneesLng) : (prestataire.zoneGeographique?.coordonnees?.lng || null),
@@ -133,10 +121,7 @@ const updateProfil = async (req, res) => {
 }
 };
 
-// ─────────────────────────────────────────
-// @route   PUT /api/prestataires/disponibilite
-// @access  Privé (prestataire)
-// ─────────────────────────────────────────
+
 const updateDisponibilite = async (req, res) => {
   try {
     const { disponible } = req.body;

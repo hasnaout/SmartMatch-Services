@@ -7,7 +7,7 @@ import { Search, MapPin, Star, Briefcase, ChevronDown, ChevronUp, CheckCircle } 
 
 const CATEGORIES = ['', 'Plomberie', 'Électricité', 'Informatique', 'Jardinage', 'Peinture', 'Maçonnerie'];
 
-// ── Composant étoiles ──
+
 const Stars = ({ note, size = 14 }) => (
   <div style={{ display:'flex', gap:2 }}>
     {[1,2,3,4,5].map(s => (
@@ -25,7 +25,7 @@ Stars.propTypes = {
   size: PropTypes.number,
 };
 
-// ── Avis d'un prestataire ──
+
 const AvisPrestataire = ({ prestataireId }) => {
   const [avis,    setAvis]    = useState([]);
   const [loading, setLoading] = useState(true);
@@ -125,7 +125,7 @@ const Prestataires = () => {
           <p className="dashboard-subtitle">Trouvez le professionnel idéal pour votre besoin</p>
         </div>
 
-        {/* Filtres */}
+
         <div className="card" style={{ marginBottom:28, display:'flex', gap:16, flexWrap:'wrap', alignItems:'center' }}>
           <div style={{ position:'relative', flex:1, minWidth:200 }}>
             <Search size={15} style={{ position:'absolute', left:14, top:'50%', transform:'translateY(-50%)', color:'var(--muted)' }} />
@@ -218,7 +218,7 @@ const Prestataires = () => {
   </Link>
 </div>
 
-                {/* Avis dépliables */}
+
                 <AvisPrestataire prestataireId={p._id} />
               </div>
             ))}

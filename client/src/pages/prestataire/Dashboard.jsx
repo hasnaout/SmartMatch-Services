@@ -47,7 +47,7 @@ useEffect(() => {
       <Navbar />
       <div className="page-content">
 
-        {/* Header */}
+
         <div className="dashboard-header">
           <h1 className="dashboard-greeting">
             Bonjour, <span>{user?.prenom}</span>
@@ -57,7 +57,7 @@ useEffect(() => {
           </p>
         </div>
 
-        {/* Stats */}
+
         <div className="stats-grid prestataire-stats-grid">
           {[
             {
@@ -101,7 +101,7 @@ useEffect(() => {
           ))}
         </div>
 
-        {/* Missions disponibles */}
+
         <div>
           <div className="section-header">
             <div>
@@ -183,7 +183,7 @@ useEffect(() => {
           )}
         </div>
       </div>
-    </div>  
+    </div>
   );
 };
 

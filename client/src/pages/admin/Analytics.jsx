@@ -6,7 +6,7 @@ import {
   TrendingUp, CheckCircle, Clock, XCircle, Wallet
 } from 'lucide-react';
 
-// Composant graphique barre simple
+
 const BarChart = ({ data, color = 'var(--accent)', label }) => {
   const max = Math.max(...data.map(d => d.value), 1);
   return (
@@ -37,7 +37,7 @@ const BarChart = ({ data, color = 'var(--accent)', label }) => {
   );
 };
 
-// Composant graphique donut simple
+
 const DonutChart = ({ segments, size = 120 }) => {
   const total = segments.reduce((s, seg) => s + seg.value, 0);
   let offset  = 0;
@@ -101,7 +101,7 @@ const Analytics = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  // Inscriptions par mois (6 derniers mois)
+
   const getDerniersNMois = (n) => {
     const mois = [];
     for (let i = n - 1; i >= 0; i--) {
@@ -169,7 +169,7 @@ const Analytics = () => {
           </p>
         </div>
 
-        {/* KPIs */}
+
         <div className="stats-grid" style={{ marginBottom:28 }}>
           {[
             { icon:<Users size={22}/>,       value:stats?.users?.total || 0,        label:'Utilisateurs',      cls:'stat-icon-accent'  },
@@ -191,7 +191,7 @@ const Analytics = () => {
 
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:20, marginBottom:20 }}>
 
-          {/* Graphique inscriptions */}
+
           <div className="card">
             <h3 style={{ fontSize:15, fontWeight:700, marginBottom:20, color:'var(--accent2)' }}>
               <Users size={16} /> Inscriptions (6 derniers mois)
@@ -199,7 +199,7 @@ const Analytics = () => {
             <BarChart data={inscriptionsData} color="var(--gradient)" />
           </div>
 
-          {/* Graphique revenus */}
+
           <div className="card">
             <h3 style={{ fontSize:15, fontWeight:700, marginBottom:20, color:'var(--accent2)' }}>
               <Wallet size={16} /> Revenus MAD (6 derniers mois)
@@ -213,7 +213,7 @@ const Analytics = () => {
 
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:20, marginBottom:20 }}>
 
-          {/* Répartition utilisateurs */}
+
           <div className="card" style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:16 }}>
             <h3 style={{ fontSize:15, fontWeight:700, color:'var(--accent2)', alignSelf:'flex-start' }}>
               <Users size={16} /> Répartition utilisateurs
@@ -234,7 +234,7 @@ const Analytics = () => {
             </div>
           </div>
 
-          {/* Statuts demandes */}
+
           <div className="card" style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:16 }}>
             <h3 style={{ fontSize:15, fontWeight:700, color:'var(--accent2)', alignSelf:'flex-start' }}>
               <FileText size={16} /> Statuts demandes
@@ -263,7 +263,7 @@ const Analytics = () => {
             </div>
           </div>
 
-          {/* Méthodes paiement */}
+
           <div className="card" style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:16 }}>
             <h3 style={{ fontSize:15, fontWeight:700, color:'var(--accent2)', alignSelf:'flex-start' }}>
               <CreditCard size={16} /> Méthodes paiement
@@ -285,7 +285,7 @@ const Analytics = () => {
           </div>
         </div>
 
-        {/* Graphique missions */}
+
         <div className="card">
           <h3 style={{ fontSize:15, fontWeight:700, marginBottom:20, color:'var(--accent2)' }}>
             <FileText size={16} /> Nouvelles missions (6 derniers mois)

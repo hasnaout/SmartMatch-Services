@@ -3,12 +3,12 @@ import "./LandingPage.css";
 import { useNavigate } from "react-router-dom";
 import Chatbot from "../../components/Chatbot";
 
-// Images
+
 import ph from "../../assets/ph.jpg";
 import vid from "../../assets/vid.mp4";
 import logo from "../../assets/logo.png";
 
-// Icônes SVG
+
 const UserIcon = () => (
   <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
 );
@@ -197,7 +197,7 @@ const LandingPage = () => {
 
   return (
     <div className="landing-page">
-      {/* HEADER */}
+
       <header className="header">
         <div className="logo-container">
           <img src={logo} alt="SmartMatch logo" className="logo-img" />
@@ -216,7 +216,7 @@ const LandingPage = () => {
         </nav>
       </header>
 
-      {/* HERO */}
+
       <section className="hero">
         <video src={vid} autoPlay muted loop playsInline />
         <div className="overlay"></div>
@@ -241,7 +241,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* SERVICES */}
+
       <section id="services" className="services">
         <div className="section-title">
           <h2>Nos Services</h2>
@@ -298,7 +298,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ABOUT */}
+
       <section id="about" className="about">
         <div className="about-wrapper">
           <div className="about-image">
@@ -337,7 +337,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* FOOTER */}
+
       <footer className="footer">
         <div className="footer-content">
           <div className="footer-section">
@@ -361,7 +361,7 @@ const LandingPage = () => {
           <p>© 2025 SmartMatch. Tous droits réservés.</p>
         </div>
       </footer>
-       <Chatbot /> 
+       <Chatbot />
       <LandingChatbot />
     </div>
   );

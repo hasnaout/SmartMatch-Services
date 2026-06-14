@@ -1,18 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap');
 
-/* ── Variables globales — Mode Clair Violet ── */
+
 :root {
-  /* Fond */
+
   --bg:         #f8f7ff;
   --bg2:        #ffffff;
   --bg3:        #f3f0ff;
   --bg4:        #ede9fe;
 
-  /* Bordures */
+
   --border:     #e5e0ff;
   --border2:    #c4b5fd;
 
-  /* Accent violet dégradé */
+
   --accent:        #667eea;
   --accent2:       #764ba2;
   --accent-light:  #ede9fe;
@@ -20,7 +20,7 @@
   --gradient:      linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --gradient-soft: linear-gradient(135deg, rgba(102,126,234,0.12) 0%, rgba(118,75,162,0.12) 100%);
 
-  /* Statuts */
+
   --success:       #059669;
   --success-light: #d1fae5;
   --warning:       #d97706;
@@ -30,30 +30,30 @@
   --info:          #2563eb;
   --info-light:    #dbeafe;
 
-  /* Texte */
+
   --text:    #1e1b4b;
   --text2:   #4338ca;
   --muted:   #6b7280;
   --muted2:  #9ca3af;
 
-  /* Client theme */
+
   --client-accent:   #667eea;
   --client-accent2:  #764ba2;
   --client-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --client-light:    #ede9fe;
 
-  /* Prestataire theme */
+
   --prest-accent:    #0ea5e9;
   --prest-accent2:   #6366f1;
   --prest-gradient:  linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
   --prest-light:     #e0f2fe;
 
-  /* Dimensions */
+
   --radius:    12px;
   --radius-lg: 20px;
   --radius-xl: 28px;
 
-  /* Ombres */
+
   --shadow:    0 4px 24px rgba(102,126,234,0.12);
   --shadow-md: 0 8px 32px rgba(102,126,234,0.16);
   --shadow-lg: 0 16px 48px rgba(102,126,234,0.2);
@@ -62,7 +62,7 @@
   --transition: 0.2s ease;
 }
 
-/* ── Reset ── */
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
@@ -84,7 +84,7 @@ a { text-decoration: none; color: inherit; }
 button { cursor: pointer; font-family: 'DM Sans', sans-serif; }
 input, textarea, select { font-family: 'DM Sans', sans-serif; outline: none; }
 
-/* ── Scrollbar ── */
+
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg3); }
 ::-webkit-scrollbar-thumb {
@@ -92,7 +92,7 @@ input, textarea, select { font-family: 'DM Sans', sans-serif; outline: none; }
   border-radius: 99px;
 }
 
-/* ── Animations ── */
+
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -119,7 +119,7 @@ input, textarea, select { font-family: 'DM Sans', sans-serif; outline: none; }
   50%     { transform: scale(1.05); }
 }
 
-/* ── Boutons ── */
+
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -197,7 +197,7 @@ input, textarea, select { font-family: 'DM Sans', sans-serif; outline: none; }
 }
 .btn-success:hover { background: #a7f3d0; }
 
-/* ── Card ── */
+
 .card {
   background: var(--bg2);
   border: 1px solid var(--border);
@@ -206,7 +206,7 @@ input, textarea, select { font-family: 'DM Sans', sans-serif; outline: none; }
   box-shadow: var(--shadow-sm);
 }
 
-/* ── Badges ── */
+
 .badge {
   display: inline-flex;
   align-items: center;
@@ -222,7 +222,7 @@ input, textarea, select { font-family: 'DM Sans', sans-serif; outline: none; }
 .badge-info    { background: var(--info-light);    color: var(--info);    }
 .badge-muted   { background: #f3f4f6; color: var(--muted); }
 
-/* ── Spinner ── */
+
 .spinner {
   width: 18px; height: 18px;
   border: 2px solid rgba(255,255,255,0.3);
@@ -240,5 +240,5 @@ input, textarea, select { font-family: 'DM Sans', sans-serif; outline: none; }
   display: inline-block;
 }
 
-/* ── Divider ── */
+
 .divider { height: 1px; background: var(--border); margin: 20px 0; }

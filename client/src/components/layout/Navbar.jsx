@@ -22,7 +22,7 @@ const typeIcon = {
   compte_verifie:   BadgeCheck,
 };
 
-// eslint-disable-next-line react/prop-types
+
 const NotificationIcon = ({ type, size = 18 }) => {
   const Icon = typeIcon[type] || Bell;
   return <Icon size={size} strokeWidth={2.2} />;
@@ -37,7 +37,7 @@ const Navbar = () => {
   const [nonLus,    setNonLus]    = useState(0);
   const notifRef = useRef(null);
 
-  // Charger notifications
+
   const fetchNotifs = () => {
     api.get('/notifications')
       .then(({ data }) => {
@@ -63,7 +63,7 @@ useEffect(() => {
 
   return () => socket.off('nouvelle_notification');
 }, [user]);
-  // Fermer en cliquant dehors
+
   useEffect(() => {
     const handleClick = (e) => {
       if (notifRef.current && !notifRef.current.contains(e.target)) {
@@ -148,12 +148,12 @@ useEffect(() => {
   return (
     <>
       <nav className={`navbar ${role}`}>
-        {/* Logo */}
+
         <NavLink to="/" className="navbar-logo">
           <img src={logo} alt="SmartMatch logo" className="navbar-logo-image" />
         </NavLink>
 
-        {/* Links desktop */}
+
         <div className="navbar-links">
           {links.map(l => (
             <NavLink
@@ -166,10 +166,10 @@ useEffect(() => {
           ))}
         </div>
 
-        {/* Droite */}
+
         <div className="navbar-right">
 
-           {/* Notifications */}
+
   {role !== 'admin' && (
     <div ref={notifRef} style={{ position: 'relative' }}>
       <button
@@ -232,7 +232,7 @@ useEffect(() => {
     </div>
   )}
 
-          {/* User */}
+
           <button className="navbar-user" onClick={() => navigate('/settings')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
     <div className={`navbar-avatar ${role}`}>{initiales}</div>
     <span className="navbar-username">{user?.prenom} {user?.nom}</span>
@@ -242,7 +242,7 @@ useEffect(() => {
     <LogOut size={14} /> Déconnecter
   </button>
 
-          {/* Hamburger mobile */}
+
   <button className="navbar-hamburger" onClick={() => setMenuOpen(!menuOpen)}>
     {menuOpen
       ? <span style={{ fontSize: 20, color: 'var(--accent)', lineHeight: 1 }}>✕</span>
@@ -251,13 +251,13 @@ useEffect(() => {
         </>
     }
     </button>
-        </div>   
+        </div>
       </nav>
 
-      {/* Menu mobile */}
+
 {menuOpen && (
   <div className="navbar-mobile-menu">
-    {/* Avatar user en haut */}
+
     <div style={{
       display: 'flex', alignItems: 'center', gap: 12,
       padding: '12px 16px', marginBottom: 8,
@@ -278,7 +278,7 @@ useEffect(() => {
 
     <div className="divider" style={{ margin: '4px 0' }} />
 
-    {/* Liens */}
+
     {links.map(l => (
       <NavLink
         key={l.to}
@@ -292,7 +292,7 @@ useEffect(() => {
 
     <div className="divider" style={{ margin: '4px 0' }} />
 
-    {/* Logout */}
+
     <button
       className="navbar-logout-mobile"
       onClick={() => { handleLogout(); setMenuOpen(false); }}

@@ -42,7 +42,7 @@ const ClientDashboard = () => {
       <Navbar />
       <div className="page-content">
 
-        {/* Header */}
+
         <div className="dashboard-header">
           <h1 className="dashboard-greeting">
             Bonjour, <span>{user?.prenom}</span>
@@ -52,7 +52,7 @@ const ClientDashboard = () => {
           </p>
         </div>
 
-        {/* Stats */}
+
         <div className="stats-grid prestataire-stats-grid">
           {[
             { icon: <FileText size={22} />, value: stats.total,     label: 'Total demandes',  cls: 'stat-icon-accent'  },
@@ -70,7 +70,7 @@ const ClientDashboard = () => {
           ))}
         </div>
 
-        {/* Section demandes */}
+
         <div>
           <div className="section-header">
             <div>

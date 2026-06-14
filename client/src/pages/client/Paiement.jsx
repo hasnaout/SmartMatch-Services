@@ -9,13 +9,11 @@ import {
 } from 'lucide-react';
 import { CATEGORIES_EN_LIGNE } from '../../utils/paiementHelper';
 
-// ── Stripe (chargé dynamiquement si clé disponible) ──────────────
+
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
-// ─────────────────────────────────────────────
-//  Formulaire Stripe — composant interne
-// ─────────────────────────────────────────────
+
 const StripeCheckoutForm = ({ paiement, onSuccess, onError }) => {
   const stripe   = useStripe();
   const elements = useElements();
@@ -50,7 +48,7 @@ const StripeCheckoutForm = ({ paiement, onSuccess, onError }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Carte simulée Stripe */}
+
       <div style={{
         background: 'var(--gradient)', borderRadius: 16,
         padding: '24px', marginBottom: 24, color: '#fff', position: 'relative', overflow: 'hidden',
@@ -76,7 +74,7 @@ const StripeCheckoutForm = ({ paiement, onSuccess, onError }) => {
         </div>
       </div>
 
-      {/* Champ carte Stripe */}
+
       <div style={{
         border: '2px solid var(--border)', borderRadius: 12,
         padding: '16px', marginBottom: 16,
@@ -121,23 +119,21 @@ const StripeCheckoutForm = ({ paiement, onSuccess, onError }) => {
   );
 };
 
-// ─────────────────────────────────────────────
-//  Composant principal
-// ─────────────────────────────────────────────
+
 const Paiement = () => {
   const { demandeId } = useParams();
   const navigate      = useNavigate();
 
   const [demande,           setDemande]           = useState(null);
   const [paiementExistant,  setPaiementExistant]  = useState(null);
-  const [stripeData,        setStripeData]         = useState(null); // { clientSecret, publishableKey }
+  const [stripeData,        setStripeData]         = useState(null);
   const [stripePromise,     setStripePromise]      = useState(null);
   const [montant,           setMontant]            = useState('');
   const [methode,           setMethode]            = useState('');
   const [notes,             setNotes]              = useState('');
   const [loading,           setLoading]            = useState(true);
   const [paying,            setPaying]             = useState(false);
-  const [step,              setStep]               = useState(1); // 1=choix, 2=paiement, 3=confirmation
+  const [step,              setStep]               = useState(1);
 
   const isEnLigne = demande ? CATEGORIES_EN_LIGNE.includes(demande.categorie) : false;
 
@@ -180,7 +176,7 @@ const Paiement = () => {
 
       setPaiementExistant(data.paiement);
 
-      // ── Stripe disponible pour le paiement en ligne ──
+
       if (methode === 'en_ligne' && data.stripeClientSecret) {
         const sp = await loadStripe(data.stripePublishableKey);
         setStripePromise(sp);
@@ -192,7 +188,7 @@ const Paiement = () => {
         });
       }
 
-      // Espèces — confirmer immédiatement
+
       if (methode === 'especes') {
         await api.put(`/paiements/${data.paiement._id}/confirmer`);
         toast.success('Paiement en espèces enregistré !');
@@ -211,7 +207,7 @@ const Paiement = () => {
     }
   };
 
-  // Appelé après succès Stripe ou simulation
+
   const handlePaiementSuccess = async () => {
     try {
       const { data } = await api.put(`/paiements/${paiementExistant._id}/confirmer`);
@@ -227,7 +223,7 @@ const Paiement = () => {
     }
   };
 
-  // Simulation si pas de Stripe
+
   const handleSimulerPaiement = async () => {
     setPaying(true);
     await new Promise(r => setTimeout(r, 2000));
@@ -254,7 +250,7 @@ const Paiement = () => {
       <Navbar />
       <div className="page-content">
 
-        {/* Header */}
+
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 32 }}>
           <button className="btn-secondary" onClick={() => navigate(-1)} style={{ padding: '8px 12px' }}>
             <ArrowLeft size={16} />
@@ -267,7 +263,7 @@ const Paiement = () => {
 
         <div style={{ maxWidth: 600, margin: '0 auto' }}>
 
-          {/* ── Déjà payé ── */}
+
           {paiementExistant?.statut === 'payé' && step !== 3 ? (
             <div className="card" style={{ textAlign: 'center', padding: '40px 32px' }}>
               <CheckCircle size={56} color="var(--success)" style={{ marginBottom: 16 }} />
@@ -279,7 +275,7 @@ const Paiement = () => {
             </div>
 
           ) : step === 1 ? (
-            /* ── Étape 1 — Choix méthode ── */
+
             <div>
               <div className="card" style={{ marginBottom: 20 }}>
                 <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--accent2)' }}>
@@ -335,7 +331,7 @@ const Paiement = () => {
                   <CreditCard size={16} /> Méthode de paiement
                 </h3>
 
-                {/* En ligne */}
+
                 <div onClick={() => setMethode('en_ligne')} style={{
                   display: 'flex', alignItems: 'center', gap: 14,
                   padding: '16px', borderRadius: 12, cursor: 'pointer', marginBottom: 12,
@@ -359,7 +355,7 @@ const Paiement = () => {
                   {methode === 'en_ligne' && <CheckCircle size={20} color="var(--accent)" />}
                 </div>
 
-                {/* Espèces */}
+
                 <div onClick={() => setMethode('especes')} style={{
                   display: 'flex', alignItems: 'center', gap: 14,
                   padding: '16px', borderRadius: 12, cursor: 'pointer',
@@ -411,7 +407,7 @@ const Paiement = () => {
             </div>
 
           ) : step === 2 ? (
-            /* ── Étape 2 — Paiement (Stripe ou simulation) ── */
+
             <div className="card" style={{ padding: '40px 32px' }}>
               <div style={{
                 width: 72, height: 72, borderRadius: 20, background: 'var(--gradient)',
@@ -430,7 +426,7 @@ const Paiement = () => {
                   : 'Interface simulée — En production : CMI ou Stripe'}
               </p>
 
-              {/* ── Formulaire Stripe réel ── */}
+
               {stripeData && stripePromise ? (
                 <Elements stripe={stripePromise} options={{ clientSecret: stripeData.clientSecret }}>
                   <StripeCheckoutForm
@@ -440,7 +436,7 @@ const Paiement = () => {
                   />
                 </Elements>
               ) : (
-                /* ── Simulation si Stripe non configuré ── */
+
                 <>
                   <div style={{
                     background: 'var(--gradient)', borderRadius: 16, padding: '24px',
@@ -487,7 +483,7 @@ const Paiement = () => {
             </div>
 
           ) : (
-            /* ── Étape 3 — Confirmation / Reçu ── */
+
             <div className="card" style={{ padding: '40px 32px', textAlign: 'center' }}>
               <div style={{
                 width: 80, height: 80, borderRadius: '50%',

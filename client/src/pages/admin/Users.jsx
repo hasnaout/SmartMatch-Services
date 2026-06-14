@@ -19,11 +19,10 @@ const AdminUsers = () => {
   const [search,     setSearch]     = useState('');
   const [roleFilter, setRoleFilter] = useState('');
 
-  // ── Demandes de suppression ──
-  const [tab,           setTab]           = useState('users'); // 'users' | 'suppressions'
+  const [tab,           setTab]           = useState('users');
   const [demandesSuppr, setDemandesSuppr] = useState([]);
   const [loadingSuppr,  setLoadingSuppr]  = useState(false);
-  const [modalRaison,   setModalRaison]   = useState(null); // { nom, prenom, email, raison, date }
+  const [modalRaison,   setModalRaison]   = useState(null);
 
   const fetchUsers = () => {
     setLoading(true);
@@ -101,7 +100,6 @@ const AdminUsers = () => {
       <Navbar />
       <div className="page-content">
 
-        {/* Header */}
         <div className="dashboard-header">
           <h1 className="dashboard-greeting">
             Gestion des <span>Utilisateurs</span>
@@ -111,7 +109,6 @@ const AdminUsers = () => {
           </p>
         </div>
 
-        {/* Onglets */}
         <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
           <button
             className={tab === 'users' ? 'btn-primary' : 'btn-secondary'}
@@ -137,7 +134,6 @@ const AdminUsers = () => {
           </button>
         </div>
 
-        {/* ═══ TAB : Tous les utilisateurs ═══ */}
         {tab === 'users' && (
           <>
             <div className="card" style={{ marginBottom: 24, display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -260,7 +256,6 @@ const AdminUsers = () => {
           </>
         )}
 
-        {/* ═══ TAB : Demandes de suppression ═══ */}
         {tab === 'suppressions' && (
           <div className="table-wrap">
             {loadingSuppr ? (
@@ -347,7 +342,6 @@ const AdminUsers = () => {
           </div>
         )}
 
-        {/* ── Modal raison ── */}
         {modalRaison && (
           <div style={{
             position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)',

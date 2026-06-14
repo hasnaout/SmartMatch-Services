@@ -1,7 +1,7 @@
 const multer = require('multer');
 const path   = require('path');
 
-// memoryStorage — ImgBB reçoit le buffer en base64
+
 const storage = multer.memoryStorage();
 
 const fileFilter = (_req, file, cb) => {

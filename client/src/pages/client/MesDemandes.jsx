@@ -14,7 +14,7 @@ const statusConfig = {
 };
 
 
-// ── Modal Avis ──
+
 const ModalAvis = ({ demande, onClose, onSuccess }) => {
   const [note,        setNote]        = useState(0);
   const [hover,       setHover]       = useState(0);
@@ -51,7 +51,7 @@ const ModalAvis = ({ demande, onClose, onSuccess }) => {
           {demande.titre}
         </p>
 
-        {/* Étoiles */}
+
         <div style={{ marginBottom:20 }}>
           <p style={{ fontSize:13, fontWeight:600, color:'var(--text)', marginBottom:10 }}>
             Votre note *
@@ -77,7 +77,7 @@ const ModalAvis = ({ demande, onClose, onSuccess }) => {
           )}
         </div>
 
-        {/* Commentaire */}
+
         <div style={{ marginBottom:24 }}>
           <p style={{ fontSize:13, fontWeight:600, color:'var(--text)', marginBottom:8 }}>
             Commentaire (optionnel)
@@ -170,7 +170,7 @@ const MesDemandes = () => {
           <p className="dashboard-subtitle">Suivez l'état de toutes vos demandes</p>
         </div>
 
-        {/* Filtres */}
+
         <div style={{ display:'flex', gap:8, marginBottom:28, flexWrap:'wrap', alignItems:'center', justifyContent:'space-between' }}>
           <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
             {[
@@ -284,7 +284,7 @@ const MesDemandes = () => {
         )}
       </div>
 
-      {/* Modal avis */}
+
       {avisDemandeId && demandeANoter && (
         <ModalAvis
           demande={demandeANoter}

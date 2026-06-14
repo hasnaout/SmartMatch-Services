@@ -41,7 +41,7 @@ const AdminDashboard = () => {
       <Navbar />
       <div className="page-content">
 
-        {/* Header */}
+
         <div className="dashboard-header">
           <h1 className="dashboard-greeting">
             Dashboard <span>Admin</span>
@@ -57,7 +57,7 @@ const AdminDashboard = () => {
           </div>
         ) : (
           <>
-            {/* Stats */}
+
             <div className="stats-grid prestataire-stats-grid">
               {[
                 { icon: <Users size={22} />,       value: stats?.users?.total        || 0, label: 'Utilisateurs',         cls: 'stat-icon-accent'  },
@@ -77,7 +77,7 @@ const AdminDashboard = () => {
               ))}
             </div>
 
-            {/* Derniers utilisateurs */}
+
             <div>
               <div className="section-header">
                 <div>

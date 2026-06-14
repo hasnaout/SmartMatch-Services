@@ -11,7 +11,7 @@ const uploadFichiers = async (req, res) => {
 
     const uploadPromises = req.files.map(async (file) => {
       const formData = new FormData();
-      // ImgBB attend le fichier en base64 via le champ "image"
+
       formData.append('image', file.buffer.toString('base64'));
 
       const response = await axios.post(

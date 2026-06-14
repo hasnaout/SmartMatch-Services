@@ -28,7 +28,7 @@ const Revenus = () => {
   const filtered = filter === 'tout' ? paiements
     : paiements.filter(p => p.methode === filter);
 
-  // Stats par mois
+
   const parMois = paiements.reduce((acc, p) => {
     const mois = new Date(p.createdAt).toLocaleDateString('fr-FR', {
       month: 'long', year: 'numeric',
@@ -44,7 +44,7 @@ const Revenus = () => {
       <Navbar />
       <div className="page-content">
 
-        {/* Header */}
+
         <div className="dashboard-header">
           <h1 className="dashboard-greeting prest">
             Mes <span>Revenus</span>
@@ -60,7 +60,7 @@ const Revenus = () => {
           </div>
         ) : (
           <>
-            {/* Stats */}
+
             <div className="stats-grid" style={{ marginBottom:28 }}>
               {[
                 {
@@ -98,7 +98,7 @@ const Revenus = () => {
               ))}
             </div>
 
-            {/* Revenus par mois */}
+
             {Object.keys(parMois).length > 0 && (
               <div className="card" style={{ marginBottom:24 }}>
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:16, color:'var(--prest-accent)' }}>
@@ -129,7 +129,7 @@ const Revenus = () => {
                           {stats.count} mission{stats.count > 1 ? 's' : ''}
                         </div>
                       </div>
-                      {/* Barre de progression */}
+
                       <div style={{ flex:2, marginRight:12 }}>
                         <div style={{
                           height:6, borderRadius:99,
@@ -154,7 +154,7 @@ const Revenus = () => {
               </div>
             )}
 
-            {/* Filtres */}
+
             <div style={{ display:'flex', gap:8, marginBottom:20, flexWrap:'wrap' }}>
               {[
                 { val:'tout',     label:'Tous' },
@@ -172,7 +172,7 @@ const Revenus = () => {
               ))}
             </div>
 
-            {/* Table */}
+
             {filtered.length === 0 ? (
               <div className="table-wrap">
                 <div className="empty-state">
@@ -254,7 +254,7 @@ const Revenus = () => {
                   </tbody>
                 </table>
 
-                {/* Total en bas */}
+
                 <div style={{
                   padding:'16px 20px',
                   borderTop:'2px solid var(--border)',

@@ -3,7 +3,7 @@ const Notification = require('../models/Notification');
 const creerNotification = async (io, { destinataire, type, titre, message, lien = '' }) => {
   try {
     console.log('📨 Création notification pour :', destinataire);
-    
+
     const notif = await Notification.create({
       destinataire, type, titre, message, lien,
     });

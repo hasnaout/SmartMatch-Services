@@ -121,7 +121,7 @@ const DetailMission = () => {
       <Navbar />
       <div className="page-content">
 
-        {/* Header */}
+
         <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:24 }}>
           <button className="btn-secondary" onClick={() => navigate(-1)} style={{ padding:'8px 12px' }}>
             <ArrowLeft size={16} />
@@ -155,7 +155,7 @@ const DetailMission = () => {
 
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:20 }}>
 
-          {/* Infos */}
+
           <div>
             <div className="card" style={{ marginBottom:16 }}>
               <h3 style={{ fontSize:15, fontWeight:700, marginBottom:14, color:'var(--prest-accent)' }}>
@@ -181,7 +181,7 @@ const DetailMission = () => {
               </div>
             </div>
 
-            {/* Client info */}
+
             <div className="card">
               <h3 style={{ fontSize:15, fontWeight:700, marginBottom:14, color:'var(--prest-accent)' }}>
                 <User size={16} /> Client
@@ -206,7 +206,7 @@ const DetailMission = () => {
               </div>
             </div>
 
-            {/* Photos */}
+
             {demande.fichiers?.length > 0 && (
               <div className="card" style={{ marginTop:16 }}>
                 <h3 style={{ fontSize:15, fontWeight:700, marginBottom:14, color:'var(--prest-accent)' }}>
@@ -222,7 +222,7 @@ const DetailMission = () => {
             )}
           </div>
 
-          {/* Chat */}
+
           <div className="chat-box" style={{ height:500 }}>
             <div className="chat-header">
               <MessageCircle size={16} color="var(--prest-accent)" />

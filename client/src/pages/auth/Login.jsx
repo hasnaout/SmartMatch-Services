@@ -21,7 +21,7 @@ const Login = () => {
   const { login } = useAuth();
   const navigate  = useNavigate();
 
-  // Charger email sauvegardé
+
   useEffect(() => {
     const savedEmail = localStorage.getItem('remembered_email');
     if (savedEmail) { setEmail(savedEmail); setRemember(true); }
@@ -33,7 +33,7 @@ const Login = () => {
     try {
       const user = await login(email, password);
 
-      // Se souvenir de moi
+
       if (remember) {
         localStorage.setItem('remembered_email', email);
       } else {
@@ -93,7 +93,7 @@ const Login = () => {
 
   return (
     <div className="auth-page">
-      {/* Côté gauche */}
+
       <div className="auth-left">
         <div className="auth-left-orb auth-left-orb-1" />
         <div className="auth-left-orb auth-left-orb-2" />
@@ -120,7 +120,7 @@ const Login = () => {
         </div>
       </div>
 
-      {/* Côté droit */}
+
       <div className="auth-right">
         <div className="auth-container">
           <div className="auth-logo">
@@ -129,7 +129,7 @@ const Login = () => {
           </div>
 
           {!showForgot ? (
-            /* ── Formulaire Login ── */
+
             <div className="auth-card">
               <div className="auth-card-header">
                 <h1 className="auth-title">Bon retour </h1>
@@ -158,7 +158,7 @@ const Login = () => {
                   </div>
                 </div>
 
-                {/* Se souvenir + Mot de passe oublié */}
+
                 <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                   <label style={{ display:'flex', alignItems:'center', gap:8, cursor:'pointer', fontSize:13, color:'var(--muted)' }}>
                     <input
@@ -194,7 +194,7 @@ const Login = () => {
               </p>
             </div>
           ) : (
-            /* ── Formulaire Mot de passe oublié ── */
+
             <div className="auth-card">
               <div className="auth-card-header">
                 <h1 className="auth-title">

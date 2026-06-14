@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { MapPin, Search, Star, Filter, Wallet, CheckCircle, XCircle } from 'lucide-react';
 
-// Fix icônes Leaflet
+
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
@@ -14,7 +14,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl:     'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
-// Icône personnalisée violet
+
 const createCustomIcon = () => L.divIcon({
   className: '',
   html: `
@@ -37,7 +37,7 @@ const CATEGORIES = [
   'Jardinage', 'Peinture', 'Maçonnerie',
 ];
 
-// Coordonnées des villes marocaines
+
 const VILLES_COORDS = {
   'casablanca':       [33.5731, -7.5898],
   'rabat':            [34.0209, -6.8416],
@@ -104,7 +104,7 @@ const Carte = () => {
   gap: 20,
   height: window.innerWidth < 768 ? 'auto' : 'calc(100vh - 200px)',
 }}>
-          {/* Panneau gauche */}
+
           <div className="carte-liste" style={{
     background: 'var(--bg2)', border: '1px solid var(--border)',
     borderRadius: 'var(--radius-lg)', overflow: 'hidden',
@@ -112,7 +112,7 @@ const Carte = () => {
     boxShadow: 'var(--shadow-sm)',
     maxHeight: window.innerWidth < 768 ? '300px' : 'none',
   }}>
-            {/* Recherche */}
+
             <div style={{ padding:16, borderBottom:'1px solid var(--border)', background:'var(--bg3)' }}>
               <div style={{ position:'relative', marginBottom:12 }}>
                 <Search size={15} style={{ position:'absolute', left:12, top:'50%', transform:'translateY(-50%)', color:'var(--muted)' }} />
@@ -139,7 +139,7 @@ const Carte = () => {
               </div>
             </div>
 
-            {/* Liste */}
+
             <div style={{ flex:1, overflowY:'auto' }}>
               {loading ? (
                 <div className="empty-state" style={{ padding:40 }}>
@@ -215,7 +215,7 @@ const Carte = () => {
             </div>
           </div>
 
-          {/* Carte */}
+
            <div className="carte-map" style={{
     borderRadius: 'var(--radius-lg)', overflow: 'hidden',
     border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)',
@@ -301,7 +301,7 @@ const Carte = () => {
                       </div>
                     </Popup>
 
-                    {/* Cercle zone d'intervention */}
+
                     <Circle
                       center={coords}
                       radius={(p.zoneGeographique?.rayon || 20) * 1000}
@@ -317,7 +317,7 @@ const Carte = () => {
               })}
             </MapContainer>
 
-            {/* Légende */}
+
             <div style={{
               position:'absolute', bottom:16, right:16, zIndex:1000,
               background:'rgba(255,255,255,0.95)',

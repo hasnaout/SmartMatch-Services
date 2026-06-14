@@ -15,14 +15,14 @@ const Messagerie = () => {
   const [sending,       setSending]       = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Charger les conversations
+
   useEffect(() => {
     api.get('/messages/conversations')
       .then(({ data }) => setConversations(data.conversations))
       .catch(() => {});
   }, []);
 
-  // Socket — recevoir les messages en temps réel
+
   useEffect(() => {
     socket.on('receive_message', (data) => {
       setMessages((prev) => [...prev, data]);
@@ -30,7 +30,7 @@ const Messagerie = () => {
     return () => socket.off('receive_message');
   }, []);
 
-  // Charger les messages d'une conversation
+
   const openConversation = async (conv) => {
     setActiveConv(conv);
     const autreUserId = getAutreUser(conv)?.id;
@@ -46,12 +46,12 @@ const Messagerie = () => {
     }
   };
 
-  // Faire défiler vers le bas
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Envoyer un message
+
   const handleSend = async () => {
     if (!newMsg.trim() || !activeConv) return;
     const autreUser = getAutreUser(activeConv);
@@ -80,7 +80,7 @@ const Messagerie = () => {
     }
   };
 
-  // Trouver l'autre utilisateur dans la conversation
+
   const getAutreUser = (conv) => {
     if (!conv) return null;
     const msg = conv.dernierMessage;
@@ -112,7 +112,7 @@ const Messagerie = () => {
 
         <div className="messages-layout">
 
-          {/* Liste conversations */}
+
           <div className="conversations-list">
             <div className="conversations-header">Conversations</div>
             {conversations.length === 0 ? (
@@ -153,7 +153,7 @@ const Messagerie = () => {
             )}
           </div>
 
-          {/* Chat */}
+
           <div className="chat-box">
             {!activeConv ? (
               <div className="chat-empty">
@@ -167,7 +167,7 @@ const Messagerie = () => {
               </div>
             ) : (
               <>
-                {/* Header */}
+
                 <div className="chat-header">
                   <div className="conv-avatar" style={{ width: 36, height: 36, fontSize: 13 }}>
                     {getAutreUser(activeConv)?.prenom?.[0]}
@@ -184,7 +184,7 @@ const Messagerie = () => {
                   </div>
                 </div>
 
-                {/* Messages */}
+
                 <div className="chat-messages">
                   {messages.length === 0 ? (
                     <div style={{ textAlign: 'center', color: 'var(--muted)', fontSize: 13, marginTop: 40 }}>
@@ -215,7 +215,7 @@ const Messagerie = () => {
                   <div ref={messagesEndRef} />
                 </div>
 
-                {/* Input */}
+
                 <div className="chat-input-area">
                   <textarea
                     className="chat-input"

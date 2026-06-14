@@ -20,15 +20,15 @@ const CreerDemande = () => {
   const [loading,   setLoading]   = useState(false);
   const [uploading, setUploading] = useState(false);
   const [dragging,  setDragging]  = useState(false);
-  const [fichiers,  setFichiers]  = useState([]); // urls cloudinary
-  const [previews,  setPreviews]  = useState([]); // previews locaux
+  const [fichiers,  setFichiers]  = useState([]);
+  const [previews,  setPreviews]  = useState([]);
   const [coordonnees, setCoordonnees] = useState(null);
   const [form, setForm] = useState({
     titre: '', description: '', categorie: '',
     budgetMin: '', budgetMax: '',
     ville: '', region: '', adresse: '',
   });
-  
+
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -48,11 +48,11 @@ const CreerDemande = () => {
       }
   }
 };
-  // ── Upload fichiers ──
+
   const handleFiles = async (files) => {
     if (!files || files.length === 0) return;
     const filesArray = Array.from(files);
-    // Prévisualisation locale
+
     filesArray.forEach(file => {
       if (file.type.startsWith('image/')) {
         const reader = new FileReader();
@@ -63,7 +63,7 @@ const CreerDemande = () => {
       }
     });
 
-    // Upload vers Cloudinary
+
     setUploading(true);
     try {
       const formData = new FormData();
@@ -129,7 +129,7 @@ const CreerDemande = () => {
         <div className="form-page">
           <form onSubmit={handleSubmit}>
 
-            {/* Infos générales */}
+
             <div className="form-card">
               <div className="form-section">
                 <div className="form-section-title"><FileText size={16} /> Informations générales</div>
@@ -147,7 +147,7 @@ const CreerDemande = () => {
                 </div>
               </div>
 
-              {/* Catégorie */}
+
               <div className="form-section">
                 <div className="form-section-title"><Tags size={16} /> Catégorie de service *</div>
                 <div className="cat-grid">
@@ -162,7 +162,7 @@ const CreerDemande = () => {
               </div>
             </div>
 
-            {/* Budget & Localisation */}
+
             <div className="form-card">
               <div className="form-section">
                 <div className="form-section-title"><Wallet size={16} /> Budget estimé (MAD)</div>
@@ -207,12 +207,12 @@ const CreerDemande = () => {
               </div>
             </div>
 
-            {/* Upload photos */}
+
             <div className="form-card">
               <div className="form-section">
                 <div className="form-section-title"><Images size={16} /> Photos / Fichiers</div>
 
-                {/* Zone drag & drop */}
+
                 <div
                   className={`upload-zone ${dragging ? 'dragging' : ''}`}
                   onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
@@ -242,7 +242,7 @@ const CreerDemande = () => {
                   </p>
                 </div>
 
-                {/* Prévisualisations */}
+
                 {previews.length > 0 && (
                   <div className="upload-preview">
                     {previews.map((p, i) => (

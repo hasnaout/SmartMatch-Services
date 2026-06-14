@@ -4,12 +4,12 @@ const Demande     = require('../models/Demande');
 const Prestataire = require('../models/Prestataire');
 const { creerNotification } = require('../utils/notificationHelper');
 
-// Initialiser Stripe (null si pas de clé — mode simulation maintenu)
+
 const stripe = process.env.STRIPE_SECRET_KEY
   ? Stripe(process.env.STRIPE_SECRET_KEY)
   : null;
 
-// Catégories en ligne vs présentiel
+
 const CATEGORIES_EN_LIGNE = [
   'Informatique', 'Design', 'Développement web',
   'Rédaction', 'Marketing', 'Traduction',
@@ -18,10 +18,7 @@ const CATEGORIES_EN_LIGNE = [
 const getTypePaiement = (categorie) =>
   CATEGORIES_EN_LIGNE.includes(categorie) ? 'en_ligne' : 'presenciel';
 
-// ─────────────────────────────────────────
-// @route   POST /api/paiements/initier
-// @access  Privé (client)
-// ─────────────────────────────────────────
+
 const initierPaiement = async (req, res) => {
   try {
     const { demandeId, montant, methode, notes } = req.body;
@@ -50,7 +47,7 @@ const initierPaiement = async (req, res) => {
       });
     }
 
-    // Vérifier si un paiement existe déjà
+
     const paiementExiste = await Paiement.findOne({
       demande: demandeId,
       statut:  { $in: ['en_attente', 'payé'] },
@@ -63,7 +60,7 @@ const initierPaiement = async (req, res) => {
       });
     }
 
-    // ── Créer le paiement en base ─────────────────────────
+
     const paiement = await Paiement.create({
       demande:     demandeId,
       client:      req.user.id,
@@ -74,15 +71,15 @@ const initierPaiement = async (req, res) => {
       statut:      'en_attente',
     });
 
-    // ── Si paiement en ligne ET Stripe configuré → créer un PaymentIntent ──
+
     let stripeClientSecret = null;
 
     if (methode === 'en_ligne' && stripe) {
       try {
-        // Stripe travaille en centimes — MAD × 100
+
         const paymentIntent = await stripe.paymentIntents.create({
           amount:   Math.round(Number(montant) * 100),
-          currency: 'mad',  // Dirham marocain
+          currency: 'mad',
           metadata: {
             paiementId:  paiement._id.toString(),
             demandeId:   demandeId,
@@ -92,7 +89,7 @@ const initierPaiement = async (req, res) => {
           description: `SmartMatch — Mission : ${demande.titre}`,
         });
 
-        // Stocker l'ID Stripe dans le paiement pour la confirmation
+
         paiement.stripePaymentIntentId = paymentIntent.id;
         await paiement.save();
 
@@ -100,7 +97,7 @@ const initierPaiement = async (req, res) => {
         console.log(`   Stripe PaymentIntent créé : ${paymentIntent.id}`);
       } catch (stripeError) {
         console.error('  Stripe error — fallback simulation :', stripeError.message);
-        // On continue sans Stripe — la simulation frontend prend le relais
+
       }
     }
 
@@ -110,7 +107,7 @@ const initierPaiement = async (req, res) => {
     return res.status(201).json({
       message:            '   Paiement initié avec succès',
       paiement,
-      stripeClientSecret, // null si espèces ou Stripe non configuré
+      stripeClientSecret,
       stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || null,
     });
 
@@ -120,10 +117,7 @@ const initierPaiement = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   PUT /api/paiements/:id/confirmer
-// @access  Privé (client)
-// ─────────────────────────────────────────
+
 const confirmerPaiement = async (req, res) => {
   try {
     const paiement = await Paiement.findById(req.params.id)
@@ -142,9 +136,7 @@ const confirmerPaiement = async (req, res) => {
       return res.status(200).json({ message: '   Paiement déjà confirmé', paiement });
     }
 
-    // ── Vérification Stripe bloquante ────────────────────
-    // Paiement en ligne : stripePaymentIntentId obligatoire et statut succeeded.
-    // Paiement en espèces : pas de Stripe, on confirme directement.
+
     if (paiement.methode === 'en_ligne') {
       if (!paiement.stripePaymentIntentId) {
         return res.status(400).json({
@@ -168,7 +160,7 @@ const confirmerPaiement = async (req, res) => {
     paiement.datePaiement = new Date();
     await paiement.save();
 
-    // Notifier le prestataire
+
     if (paiement.prestataire?.user) {
       const io = req.app.get('io');
       await creerNotification(io, {
@@ -188,10 +180,7 @@ const confirmerPaiement = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   GET /api/paiements/mes-paiements
-// @access  Privé (client)
-// ─────────────────────────────────────────
+
 const getMesPaiements = async (req, res) => {
   try {
     const paiements = await Paiement.find({ client: req.user.id })
@@ -205,10 +194,7 @@ const getMesPaiements = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   GET /api/paiements/mes-revenus
-// @access  Privé (prestataire)
-// ─────────────────────────────────────────
+
 const getMesRevenus = async (req, res) => {
   try {
     const prestataire = await Prestataire.findOne({ user: req.user.id });
@@ -229,10 +215,7 @@ const getMesRevenus = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   GET /api/paiements/demande/:id
-// @access  Privé
-// ─────────────────────────────────────────
+
 const getPaiementDemande = async (req, res) => {
   try {
     const paiement = await Paiement.findOne({ demande: req.params.id })
@@ -245,10 +228,7 @@ const getPaiementDemande = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   GET /api/paiements (admin)
-// @access  Privé (admin)
-// ─────────────────────────────────────────
+
 const getTousPaiements = async (req, res) => {
   try {
     const paiements = await Paiement.find()

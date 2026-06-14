@@ -1,33 +1,16 @@
-// ─────────────────────────────────────────────────────────────────
-// Algorithme de scoring pour le matching — SmartMatch
-// Score total sur 100 points
-//
-// Critères :
-//   1. Catégorie / Compétences   — 40 pts
-//   2. Localisation géospatiale  — 20 pts  ← amélioré (Haversine + rayon)
-//   3. Disponibilité             — 15 pts
-//   4. Note moyenne              — 15 pts
-//   5. Missions réussies         — 10 pts
-// ─────────────────────────────────────────────────────────────────
-
-// ── Utilitaire : normalisation de chaîne ──────────────────────────
-// Supprime les accents, espaces en trop, et met en minuscules.
-// Évite les faux négatifs du type "Casablanca " ≠ "casablanca".
 const normaliser = (str) => {
   if (!str || typeof str !== 'string') return '';
   return str
     .trim()
     .toLowerCase()
-    .normalize('NFD')                    // décompose les caractères accentués
-    .replace(/[\u0300-\u036f]/g, '')     // retire les diacritiques
-    .replace(/\s+/g, ' ');              // normalise les espaces multiples
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ');
 };
 
-// ── Formule de Haversine ──────────────────────────────────────────
-// Calcule la distance en km entre deux points GPS (lat/lng en degrés).
-// Précision suffisante pour des distances < 500 km.
+
 const haversineKm = (lat1, lng1, lat2, lng2) => {
-  const R = 6371; // rayon moyen de la Terre en km
+  const R = 6371;
   const toRad = (deg) => (deg * Math.PI) / 180;
 
   const dLat = toRad(lat2 - lat1);
@@ -40,7 +23,7 @@ const haversineKm = (lat1, lng1, lat2, lng2) => {
   return R * 2 * Math.asin(Math.sqrt(a));
 };
 
-// ── Vérification des coordonnées GPS ─────────────────────────────
+
 const coordonneesValides = (coords) =>
   coords &&
   typeof coords.lat === 'number' &&
@@ -48,26 +31,13 @@ const coordonneesValides = (coords) =>
   !isNaN(coords.lat) &&
   !isNaN(coords.lng);
 
-// ── Score de localisation (20 points) ────────────────────────────
-//
-// Stratégie par priorité décroissante :
-//
-//   A) Géospatiale (si les deux parties ont des coordonnées GPS)
-//      • distance ≤ rayon du prestataire        → 20 pts (dans la zone)
-//      • distance ≤ rayon × 2                   → 10 pts (zone élargie)
-//      • distance > rayon × 2                   →  0 pts (hors zone)
-//
-//   B) Textuelle normalisée (fallback sans GPS)
-//      • même ville (après normalisation)        → 20 pts
-//      • même région (après normalisation)       → 10 pts
-//      • aucune correspondance                   →  0 pts
-//
+
 const scorerLocalisation = (prestataire, demande) => {
   const zonePresta  = prestataire.zoneGeographique || {};
   const locClient   = demande.localisation         || {};
-  const rayon       = zonePresta.rayon             || 20; // km, défaut 20
+  const rayon       = zonePresta.rayon             || 20;
 
-  // ── Stratégie A : géospatiale ──
+
   const coordsPresta  = zonePresta.coordonnees;
   const coordsClient  = locClient.coordonnees;
 
@@ -82,7 +52,7 @@ const scorerLocalisation = (prestataire, demande) => {
     return                               { points:  0, methode: 'gps_hors_zone', distance };
   }
 
-  // ── Stratégie B : textuelle normalisée (fallback) ──
+
   const villePresta  = normaliser(zonePresta.ville);
   const villeClient  = normaliser(locClient.ville);
   const regionPresta = normaliser(zonePresta.region);
@@ -97,7 +67,7 @@ const scorerLocalisation = (prestataire, demande) => {
   return { points: 0, methode: 'aucune_correspondance' };
 };
 
-// ── Fonction principale de scoring ───────────────────────────────
+
 const calculerScore = (prestataire, demande) => {
   let score = 0;
 
@@ -127,7 +97,7 @@ const calculerScore = (prestataire, demande) => {
   return Math.round(score);
 };
 
-// ── Export du détail pour les logs/debug ─────────────────────────
+
 const calculerScoreDetaille = (prestataire, demande) => {
   const categorie    = prestataire.categories.includes(demande.categorie) ? 40 : 0;
   const localisation = scorerLocalisation(prestataire, demande);

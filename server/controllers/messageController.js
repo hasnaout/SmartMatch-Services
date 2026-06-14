@@ -1,7 +1,7 @@
 const Message = require('../models/Message');
 const Demande  = require('../models/Demande');
 
-// ── Générer roomId cohérent et toujours identique ──
+
 const genererRoomId = (demandeId, userId1, userId2) => {
   const ids = [userId1.toString(), userId2.toString()].sort();
   return `${demandeId}_${ids[0]}_${ids[1]}`;

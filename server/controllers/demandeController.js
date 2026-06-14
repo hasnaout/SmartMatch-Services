@@ -3,10 +3,7 @@ const Prestataire  = require('../models/Prestataire');
 const { calculerScore }     = require('../utils/matchingEngine');
 const { creerNotification } = require('../utils/notificationHelper');
 
-// ─────────────────────────────────────────
-// @route   POST /api/demandes
-// @access  Privé (client)
-// ─────────────────────────────────────────
+
 const creerDemande = async (req, res) => {
   try {
     console.log(' Body reçu:', JSON.stringify(req.body, null, 2));
@@ -37,7 +34,7 @@ const creerDemande = async (req, res) => {
         ville:   ville   || '',
         region:  region  || '',
         adresse: adresse || '',
-        // Coordonnées GPS envoyées par le client (géocodage Nominatim)
+
         coordonnees: {
           lat: coordonneesLat ? Number(coordonneesLat) : null,
           lng: coordonneesLng ? Number(coordonneesLng) : null,
@@ -48,7 +45,7 @@ const creerDemande = async (req, res) => {
 
     console.log('   Demande créée:', demande._id);
 
-    // ── Matching ──
+
     const prestataires = await Prestataire.find({
       categories: { $in: [categorie] },
       disponible:  true,
@@ -67,7 +64,7 @@ const creerDemande = async (req, res) => {
     demande.prestatairesRecommandes = recommandations;
     await demande.save();
 
-    // ── Notifications ──
+
     const io = req.app.get('io');
     for (const r of recommandations) {
       const prest = prestataires.find(
@@ -102,10 +99,7 @@ const creerDemande = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   GET /api/demandes/mes-demandes
-// @access  Privé (client)
-// ─────────────────────────────────────────
+
 const getMesDemandes = async (req, res) => {
   try {
     const demandes = await Demande.find({ client: req.user.id })
@@ -127,10 +121,7 @@ const getMesDemandes = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   GET /api/demandes/disponibles
-// @access  Privé (prestataire)
-// ─────────────────────────────────────────
+
 const getDemandesDisponibles = async (req, res) => {
   try {
     const prestataire = await Prestataire.findOne({ user: req.user.id });
@@ -152,10 +143,7 @@ const getDemandesDisponibles = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   GET /api/demandes/:id
-// @access  Privé
-// ─────────────────────────────────────────
+
 const getDemande = async (req, res) => {
   try {
     const demande = await Demande.findById(req.params.id)
@@ -183,17 +171,17 @@ const getDemande = async (req, res) => {
       if (prestataire) {
         const pid = prestataire._id.toString();
 
-        // Prestataire choisi
+
         const choisi = demande.prestataireChoisi?._id?.toString()
           || demande.prestataireChoisi?.toString();
 
-        // Prestataire recommandé
+
         const recommande = demande.prestatairesRecommandes?.some(
           r => r.prestataire?._id?.toString() === pid
             || r.prestataire?.toString() === pid
         );
 
-        //    Prestataire dont la catégorie correspond (accès depuis /disponibles)
+
         const categorieMatch = prestataire.categories?.includes(demande.categorie);
 
         isPrestataireAutorise = choisi === pid || recommande || categorieMatch;
@@ -211,10 +199,7 @@ const getDemande = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   PUT /api/demandes/:id/statut
-// @access  Privé (client ou admin)
-// ─────────────────────────────────────────
+
 const updateStatut = async (req, res) => {
   try {
     const { statut } = req.body;
@@ -237,7 +222,7 @@ const updateStatut = async (req, res) => {
     demande.statut = statut;
     await demande.save();
 
-    // Notifier si terminée
+
     if (statut === 'terminée' && ancienStatut !== 'terminée' && demande.prestataireChoisi) {
       await Prestataire.findByIdAndUpdate(demande.prestataireChoisi, {
         $inc: { nombreMissionsReussies: 1 },
@@ -266,10 +251,7 @@ const updateStatut = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   PUT /api/demandes/:id/choisir-prestataire
-// @access  Privé (client)
-// ─────────────────────────────────────────
+
 const choisirPrestataire = async (req, res) => {
   try {
     const { prestataireId } = req.body;
@@ -307,10 +289,7 @@ const choisirPrestataire = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @route   PUT /api/demandes/:id/terminer
-// @access  Privé (prestataire)
-// ─────────────────────────────────────────
+
 const terminerMission = async (req, res) => {
   try {
     const demande = await Demande.findById(req.params.id)

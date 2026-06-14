@@ -1,15 +1,12 @@
-// src/components/Chatbot.jsx
 import { useState, useRef, useEffect } from "react";
 import "./Chatbot.css";
 import robotImg from '../assets/robot1.png';
 import { FaRocket, FaTag, FaTools, FaEnvelope } from "react-icons/fa";
 
-// ─────────────────────────────────────────────
-//  Configuration
-// ─────────────────────────────────────────────
+
 const API_URL = "/api/chatbot";
 
-// Identifiant de session unique par onglet — permet la mémoire de conversation
+
 const SESSION_ID = `session_${Date.now()}_${Math.random().toString(36).slice(2)}`;
 
 const QUICK_SUGGESTIONS = [
@@ -19,9 +16,7 @@ const QUICK_SUGGESTIONS = [
   { label: <><FaEnvelope /> Nous contacter</>,    text: "Comment vous contacter ?" },
 ];
 
-// ─────────────────────────────────────────────
-//  Composant principal
-// ─────────────────────────────────────────────
+
 export default function Chatbot() {
   const [isOpen, setIsOpen]               = useState(false);
   const [messages, setMessages]           = useState([]);
@@ -32,12 +27,12 @@ export default function Chatbot() {
   const messagesEndRef = useRef(null);
   const inputRef       = useRef(null);
 
-  // Scroll automatique vers le bas
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
-  // Message de bienvenue à l'ouverture
+
   useEffect(() => {
     if (isOpen) {
       if (messages.length === 0) {
@@ -51,7 +46,7 @@ export default function Chatbot() {
     }
   }, [isOpen]);
 
-  // ── Envoi du message ──────────────────────
+
   const sendMessage = async (text) => {
     const trimmed = (text || input).trim();
     if (!trimmed) return;
@@ -66,7 +61,7 @@ export default function Chatbot() {
       const res = await fetch(API_URL, {
         method:  "POST",
         headers: { "Content-Type": "application/json" },
-        // sessionId transmis pour activer la mémoire de conversation côté serveur
+
         body: JSON.stringify({ message: trimmed, sessionId: SESSION_ID }),
       });
 
@@ -98,10 +93,10 @@ export default function Chatbot() {
     }
   };
 
-  // ── Rendu ─────────────────────────────────
+
   return (
     <>
-      {/* Bulle flottante */}
+
       <button
         className={`chat-bubble ${isOpen ? "chat-bubble--open" : ""}`}
         onClick={() => setIsOpen((v) => !v)}
@@ -110,10 +105,10 @@ export default function Chatbot() {
         {isOpen ? "✕" : <img src={robotImg} alt="bot" style={{ width: "34px", height: "34px", objectFit: "contain" }} />}
       </button>
 
-      {/* Fenêtre de chat */}
+
       {isOpen && (
         <div className="chat-window" role="dialog" aria-label="Assistant SmartMatch">
-          {/* Header */}
+
           <div className="chat-header">
             <div className="chat-header__info">
               <img src={robotImg} alt="SmartMatch" className="chat-header__avatar" />
@@ -134,7 +129,7 @@ export default function Chatbot() {
             </button>
           </div>
 
-          {/* Zone de messages */}
+
           <div className="chat-messages">
             {messages.map((msg) => (
               <div key={msg.id} className={`chat-msg chat-msg--${msg.from}`}>
@@ -142,7 +137,7 @@ export default function Chatbot() {
               </div>
             ))}
 
-            {/* Indicateur de frappe */}
+
             {isTyping && (
               <div className="chat-msg chat-msg--bot">
                 <span className="typing-indicator">
@@ -151,7 +146,7 @@ export default function Chatbot() {
               </div>
             )}
 
-            {/* Suggestions rapides */}
+
             {showSuggestions && messages.length > 0 && (
               <div className="chat-suggestions">
                 {QUICK_SUGGESTIONS.map((s) => (
@@ -169,7 +164,7 @@ export default function Chatbot() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Zone de saisie */}
+
           <div className="chat-input-area">
             <input
               ref={inputRef}

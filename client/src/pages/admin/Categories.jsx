@@ -120,7 +120,7 @@ const Categories = () => {
           </p>
         </div>
 
-        {/* Formulaire */}
+
         {showForm && (
           <div className="card" style={{ marginBottom:24, border:'2px solid var(--accent)', animation:'fadeUp 0.3s ease-out' }}>
             <h3 style={{ fontSize:16, fontWeight:700, marginBottom:20, color:'var(--accent2)' }}>
@@ -181,7 +181,7 @@ const Categories = () => {
           </div>
         )}
 
-        {/* Header + bouton */}
+
         <div className="section-header" style={{ marginBottom:20 }}>
           <div>
             <h2 className="section-title">Toutes les catégories</h2>
@@ -194,7 +194,7 @@ const Categories = () => {
           )}
         </div>
 
-        {/* Liste */}
+
         {loading ? (
           <div className="empty-state">
             <span className="spinner-dark" style={{ width:32, height:32, borderWidth:3 }} />

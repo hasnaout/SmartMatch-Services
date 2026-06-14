@@ -118,7 +118,7 @@ const MonProfil = () => {
       <Navbar />
       <div className="page-content mon-profil-page">
 
-        {/* Header */}
+
         <div className="profil-header">
           <div className="profil-avatar">
             {user?.prenom?.[0]}{user?.nom?.[0]}
@@ -143,7 +143,7 @@ const MonProfil = () => {
 
         <form onSubmit={handleSave} className="form-page mon-profil-form">
 
-          {/* Disponibilité */}
+
           <div className="card profil-availability-card">
             <div className="profil-availability-content">
               <div>
@@ -168,7 +168,7 @@ const MonProfil = () => {
             </div>
           </div>
 
-          {/* Description */}
+
           <div className="form-card profil-form-card">
             <div className="form-section">
               <div className="form-section-title">À propos</div>
@@ -183,7 +183,7 @@ const MonProfil = () => {
               </div>
             </div>
 
-            {/* Catégories */}
+
             <div className="form-section">
               <div className="form-section-title">Catégories de service</div>
               <div className="profil-category-list">
@@ -200,7 +200,7 @@ const MonProfil = () => {
               </div>
             </div>
 
-            {/* Compétences */}
+
             <div className="form-section">
               <div className="form-section-title">Compétences</div>
               <div className="profil-add-row">
@@ -232,7 +232,7 @@ const MonProfil = () => {
             </div>
           </div>
 
-          {/* Tarifs & Zone */}
+
           <div className="form-card profil-form-card">
             <div className="form-section">
               <div className="form-section-title">Tarifs & Expérience</div>

@@ -5,7 +5,7 @@ const messageSchema = new mongoose.Schema(
     roomId: {
       type: String,
       required: true,
-      // format : "demandeId_clientId_prestataireId"
+
     },
     expediteur: {
       type: mongoose.Schema.Types.ObjectId,

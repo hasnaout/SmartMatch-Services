@@ -54,6 +54,39 @@ const initierPaiement = async (req, res) => {
     });
 
     if (paiementExiste) {
+      if (paiementExiste.statut === 'payé') {
+        return res.status(400).json({
+          message: '  Un paiement existe déjà pour cette mission',
+          paiement: paiementExiste,
+        });
+      }
+
+      if (paiementExiste.methode === 'en_ligne' && stripe) {
+        try {
+          let stripePI;
+          if (paiementExiste.stripePaymentIntentId) {
+            stripePI = await stripe.paymentIntents.retrieve(paiementExiste.stripePaymentIntentId);
+          } else {
+            stripePI = await stripe.paymentIntents.create({
+              amount:      Math.round(paiementExiste.montant * 100),
+              currency:    'mad',
+              description: `SmartMatch — Mission`,
+              metadata:    { paiementId: paiementExiste._id.toString(), demandeId },
+            });
+            paiementExiste.stripePaymentIntentId = stripePI.id;
+            await paiementExiste.save();
+          }
+          return res.status(200).json({
+            message:              '   Paiement en ligne récupéré',
+            paiement:             paiementExiste,
+            stripeClientSecret:   stripePI.client_secret,
+            stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+          });
+        } catch (stripeErr) {
+          return res.status(502).json({ message: `Erreur Stripe : ${stripeErr.message}` });
+        }
+      }
+
       return res.status(400).json({
         message: '  Un paiement existe déjà pour cette mission',
         paiement: paiementExiste,
@@ -96,8 +129,11 @@ const initierPaiement = async (req, res) => {
         stripeClientSecret = paymentIntent.client_secret;
         console.log(`   Stripe PaymentIntent créé : ${paymentIntent.id}`);
       } catch (stripeError) {
-        console.error('  Stripe error — fallback simulation :', stripeError.message);
-
+        console.error('  Stripe error :', stripeError.message);
+        await paiement.deleteOne();
+        return res.status(502).json({
+          message: `Erreur Stripe : ${stripeError.message}`,
+        });
       }
     }
 
@@ -137,15 +173,10 @@ const confirmerPaiement = async (req, res) => {
     }
 
 
-    if (paiement.methode === 'en_ligne') {
+    if (paiement.methode === 'en_ligne' && stripe) {
       if (!paiement.stripePaymentIntentId) {
         return res.status(400).json({
           message: '  Paiement en ligne non initié côté Stripe — confirmation impossible',
-        });
-      }
-      if (!stripe) {
-        return res.status(500).json({
-          message: '  Stripe non configuré sur le serveur',
         });
       }
       const intent = await stripe.paymentIntents.retrieve(paiement.stripePaymentIntentId);

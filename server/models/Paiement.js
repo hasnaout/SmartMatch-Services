@@ -47,6 +47,10 @@ const paiementSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    stripePaymentIntentId: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }
 );

@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"c:\\\\Users\\\\pc\\\\OneDrive\\\\Tiedostot\\\\SmartMatch_updated\\\\SmartMatch \\(1\\)\\\\SmartMatch\" -Recurse -Force | Select-Object -First 150 | ForEach-Object { $_.FullName })"
+    ]
+  }
+}

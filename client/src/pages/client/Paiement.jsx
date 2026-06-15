@@ -17,27 +17,31 @@ import { Elements, CardElement, useStripe, useElements } from '@stripe/react-str
 const StripeCheckoutForm = ({ paiement, onSuccess, onError }) => {
   const stripe   = useStripe();
   const elements = useElements();
-  const [paying, setPaying] = useState(false);
+  const [paying,       setPaying]       = useState(false);
+  const [stripeReady,  setStripeReady]  = useState(false);
+
+  useEffect(() => {
+    if (stripe) setStripeReady(true);
+  }, [stripe]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!stripe || !elements) return;
-
+    if (!stripe || !elements) {
+      onError('Stripe non chargé — désactivez votre extension de sécurité ou testez en navigation privée.');
+      return;
+    }
     setPaying(true);
     try {
       const { error, paymentIntent } = await stripe.confirmCardPayment(
         paiement.stripeClientSecret,
-        {
-          payment_method: {
-            card: elements.getElement(CardElement),
-          },
-        }
+        { payment_method: { card: elements.getElement(CardElement) } }
       );
-
       if (error) {
         onError(error.message);
       } else if (paymentIntent.status === 'succeeded') {
         onSuccess();
+      } else {
+        onError(`Paiement incomplet (statut: ${paymentIntent.status})`);
       }
     } catch (err) {
       onError(err.message);
@@ -46,9 +50,28 @@ const StripeCheckoutForm = ({ paiement, onSuccess, onError }) => {
     }
   };
 
+  if (!stripeReady && !stripe) {
+    return (
+      <div style={{ textAlign: 'center', padding: '24px 0' }}>
+        <span className="spinner-dark" style={{ width: 32, height: 32, borderWidth: 3, display: 'inline-block', marginBottom: 16 }} />
+        <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 12 }}>
+          Chargement de Stripe en cours...
+        </p>
+        <div style={{
+          padding: '12px 16px', borderRadius: 8,
+          background: 'var(--warning-light)', fontSize: 12, color: 'var(--warning)',
+          textAlign: 'left',
+        }}>
+          <strong>Si le bouton ne s'affiche pas :</strong><br />
+          Désactivez votre extension de sécurité (Trend Micro, Malwarebytes…)<br />
+          ou testez en <strong>navigation privée</strong> (Ctrl+Shift+N).
+        </div>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit}>
-
       <div style={{
         background: 'var(--gradient)', borderRadius: 16,
         padding: '24px', marginBottom: 24, color: '#fff', position: 'relative', overflow: 'hidden',
@@ -74,7 +97,6 @@ const StripeCheckoutForm = ({ paiement, onSuccess, onError }) => {
         </div>
       </div>
 
-
       <div style={{
         border: '2px solid var(--border)', borderRadius: 12,
         padding: '16px', marginBottom: 16,
@@ -87,8 +109,8 @@ const StripeCheckoutForm = ({ paiement, onSuccess, onError }) => {
           style: {
             base: {
               fontSize: '16px',
-              color: 'var(--text)',
-              '::placeholder': { color: 'var(--muted)' },
+              color: '#000',
+              '::placeholder': { color: '#aaa' },
             },
           },
         }} />
@@ -101,7 +123,7 @@ const StripeCheckoutForm = ({ paiement, onSuccess, onError }) => {
         fontSize: 12, color: 'var(--info)',
       }}>
         <AlertCircle size={14} />
-        Mode test Stripe — utilisez la carte 4242 4242 4242 4242, exp 12/28, CVV 123
+        Mode test — carte : 4242 4242 4242 4242 · exp 12/28 · CVV 123
       </div>
 
       <button
@@ -149,7 +171,6 @@ const Paiement = () => {
           setMethode(p.data.paiement.methode);
           setMontant(p.data.paiement.montant?.toString() || '');
           if (p.data.paiement.statut === 'payé') setStep(3);
-          else if (p.data.paiement.methode === 'en_ligne') setStep(2);
         }
         if (!p.data.paiement && d.data.demande.budget?.max > 0) {
           setMontant(d.data.demande.budget.max.toString());
@@ -163,11 +184,6 @@ const Paiement = () => {
     if (!montant || Number(montant) <= 0) { toast.error('Entrez un montant valide'); return; }
     if (!methode) { toast.error('Choisissez une méthode de paiement'); return; }
 
-    if (paiementExistant?.statut === 'en_attente') {
-      setStep(2);
-      return;
-    }
-
     setPaying(true);
     try {
       const { data } = await api.post('/paiements/initier', {
@@ -178,13 +194,17 @@ const Paiement = () => {
 
 
       if (methode === 'en_ligne' && data.stripeClientSecret) {
-        const sp = await loadStripe(data.stripePublishableKey);
-        setStripePromise(sp);
+        const pubKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || data.stripePublishableKey;
+        if (!pubKey) {
+          toast.error('Clé Stripe publique manquante — vérifiez votre configuration');
+          return;
+        }
+        // Ne pas await loadStripe — passer la Promise directement à Elements
+        setStripePromise(loadStripe(pubKey));
         setStripeData({
-          clientSecret:    data.stripeClientSecret,
-          publishableKey:  data.stripePublishableKey,
-          montant:         data.paiement.montant,
-          reference:       data.paiement.reference,
+          clientSecret: data.stripeClientSecret,
+          montant:      data.paiement.montant,
+          reference:    data.paiement.reference,
         });
       }
 
@@ -428,7 +448,7 @@ const Paiement = () => {
 
 
               {stripeData && stripePromise ? (
-                <Elements stripe={stripePromise} options={{ clientSecret: stripeData.clientSecret }}>
+                <Elements stripe={stripePromise}>
                   <StripeCheckoutForm
                     paiement={{ ...paiementExistant, stripeClientSecret: stripeData.clientSecret }}
                     onSuccess={handlePaiementSuccess}

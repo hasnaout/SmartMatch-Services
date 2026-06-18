@@ -1,33 +1,16 @@
 const express = require('express');
 const router  = express.Router();
-
 const {
-  getCategories,
-  getCategoriesActives,
-  creerCategorie,
-  updateCategorie,
-  supprimerCategorie,
+  getCategories, getCategoriesActives,
+  creerCategorie, updateCategorie, supprimerCategorie,
 } = require('../controllers/categorieController');
+const { protect }        = require('../middleware/authMiddleware');
+const { authorizeRoles } = require('../middleware/roleMiddleware');
 
-const { protect, authorize } = require('../middleware/authMiddleware');
-const { validateMongoId }    = require('../middleware/demandeValidator');
-
-// ── Public ──
-// GET /api/categories/actives — liste pour le formulaire de demande
 router.get('/actives', getCategoriesActives);
-
-// ── Privé (admin) ──
-// Factorisation : protect + authorize appliqués une seule fois
-const adminRouter = express.Router();
-adminRouter.use(protect);
-adminRouter.use(authorize('admin'));
-
-adminRouter.get   ('/',    getCategories);
-adminRouter.post  ('/',    creerCategorie);
-adminRouter.put   ('/:id', validateMongoId, updateCategorie);
-adminRouter.delete('/:id', validateMongoId, supprimerCategorie);
-
-// Monter le sous-router admin sur le router principal
-router.use('/', adminRouter);
+router.get('/',        protect, authorizeRoles('admin'), getCategories);
+router.post('/',       protect, authorizeRoles('admin'), creerCategorie);
+router.put('/:id',     protect, authorizeRoles('admin'), updateCategorie);
+router.delete('/:id',  protect, authorizeRoles('admin'), supprimerCategorie);
 
 module.exports = router;

@@ -4,6 +4,9 @@ dotenv.config();
 const express    = require('express');
 const cors       = require('cors');
 const http       = require('http');
+const helmet     = require('helmet');
+const rateLimit  = require('express-rate-limit');
+const mongoose   = require('mongoose');
 const { Server } = require('socket.io');
 const connectDB  = require('./config/db');
 
@@ -51,7 +54,6 @@ io.on('connection', (socket) => {
 
   socket.on('join_user', (userId) => {
     socket.join(`user_${userId}`);
-    console.log(`👤 User ${userId} a rejoint sa room`);
   });
 
   socket.on('join_room', (roomId) => {
@@ -90,6 +92,7 @@ app.get('/', (req, res) => res.json({ message: '   SmartMatch API fonctionne !' 
 
 app.use((req, res) => res.status(404).json({ message: '  Route non trouvée' }));
 
+// ── Gestionnaire d'erreurs global ──
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: '  Erreur serveur', error: err.message });

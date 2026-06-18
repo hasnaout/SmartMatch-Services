@@ -101,7 +101,6 @@ useEffect(() => {
           ))}
         </div>
 
-
         <div>
           <div className="section-header">
             <div>

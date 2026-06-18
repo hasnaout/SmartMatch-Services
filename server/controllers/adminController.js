@@ -1,27 +1,48 @@
-const User = require('../models/User');
+const mongoose    = require('mongoose');
+const User        = require('../models/User');
 const Prestataire = require('../models/Prestataire');
-const Demande = require('../models/Demande');
-const Avis = require('../models/Avis');
+const Demande     = require('../models/Demande');
+const Avis        = require('../models/Avis');
+const Message     = require('../models/Message');
+const Notification= require('../models/Notification');
 const { creerNotification } = require('../utils/notificationHelper');
 
 const getTousUsers = async (req, res) => {
   try {
-    const { role, isActive, page = 1, limit = 10 } = req.query;
+    const { role, isActive, page = 1, limit = 10, search } = req.query;
 
     const filtre = {};
-    if (role) filtre.role = role;
+    if (role)                filtre.role     = role;
     if (isActive !== undefined) filtre.isActive = isActive === 'true';
 
-    const skip = (page - 1) * limit;
+    // BONUS : recherche par nom ou email
+    if (search) {
+      filtre.$or = [
+        { nom:    { $regex: search, $options: 'i' } },
+        { prenom: { $regex: search, $options: 'i' } },
+        { email:  { $regex: search, $options: 'i' } },
+      ];
+    }
 
-    const users = await User.find(filtre)
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(Number(limit));
+    const skip = (page - 1) * Number(limit);
 
-    const total = await User.countDocuments(filtre);
+    // CORRECTION 1 : parallel queries avec Promise.all
+    const [users, total] = await Promise.all([
+      User.find(filtre)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(Number(limit))
+        .select('-password -resetCode -resetCodeExpire -loginAttempts -lockUntil')
+        .lean(),
+      User.countDocuments(filtre),
+    ]);
 
-    res.status(200).json({ total, page: Number(page), users });
+    res.status(200).json({
+      total,
+      page:       Number(page),
+      totalPages: Math.ceil(total / Number(limit)),
+      users,
+    });
   } catch (error) {
     res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
@@ -33,7 +54,7 @@ const activerUser = async (req, res) => {
       req.params.id,
       { isActive: true },
       { new: true }
-    );
+    ).select('-password');
 
     if (!user) {
       return res.status(404).json({ message: '  Utilisateur introuvable' });
@@ -47,11 +68,18 @@ const activerUser = async (req, res) => {
 
 const suspendrUser = async (req, res) => {
   try {
+    // CORRECTION 3 : un admin ne peut pas se suspendre lui-même
+    if (req.params.id === req.user.id) {
+      return res.status(400).json({
+        message: '  Vous ne pouvez pas suspendre votre propre compte',
+      });
+    }
+
     const user = await User.findByIdAndUpdate(
       req.params.id,
       { isActive: false },
       { new: true }
-    );
+    ).select('-password');
 
     if (!user) {
       return res.status(404).json({ message: '  Utilisateur introuvable' });
@@ -69,7 +97,7 @@ const verifierUser = async (req, res) => {
       req.params.id,
       { isVerified: true },
       { new: true }
-    );
+    ).select('-password');
 
     if (!user) {
       return res.status(404).json({ message: '  Utilisateur introuvable' });
@@ -153,12 +181,30 @@ const refuserSuppression = async (req, res) => {
 
 const getTousAvis = async (req, res) => {
   try {
-    const avis = await Avis.find()
-      .populate('client', 'nom prenom email')
-      .populate('prestataire')
-      .sort({ createdAt: -1 });
+    // CORRECTION 7 : pagination sur les avis
+    const { page = 1, limit = 20, isVisible } = req.query;
+    const filtre = {};
+    if (isVisible !== undefined) filtre.isVisible = isVisible === 'true';
 
-    res.status(200).json({ total: avis.length, avis });
+    const skip = (page - 1) * Number(limit);
+
+    const [avis, total] = await Promise.all([
+      Avis.find(filtre)
+        .populate('client',      'nom prenom email')
+        .populate('prestataire', 'noteMoyenne nombreAvis')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(Number(limit))
+        .lean(),
+      Avis.countDocuments(filtre),
+    ]);
+
+    res.status(200).json({
+      total,
+      page:       Number(page),
+      totalPages: Math.ceil(total / Number(limit)),
+      avis,
+    });
   } catch (error) {
     res.status(500).json({ message: '  Erreur serveur', error: error.message });
   }
@@ -217,7 +263,7 @@ const getStats = async (req, res) => {
 module.exports = {
   getTousUsers,
   activerUser,
-  suspendrUser,
+  suspendreUser,
   verifierUser,
   supprimerUser,
   getDemandesSuppression,

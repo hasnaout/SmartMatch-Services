@@ -1,9 +1,0 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-@import './styles/variables.css';
-@import './styles/reset.css';
-@import './styles/animations.css';
-@import './styles/legacy-global.css';
-@import './styles/legacy-dashboard.css';
-@import './styles/legacy-demandes.css';
-@import './styles/legacy-navbar.css';

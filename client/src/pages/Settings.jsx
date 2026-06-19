@@ -47,7 +47,6 @@ const Settings = () => {
       toast.error('Veuillez préciser la raison (minimum 10 caractères)');
       return;
     }
-    if (!window.confirm('Confirmer la demande de suppression de votre compte ?')) return;
     setSuppLoading(true);
     try {
       const { data } = await api.post('/users/demande-suppression', { raison });

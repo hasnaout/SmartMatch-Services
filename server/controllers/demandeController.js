@@ -6,8 +6,6 @@ const { creerNotification } = require('../utils/notificationHelper');
 
 const creerDemande = async (req, res) => {
   try {
-    console.log(' Body reçu:', JSON.stringify(req.body, null, 2));
-
     const {
       titre, description, categorie,
       budgetMin, budgetMax, ville, region, adresse, fichiers, coordonneesLat, coordonneesLng,
@@ -18,8 +16,6 @@ const creerDemande = async (req, res) => {
         message: '  Titre, description et catégorie sont obligatoires',
       });
     }
-
-    console.log(' Fichiers reçus dans body:', fichiers);
 
     const demande = await Demande.create({
       client:      req.user.id,
@@ -43,23 +39,15 @@ const creerDemande = async (req, res) => {
       fichiers: Array.isArray(fichiers) ? fichiers : [],
     });
 
-    console.log('   Demande créée:', demande._id);
-
-
     const prestataires = await Prestataire.find({
       categories: { $in: [categorie] },
       disponible:  true,
     }).populate('user', 'nom prenom email telephone avatar isVerified');
 
-    console.log(' Catégorie recherchée:', categorie);
-    console.log(' Prestataires trouvés:', prestataires.length);
-
     const recommandations = prestataires
       .map(p => ({ prestataire: p._id, score: calculerScore(p, demande) }))
       .sort((a, b) => b.score - a.score)
       .slice(0, 5);
-
-    console.log(' Recommandations:', recommandations.length);
 
     demande.prestatairesRecommandes = recommandations;
     await demande.save();
@@ -321,10 +309,6 @@ const terminerMission = async (req, res) => {
 
     demande.statut = 'terminée';
     await demande.save();
-
-    await Prestataire.findByIdAndUpdate(prestataire._id, {
-      $inc: { nombreMissionsReussies: 1 },
-    });
 
     const io = req.app.get('io');
     await creerNotification(io, {

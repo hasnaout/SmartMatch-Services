@@ -84,7 +84,6 @@ const Categories = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Supprimer cette catégorie ?')) return;
     try {
       await api.delete(`/categories/${id}`);
       toast.success('Catégorie supprimée');

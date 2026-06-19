@@ -146,7 +146,6 @@ const MesDemandes = () => {
   useEffect(() => { fetchDemandes(); fetchMesAvis(); }, []);
 
   const handleAnnuler = async (id) => {
-    if (!window.confirm('Annuler cette demande ?')) return;
     try {
       await api.put(`/demandes/${id}/statut`, { statut: 'annulée' });
       toast.success('Demande annulée');

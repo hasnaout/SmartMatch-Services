@@ -89,6 +89,13 @@ const App = () => {
   </ProtectedRoute>
 } />
 
+      <Route path="/unauthorized" element={
+        <div style={{ textAlign: 'center', padding: '4rem' }}>
+          <h1>Accès refusé</h1>
+          <p>Vous n'avez pas les permissions nécessaires pour accéder à cette page.</p>
+          <a href="/">Retour à l'accueil</a>
+        </div>
+      } />
       <Route path="*" element={<Navigate to="/" />} />
 
     </Routes>

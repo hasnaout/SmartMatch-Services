@@ -134,12 +134,8 @@ const motDePasseOublie = async (req, res) => {
     user.resetCodeExpire = expiration;
     await user.save({ validateBeforeSave: false });
 
-    console.log(`  Code de réinitialisation pour ${email}: ${code}`);
-
     res.status(200).json({
-      message: '   Code de réinitialisation généré',
-
-      code: code,
+      message: '   Code de réinitialisation généré. Vérifiez votre email.',
     });
   } catch (error) {
     res.status(500).json({ message: '  Erreur serveur', error: error.message });

@@ -31,7 +31,7 @@ const initCategories = async () => {
       { nom: 'Design', ordre: 12 },
       { nom: 'Marketing', ordre: 13 },
       { nom: 'Traduction',    ordre: 14 },
-      { nom: 'Autre',    rdre: 15 },
+      { nom: 'Autre',    ordre: 15 },
     ]);
     console.log('   Catégories initialisées');
   }
@@ -70,12 +70,19 @@ io.on('connection', (socket) => {
 });
 
 
+app.use(helmet());
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { message: 'Trop de tentatives, réessayez dans 15 minutes' },
+});
 
-app.use('/api/auth',          require('./routes/authRoutes'));
+
+app.use('/api/auth',          authLimiter, require('./routes/authRoutes'));
 app.use('/api/users',         require('./routes/userRoutes'));
 app.use('/api/prestataires',  require('./routes/prestataireRoutes'));
 app.use('/api/demandes',      require('./routes/demandeRoutes'));

@@ -55,7 +55,6 @@ const AdminUsers = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Supprimer cet utilisateur ?')) return;
     try {
       await api.delete(`/admin/users/${id}`);
       toast.success('Utilisateur supprimé');
@@ -66,7 +65,6 @@ const AdminUsers = () => {
   };
 
   const handleValiderSuppression = async (id) => {
-    if (!window.confirm('Confirmer la suppression définitive de ce compte ?')) return;
     try {
       await api.put(`/admin/users/${id}/valider-suppression`);
       toast.success('Compte supprimé');

@@ -33,7 +33,6 @@ const DetailMission = () => {
   const [terminant, setTerminant] = useState(false);
 
  const handleTerminer = async () => {
-  if (!window.confirm('Marquer cette mission comme terminée ?')) return;
   setTerminant(true);
   try {
     await api.put(`/demandes/${id}/terminer`);

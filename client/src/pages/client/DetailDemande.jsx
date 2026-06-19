@@ -121,7 +121,6 @@ const DetailDemande = () => {
 
 
   const handleChoisirPrestataire = async (prestataireId) => {
-    if (!window.confirm('Confirmer le choix de ce prestataire ?')) return;
     try {
       await api.put(`/demandes/${id}/choisir-prestataire`, { prestataireId });
       toast.success('Prestataire choisi ! La mission démarre.');
@@ -134,7 +133,6 @@ const DetailDemande = () => {
 
 
   const handleTerminer = async () => {
-    if (!window.confirm('Marquer cette demande comme terminée ?')) return;
     try {
       await api.put(`/demandes/${id}/statut`, { statut: 'terminée' });
       toast.success('Demande terminée !');
@@ -151,7 +149,6 @@ const DetailDemande = () => {
 
 
   const handleAnnuler = async () => {
-    if (!window.confirm('Annuler cette demande ?')) return;
     try {
       await api.put(`/demandes/${id}/statut`, { statut: 'annulée' });
       toast.success('Demande annulée');

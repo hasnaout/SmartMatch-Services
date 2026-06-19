@@ -135,7 +135,8 @@ const motDePasseOublie = async (req, res) => {
     await user.save({ validateBeforeSave: false });
 
     res.status(200).json({
-      message: '   Code de réinitialisation généré. Vérifiez votre email.',
+      message: '   Code de réinitialisation généré.',
+      code,
     });
   } catch (error) {
     res.status(500).json({ message: '  Erreur serveur', error: error.message });

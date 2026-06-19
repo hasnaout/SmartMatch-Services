@@ -27,21 +27,32 @@ const MonProfil = () => {
   useEffect(() => {
     setLoading(true);
     api.get('/prestataires/moi')
-      .then(({ data }) => {
+      .then(async ({ data }) => {
         const p = data.prestataire;
-         setProfil(p);
+        setProfil(p);
+        const ville  = p.zoneGeographique?.ville  || '';
+        const region = p.zoneGeographique?.region || '';
         setForm({
           description: p.description || '',
           competences: p.competences || [],
           categories:  p.categories  || [],
           tarifMin:    p.tarifMin    || '',
           tarifMax:    p.tarifMax    || '',
-          ville:       p.zoneGeographique?.ville  || '',
-          region:      p.zoneGeographique?.region || '',
+          ville,
+          region,
           rayon:       p.zoneGeographique?.rayon  || 20,
           experience:  p.experience || '',
         });
         setDisponible(p.disponible);
+
+        const lat = p.zoneGeographique?.coordonnees?.lat;
+        const lng = p.zoneGeographique?.coordonnees?.lng;
+        if (lat && lng) {
+          setCoordonnees({ lat, lng });
+        } else if (ville.trim().length >= 3) {
+          const coords = await geocoderVille(ville, region);
+          if (coords) setCoordonnees(coords);
+        }
       })
       .catch(() => toast.error('Erreur chargement profil'))
       .finally(() => setLoading(false));

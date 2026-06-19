@@ -155,7 +155,7 @@ const getTousAvis = async (req, res) => {
   try {
     const avis = await Avis.find()
       .populate('client', 'nom prenom email')
-      .populate('prestataire')
+      .populate({ path: 'prestataire', populate: { path: 'user', select: 'nom prenom' } })
       .sort({ createdAt: -1 });
 
     res.status(200).json({ total: avis.length, avis });
